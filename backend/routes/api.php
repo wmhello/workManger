@@ -41,7 +41,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request)
         'id' => $user['id'],
         'name' => $user['name'],
         'email' => $user['email'],
-        'role' => [$roles],
+        'role' => array($user['role']),
         'avatar' => $user['avatar']
     ];
     return response()->json([

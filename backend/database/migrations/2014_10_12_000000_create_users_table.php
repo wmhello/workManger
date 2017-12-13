@@ -18,8 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('roles', 50)->default('editor')->comment('权限组');
-            $table->string('avatar', 100)->default('')->comment('头像');
+            $table->string('role', 50)->default('editor')->comment('权限组');
+            $table->string('avatar', 100)->nullable()->comment('头像');
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
