@@ -20,21 +20,5 @@ Route::any('/menu', 'MenuController@menu');
 Route::any('/menu/all', 'MenuController@all');
 
 
-Route::middleware(['web', 'wechat.oauth'])->group(function () {
-    Route::get('/view', function (\EasyWeChat\Foundation\Application $app) {
-        $user = session('wechat.oauth_user');
-        $js = $app->js;
-        return view('view', compact(['user', 'js']));
-
-//        dd($user);
-    });
-
-    Route::get('/view1', function (\EasyWeChat\Foundation\Application $app) {
-        $user = session('wechat.oauth_user');
-        $js = $app->js;
-        return view('view1', compact(['user', 'js']));
-
-//        dd($user);
-    });
-
+Route::middleware(['web'])->group(function () {
 });

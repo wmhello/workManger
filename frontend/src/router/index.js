@@ -8,52 +8,94 @@ import Layout from '../views/layout/Layout'
 
 Vue.use(Router)
 
- /**
-  * icon : the icon show in the sidebar
-  * hidden : if `hidden:true` will not show in the sidebar
-  * redirect : if `redirect:noredirect` will not redirct in the levelbar
-  * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
-  * meta : `{ role: ['admin'] }`  will control the page role
-  **/
-export const constantRouterMap = [
-  { path: '/login', component: _import('login/index'), hidden: true },
-  { path: '/404', component: _import('404'), hidden: true },
+/**
+ * icon : the icon show in the sidebar
+ * hidden : if `hidden:true` will not show in the sidebar
+ * redirect : if `redirect:noredirect` will not redirct in the levelbar
+ * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
+ * meta : `{ role: ['admin'] }`  will control the page role
+ **/
+export const constantRouterMap = [{
+    path: '/login',
+    component: _import('login/index'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: _import('404'),
+    hidden: true
+  },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     name: 'Dashboard',
     hidden: true,
-    children: [{ path: 'dashboard', component: _import('dashboard/index') }]
+    children: [{
+      path: 'dashboard',
+      component: _import('dashboard/index')
+    }]
   }
 ]
 
 export default new Router({
   mode: 'history', //后端支持可开
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRouterMap
 })
 
 export const asyncRouterMap = [
+  // {
+  //   path: '/example',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'Example',
+  //   icon: 'zujian',
+  //   children: [
+  //     { path: 'index', name: 'Form', icon: 'zonghe', component: _import('page/form') }
+  //   ]
+  // },
+
+  // {
+  //   path: '/table',
+  //   component: Layout,
+  //   redirect: '/table/index',
+  //   icon: 'tubiao',
+  //   noDropdown: true,
+  //   children: [{ path: 'index', name: 'Table', component: _import('table/index'), meta: { role: ['admin'] }}]
+  // },
   {
-    path: '/example',
+    path: '/admin',
     component: Layout,
-    redirect: 'noredirect',
-    name: 'Example',
-    icon: 'zujian',
-    children: [
-      { path: 'index', name: 'Form', icon: 'zonghe', component: _import('page/form') }
+    redirect: '/admin/index',
+    icon: 'tubiao',
+    name: '用户管理',
+    meta: {
+      role: ['admin']
+    },
+    children: [{
+        path: 'index',
+        name: '用户列表',
+        component: _import('admin/Index'),
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'new',
+        name: '新增用户',
+        component: _import('admin/New'),
+        meta: {
+          role: ['admin']
+        }
+      }
     ]
   },
-
   {
-    path: '/table',
-    component: Layout,
-    redirect: '/table/index',
-    icon: 'tubiao',
-    noDropdown: true,
-    children: [{ path: 'index', name: 'Table', component: _import('table/index'), meta: { role: ['admin'] }}]
-  },
-
-  { path: '*', redirect: '/404', hidden: true }
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]

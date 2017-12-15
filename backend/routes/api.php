@@ -36,12 +36,12 @@ use \Illuminate\Http\Response;
 Route::middleware('auth:api')->get('/user', function (Request $request)
 {
     $user = $request->user();
-    $roles = $user['role'];
+    $roles = explode(',',$user['role']);
     $data = [
         'id' => $user['id'],
         'name' => $user['name'],
         'email' => $user['email'],
-        'role' => array($user['role']),
+        'role' => $roles,
         'avatar' => $user['avatar']
     ];
     return response()->json([
@@ -51,8 +51,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request)
     ],200);
 });
 Route::post('/login', 'Auth\LoginController@login');
-Route::post('/logout', 'Auth\LoginController@logout');
 Route::post('/token/refresh', 'Auth\LoginController@refresh');
+Route::post('/logout', 'Auth\LoginController@logout');
 Route::middleware('auth:api')->group(function() {
-
+    Route::Resource('admin', 'UserController');
+    Route::post('/admin/{id}/reset', 'UserController@reset');
+    Route::post('/admin/upload', 'UserController@upload');
 });

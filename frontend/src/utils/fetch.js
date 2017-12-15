@@ -1,23 +1,25 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+import { getToken,setToken } from '@/utils/auth'
+import { loginToken } from "@/api/login";
 
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
-  timeout: 15000                  // 请求超时时间
+  timeout: 150000,                  // 请求超时时间
+  withCredentials: true,
 })
 
 // request拦截器
 service.interceptors.request.use(config => {
-  if (store.getters.token) {
-    config.headers['Authorization'] = 'Bearer ' + getToken()// 让每个请求携带自定义token 请根据实际情况自行修改
+  if (getToken()) {
+    config.headers['Authorization'] = "Bearer "+getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   return config
 }, error => {
   // Do something with request error
-  console.log(error) // for debug
+  // console.log(error) // for debug
   Promise.reject(error)
 })
 
@@ -35,7 +37,7 @@ service.interceptors.response.use(
     //     duration: 5 * 1000
     //   })
 
-    //   // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
+      // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
     //   if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
     //     MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
     //       confirmButtonText: '重新登录',
@@ -51,16 +53,25 @@ service.interceptors.response.use(
     // } else {
     //   return response.data
     // }
-    return response.data
+    return res
   },
   error => {
-    console.log('err' + error)// for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+
+      // console.log(error.response)
+       if (error.response.status == 401) {  // 刷新token
+          loginToken().then(response => {
+            setToken(response.token)
+            let url = location.href
+             window.VM.$router.go(0)
+          })
+       } else {
+         if (error.response.status == 500) { // token过期  退出系统
+           store.dispatch('FedLogOut').then(() => {
+             window.VM.$router.push({ path: '/login'})
+          })
+         }
+         return Promise.reject(error)
+       }
   }
 )
 

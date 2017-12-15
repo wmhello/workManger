@@ -5,22 +5,28 @@ export function login(username, password) {
     url: '/api/login',
     method: 'post',
     data: {
-      email: username,
+      email:username,
       password
     }
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return fetch({
     url: '/api/user',
-    method: 'get'
+    method: 'get',
   })
 }
 
 export function logout() {
   return fetch({
     url: '/api/logout',
+    method: 'post'
+  })
+}
+export function loginToken() {
+  return fetch({
+    url: '/api/token/refresh',
     method: 'post'
   })
 }

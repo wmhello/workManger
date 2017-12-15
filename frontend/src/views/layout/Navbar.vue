@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import adminConfig from "./../../../static/config";
 import { mapGetters } from 'vuex'
 import Levelbar from './Levelbar'
 import Hamburger from '@/components/Hamburger'
@@ -41,8 +42,8 @@ export default {
     },
     logout() {
       this.$store.dispatch('LogOut').then(() => {
-        this.$router.push({path: '/login'})
         //location.reload()  // 为了重新实例化vue-router对象 避免bug
+        this.$router.push({path:'/login'})  // 返回登录窗口
       })
     }
   }

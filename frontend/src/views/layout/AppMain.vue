@@ -16,3 +16,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.app-main{
+  height: 1000px;
+  margin:10px;
+  margin-top: 20px;
+  /* background-color: blue;
+  background-image: url("../../assets/images/fuck.png"); */
+ }
+</style>
+
