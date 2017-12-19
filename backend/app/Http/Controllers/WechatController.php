@@ -17,8 +17,14 @@ class WechatController extends Controller
      */
     public function serve()
     {
+        $app = app('wechat.official_account');
+        $app->server->push(function($message){
+            return "欢迎关注 overtrue！";
+        });
 
-        $wechat = app('wechat');
+        return $app->server->serve();
+        // 3.0版本使用
+/*        $wechat = app('wechat');
         $userApi = $wechat->user;
         $wechat->server->setMessageHandler(function($message) use ($userApi) {
             switch ($message->MsgType) {
@@ -61,8 +67,6 @@ class WechatController extends Controller
                     break;
             }
         });
-
-
-        return $wechat->server->serve();
+        return $wechat->server->serve();*/
     }
 }

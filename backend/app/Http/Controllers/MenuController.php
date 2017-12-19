@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use EasyWeChat\Foundation\Application;
+
+use EasyWeChat\OfficialAccount\Application;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -53,12 +54,12 @@ class MenuController extends Controller
                 "url"  => "http://wmhello.tunnel.qydev.com/view1"
             ],
         ];
-        $this->menu->add($buttons);
+        $this->menu->create($buttons);
     }
 
     public function all()
     {
-        $result = $this->menu->all();
+        $result = $this->menu->list();
         return $result;
     }
 }

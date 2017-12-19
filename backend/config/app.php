@@ -168,10 +168,10 @@ return [
         /*
          * Package Service Providers...
          */
-        Overtrue\LaravelWeChat\ServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Overtrue\LaravelPinyin\ServiceProvider::class,
+        Overtrue\LaravelWeChat\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -229,10 +229,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class,
-
+        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
     ],
 
 ];
