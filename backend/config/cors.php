@@ -13,7 +13,7 @@ return [
     */
    
     'supportsCredentials' => true,
-    'allowedOrigins' => ['*'],
+    'allowedOrigins' => ['http://work.ynxpyz.cn', 'http://localhost:9528'],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
     'exposedHeaders' => [],
