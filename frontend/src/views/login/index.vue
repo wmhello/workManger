@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
       class="card-box login-form">
-      <h3 class="title">系统登录</h3>
+      <h3 class="title">新平一中工作网</h3>
        <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="yonghuming" />
@@ -21,8 +21,6 @@
           登录
         </el-button>
       </el-form-item>
-      <div class='tips'>账号:email</div>
-      <div class='tips'>密码:数字，好好想想</div>
     </el-form>
   </div>
 </template>

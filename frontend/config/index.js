@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://xpyz.dev/api',
+        target: 'http://manger.test/api',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

@@ -1,3 +1,3 @@
 export default {
-  site: 'http://www.ynxpyz.cn/'
+  site: 'http://manger.test/'
 }
