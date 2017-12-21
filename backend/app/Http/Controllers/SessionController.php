@@ -87,8 +87,12 @@ class SessionController extends Controller
 
     public function upload(SessionImport $import)
     {
-        $file = $this->fileUpdate();
-        return $import ->importData($file);
+        $result = $import->handleImport($import);
+        if ($result) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 
 }

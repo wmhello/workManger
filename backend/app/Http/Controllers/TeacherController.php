@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Import\LeaderImport;
-use App\Leader;
+use App\Teacher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 
-class LeaderController extends Controller
+class TeacherController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -43,10 +41,10 @@ class LeaderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Leader  $leader
+     * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function show(Leader $leader)
+    public function show(Teacher $teacher)
     {
         //
     }
@@ -54,10 +52,10 @@ class LeaderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Leader  $leader
+     * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function edit(Leader $leader)
+    public function edit(Teacher $teacher)
     {
         //
     }
@@ -66,10 +64,10 @@ class LeaderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Leader  $leader
+     * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Leader $leader)
+    public function update(Request $request, Teacher $teacher)
     {
         //
     }
@@ -77,23 +75,11 @@ class LeaderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Leader  $leader
+     * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Leader $leader)
+    public function destroy(Teacher $teacher)
     {
         //
-    }
-
-    public function upload(LeaderImport $import, Request $request)
-    {
-        $data = $request->only(['session_id']);
-
-        $result = $import->handleImport($import);
-        if ($result) {
-            return $this->success();
-        } else {
-            return $this->error();
-        }
     }
 }

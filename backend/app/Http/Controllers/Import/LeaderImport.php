@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
-class SessionImport extends \Maatwebsite\Excel\Files\ExcelFile
+class LeaderImport extends \Maatwebsite\Excel\Files\ExcelFile
 {
     use \App\Http\Controllers\Result;
 

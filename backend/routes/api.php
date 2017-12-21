@@ -61,4 +61,8 @@ Route::middleware('auth:api')->group(function() {
 
     Route::Resource('session', 'SessionController');
     Route::post('/session/upload', 'SessionController@upload');
+
+    Route::Resource('leader', 'LeaderController');
+    Route::post('/leader/upload', 'LeaderController@upload');
+
 });
