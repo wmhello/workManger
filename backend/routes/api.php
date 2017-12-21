@@ -55,6 +55,10 @@ Route::post('/token/refresh', 'Auth\LoginController@refresh');
 Route::post('/logout', 'Auth\LoginController@logout');
 Route::middleware('auth:api')->group(function() {
     Route::Resource('admin', 'UserController');
+
     Route::post('/admin/{id}/reset', 'UserController@reset');
     Route::post('/admin/upload', 'UserController@upload');
+
+    Route::Resource('session', 'SessionController');
+    Route::post('/session/upload', 'SessionController@upload');
 });

@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
+
 trait Result
 {
     public function success()
@@ -44,5 +46,28 @@ trait Result
             'message' => $info
         ], 404);
 
+    }
+
+    public function errorWithCodeAndInfo($code, $info)
+    {
+        return response()->json([
+            'status' => 'error',
+            'status_code' => $code,
+            'message' => $info
+        ], $code);
+    }
+
+    public function fileUpdate()
+    {
+       $file = Input::file('file');
+        $type=['application/vnd.ms-excel'];
+        $fileType = $file->getClientMimeType();
+        if (in_array($fileType, $type)) {
+            $clientExt = $file->getClientOriginalExtension();
+            $fileName = date('ymdhis').'.'.$clientExt;
+            return $file->storeAs('xls',$fileName);
+        } else {
+            return $this->errorWithCodeAndInfo(406,'上传的文件格式不正确');
+        }
     }
 }

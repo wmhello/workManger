@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Session;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Import\SessionImport;
 
 class SessionController extends Controller
 {
+    use Result;
     /**
      * Display a listing of the resource.
      *
@@ -82,4 +84,11 @@ class SessionController extends Controller
     {
         //
     }
+
+    public function upload(SessionImport $import)
+    {
+        $file = $this->fileUpdate();
+        return $import ->importData($file);
+    }
+
 }
