@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\ClassTeacher;
+use App\Http\Controllers\Import\ClassTeacherImport;
+use App\Http\Requests\ClassTeacherUploadRequest;
 use Illuminate\Http\Request;
 
 class ClassTeacherController extends Controller
 {
+    use Result;
     /**
      * Display a listing of the resource.
      *
@@ -81,5 +84,15 @@ class ClassTeacherController extends Controller
     public function destroy(ClassTeacher $classTeacher)
     {
         //
+    }
+
+    public function upload( ClassTeacherImport $import, ClassTeacherUploadRequest $request)
+    {
+        $bool = $import->handleImport($import);
+        if ($bool) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 }
