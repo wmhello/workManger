@@ -9,29 +9,81 @@
 namespace App\Http\Controllers\Import;
 
 use App;
+use App\Http\Controllers\Import\LeaderImport;
+use App\Rules\Telphone;
+use App\Teacher;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class LeaderImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
 {
-    public function handle($file)
+    public function handle($import)
     {
-        // get the results
-        // 获取第一个工作表电子表格的数据
-        $results = $file->first()->toArray();
+        $data = $import->first()->toArray();
         $lists = [];
-        foreach ($results as $v){
-
-            $data = [
-               'year' => (int)$v[0],
-               'team' =>(int)$v[1],
-               'remark' =>$v[2]
+        $session_id = (int)request()->input('session_id');
+        foreach($data as $val) {
+            // 获取每条记录  为验证做准备
+            $item = [
+                'name' => $val['name'],
+                'leader_type' => (int)$val['leader_type'],
+                'job' => $val['job'],
+                'remark' => $val['remark'],
+                'phone' => $val['phone'],
+                'session_id' => $session_id,
+                'created_at'  => Carbon::now(),
+                'updated_at'  => Carbon::now()
             ];
-           if (Session::where('year', $data['year'])->where('team', $data['team'])->first()){  // 存在重复记录
-               continue;
-           } else { // 记录先暂时保存到数组，稍后一次新建
-               array_push($lists,$data);
-           }
+            // 根据规则进行验证，保证输入的内容符合要求  电话号码如果填写要验证  类型只能为1和2
+            $rules = [
+                'name' => 'required',
+                'phone' => ['nullable', new Telphone],
+                'leader_type' => 'required|in:1,2',
+                'job' => 'required'
+            ];
+            $validator = Validator::make($item, $rules);
+
+            if (!$validator->fails()) { // 成功
+                // 验证成功后要 进行姓名处理  根据姓名  从Teacher中取出id
+                if (!isset($item['phone'])) {
+                    // 名字处理  ，看看是否有同名同姓的 ，没有手机号码而且又姓名相同，则无法处理  未知是那个用户
+                    $count = Teacher::where('name', $item['name'])->count();
+                    if ($count>1) {
+                        continue;
+                    }
+                    // 姓名唯一，取出该教师的ID号，用于在领导表中保存
+                    $teacher_id = Teacher::where('name', $item['name'])->value('id');
+                    if ($teacher_id) {
+                        $item['teacher_id'] = $teacher_id;
+                        unset($item['name']);
+                        unset($item['phone']);
+                        array_push($lists, $item);
+                    } else {  // 没有找到指定姓名的教师，则跳过处理该记录
+                        continue;
+                    }
+                } else {
+                    // 有手机号，则用手机号和用户姓名同时来取教师ID
+                    $teacher_id = Teacher::where('name', $item['name'])->where('phone', $item['phone'])->value('id');
+                    if ($teacher_id) {
+                        $item['teacher_id'] = $teacher_id;
+                        unset($item['name']);
+                        unset($item['phone']);
+                        array_push($lists, $item);
+                    } else {  // 教师表里面没有该教师信息，则处理下一条记录
+                        continue;
+                    }
+                }
+            }
         }
-        return Session::insert($lists);
+        // 删除原来存在的该学期的数据
+        if (App\Leader::where('session_id',$session_id)->count()){
+            App\Leader::where('session_id',$session_id)->delete();
+        }
+        // 插入数据到领导表
+//        array_walk($lists, function($v){
+//            App\Leader::Create($v);
+//        });
+        return App\Leader::insert($lists);
     }
 
 }

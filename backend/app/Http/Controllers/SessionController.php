@@ -87,12 +87,14 @@ class SessionController extends Controller
 
     public function upload(SessionImport $import)
     {
-        $result = $import->handleImport($import);
-        if ($result) {
+        $bool = $import->handleImport($import);
+        if ($bool) {
             return $this->success();
         } else {
             return $this->error();
         }
+
+
     }
 
 }
