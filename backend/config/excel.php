@@ -371,8 +371,8 @@ return array(
         |
         */
 
-        //'heading'                 => 'slugged',
-        'heading'                 => 'false',
+        'heading'                 => 'slugged',
+        //'heading'                 => 'false',
 
         /*
         |--------------------------------------------------------------------------

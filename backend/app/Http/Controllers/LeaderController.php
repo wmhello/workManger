@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Import\LeaderImport;
+use App\Http\Requests\LeaderUploadRequest;
 use App\Leader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use \Maatwebsite\Excel\Facades\Excel;
 
 class LeaderController extends Controller
 {
+    use Result;
     /**
      * Display a listing of the resource.
      *
@@ -85,15 +90,65 @@ class LeaderController extends Controller
         //
     }
 
-    public function upload(LeaderImport $import, Request $request)
+    public function upload(LeaderUploadRequest $request)
     {
-        $data = $request->only(['session_id']);
+        $fileName = $this->fileUpdate();
+        $file = storage_path('app') . '/' . $fileName;
+        $lists = [];
+        Excel::load($file,function($reader) use(&$data){
+             $data = $reader->first()->toArray();
+        });
 
-        $result = $import->handleImport($import);
-        if ($result) {
-            return $this->success();
-        } else {
-            return $this->error();
+        array_filter($data, function($val) use( &$lists) {
+            $item = [
+                'name' => $val['name'],
+                'type' => (int)$val['type'],
+                'job'  => $val['job'],
+                'remark'  => $val['remark'],
+                'phone'  => $val['phone']
+            ];
+            $rules = [
+                'name' => 'required',
+                'phone' => 'present|regex:^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$',
+                'type' => 'required|in:1,2'
+            ];
+            $validator =Validator::make($item,$rules);
+            if (!$validator->fails()){ // 成功
+                array_push($lists, $item);
+            }
+        });
+        var_dump($lists);
+    }
+
+    /**
+     * Validate the given parameters with the given rules.
+     *
+     * @param  array  $parameters
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     * @return void
+     */
+    public function validateParameters($parameters, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        $validator = $this->getValidationFactory()->make($parameters, $rules, $messages, $customAttributes);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(app('request'), $validator);
         }
     }
+
+    /**
+     * 抛出一个验证异常
+     *
+     * @param WrapedValidationException $e
+     * @param Request                   $request
+     *
+     * @throws ValidationException
+     */
+    protected function throwWrapedValidationException(WrapedValidationException $e, Request $request)
+    {
+        throw new ValidationException(null, $this->buildFailedValidationResponse($request, $e->getErrors()));
+    }
+
 }
