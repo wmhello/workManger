@@ -15,7 +15,7 @@ use App\Teacher;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class ClassTeacherImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
+class DepartmentsImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
 {
     public function handle($import)
     {
@@ -27,7 +27,8 @@ class ClassTeacherImportHandler implements \Maatwebsite\Excel\Files\ImportHandle
             $item = [
                 'name' => $val['name'],
                 'grade' => (int)$val['grade'],
-                'class' => (int)$val['class'],
+                'teach_id' => (int)$val['teach_id'],
+                'leader' => (int)$val['leader'],
                 'remark' => $val['remark'],
                 'phone' => $val['phone'],
                 'session_id' => $session_id,
@@ -39,7 +40,9 @@ class ClassTeacherImportHandler implements \Maatwebsite\Excel\Files\ImportHandle
                 'name' => 'required|exists:yz_teacher,name',
                 'phone' => ['nullable', new Telphone],
                 'grade' => 'required|in:1,2,3',
-                'class' => 'required|integer'
+                'leader' => 'required|int:0,1',
+                'teach_id' => 'required|exists:yz_teaching,id',
+
             ];
             $validator = Validator::make($item, $rules);
 

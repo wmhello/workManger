@@ -67,4 +67,8 @@ Route::middleware('auth:api')->group(function() {
 
     Route::Resource('classTeacher', 'ClassTeacherController');
     Route::post('/classTeacher/upload', 'ClassTeacherController@upload');
+
+    Route::Resource('departments', 'DepartmentsController');
+    Route::post('/departments/upload', 'DepartmentsController@upload');
+
 });

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Http\Controllers\Import\DepartmentsImport;
+use App\Http\Requests\DepartmentsUploadRequest;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -81,5 +83,15 @@ class DepartmentController extends Controller
     public function destroy(Department $department)
     {
         //
+    }
+
+    public function upload(DepartmentsImport $import, DepartmentsUploadRequest $request)
+    {
+        $bool = $import->handleImport($import);
+        if ($bool) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 }

@@ -36,7 +36,7 @@ class LeaderImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
             ];
             // 根据规则进行验证，保证输入的内容符合要求  电话号码如果填写要验证  类型只能为1和2
             $rules = [
-                'name' => 'required',
+                'name' => 'required|exists:yz_teacher,name',
                 'phone' => ['nullable', new Telphone],
                 'leader_type' => 'required|in:1,2',
                 'job' => 'required'
