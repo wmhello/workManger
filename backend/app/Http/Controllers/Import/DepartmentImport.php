@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Import;
 
 
-class DepartmentsImport extends \Maatwebsite\Excel\Files\ExcelFile
+class DepartmentImport extends \Maatwebsite\Excel\Files\ExcelFile
 {
     use \App\Http\Controllers\Result;
 

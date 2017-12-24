@@ -15,7 +15,7 @@ use App\Teacher;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentsImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
+class DepartmentImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
 {
     public function handle($import)
     {
@@ -79,14 +79,14 @@ class DepartmentsImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
             }
         }
         // 删除原来存在的该学期的数据
-        if (App\ClassTeacher::where('session_id',$session_id)->count()){
-            App\ClassTeacher::where('session_id',$session_id)->delete();
+        if (App\Department::where('session_id',$session_id)->count()){
+            App\Department::where('session_id',$session_id)->delete();
         }
         // 插入数据到领导表
 //        array_walk($lists, function($v){
-//            App\App\ClassTeacher::Create($v);
+//            App\App\Department::Create($v);
 //        });
-        return App\ClassTeacher::insert($lists);
+        return App\Department::insert($lists);
     }
 
 }
