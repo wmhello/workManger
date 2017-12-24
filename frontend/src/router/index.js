@@ -93,6 +93,58 @@ export const asyncRouterMap = [
       }
     ]
   },
+  //教学过程管理
+  {
+    path: '/teachmanage',
+    component: Layout,
+    redirect: '/teachmanage/session',
+    icon: 'tubiao',
+    name: '教学过程管理',
+    meta: {
+      role: ['admin']
+    },
+    children: [{
+        path: 'session',
+        name: '学期管理',
+        component: _import('teachmanage/Session'),
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'leader',
+        name: '校领导管理',
+        component: _import('teachmanage/Leader'),
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'classteacher',
+        name: '班主任管理',
+        component: _import('teachmanage/Classteacher'),
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'department',
+        name: '教研组长管理',
+        component: _import('teachmanage/Department'),
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'teaching',
+        name: '教师代课管理',
+        component: _import('teachmanage/Teaching'),
+        meta: {
+          role: ['admin']
+        }
+      }
+    ]
+  },
   {
     path: '*',
     redirect: '/404',
