@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
             $table->increments('id');
             $table->string('name', '20')->comment('名称');
             $table->string('explain', '20')->comment('说明');
-            $table->string('model', '50')->comment('可以操作的资源')->nullable();
+            $table->string('resource', '50')->comment('资源列表')->nullable();
             $table->string('remark', '50')->comment('备注')->nullable();
             $table->softDeletes();
             $table->timestamps();
