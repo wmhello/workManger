@@ -71,4 +71,6 @@ Route::middleware('auth:api')->group(function() {
     Route::Resource('department', 'DepartmentController');
     Route::post('/department/upload', 'DepartmentController@upload');
 
+    Route::Resource('role', 'RoleController');
+
 });

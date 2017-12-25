@@ -64,7 +64,7 @@
       "examples": [
         {
           "title": "返回管理员信息列表",
-          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  用户标识\n      \"name\": \"test\"  //字符型 用户昵称\n      \"email\": \"test@qq.com\"  // 字符型 用户email，管理员登录时的email\n      \"role\": \"admin\" // 字符型 角色  可以取得值为admin或editor\n      \"avatar\": \"\" // 字符型 用户的头像图片\n    }\n  ],\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  用户标识\n      \"name\": \"test\"  //字符型 用户昵称\n      \"email\": \"test@qq.com\"  // 字符型 用户email，管理员登录时的email\n      \"role\": \"admin\" // 字符型 角色  可以取得值为admin或editor\n      \"avatar\": \"\" // 字符型 用户的头像图片\n    }\n  ],\n\"status\": \"success\",\n\"status_code\": 200,\n\"links\": {\n\"first\": \"http://manger.test/api/admin?page=1\",\n\"last\": \"http://manger.test/api/admin?page=19\",\n\"prev\": null,\n\"next\": \"http://manger.test/api/admin?page=2\"\n},\n\"meta\": {\n\"current_page\": 1, // 当前页\n\"from\": 1, //当前页开始的记录\n\"last_page\": 19, //总页数\n\"path\": \"http://manger.test/api/admin\",\n\"per_page\": 15,\n\"to\": 15, //当前页结束的记录\n\"total\": 271  // 总条数\n}\n}",
           "type": "json"
         }
       ]
