@@ -1,33 +1,5 @@
 [
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./public/apidoc/main.js",
-    "group": "E__manger_backend_public_apidoc_main_js",
-    "groupTitle": "E__manger_backend_public_apidoc_main_js",
-    "name": ""
-  },
-  {
     "type": "delete",
     "url": "/api/admin/:id",
     "title": "删除指定的管理员",
@@ -483,7 +455,7 @@
       "examples": [
         {
           "title": "返回学期信息列表，分页显示，每页15条记录,",
-          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"year\": 2016  //数字型 学年\n      \"team\": 2  //  数字型 学期\n      \"remark\": \"2016-2017下学期\" // 备注说明\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200,\n \"links\": {\n \"first\": \"http://manger.test/api/session?page=1\",\n \"last\": \"http://manger.test/api/session?page=1\",\n \"prev\": null,\n \"next\": null\n },\n \"meta\": {\n \"current_page\": 1,   //当前页\n \"from\": 1,  // 当前记录\n \"last_page\": 1,    //最后一页\n \"path\": \"http://manger.test/api/session\",\n \"per_page\": 15,  //\n \"to\": 4,  //当前页最后一条记录\n \"total\": 4 // 总记录\n }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"year\": 2016  //数字型 学年\n      \"team\": 2  //  数字型 学期\n      \"remark\": \"2016-2017下学期\" // 备注说明\n      \"one\": 20,  // 高一年级班级数\n      \"two\": 20,  // 高二年级班级数\n      \"three\": 20  // 高三年级班级数\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200,\n \"links\": {\n \"first\": \"http://manger.test/api/session?page=1\",\n \"last\": \"http://manger.test/api/session?page=1\",\n \"prev\": null,\n \"next\": null\n },\n \"meta\": {\n \"current_page\": 1,   //当前页\n \"from\": 1,  // 当前记录\n \"last_page\": 1,    //最后一页\n \"path\": \"http://manger.test/api/session\",\n \"per_page\": 15,  //\n \"to\": 4,  //当前页最后一条记录\n \"total\": 4 // 总记录\n }\n}",
           "type": "json"
         }
       ]
@@ -515,7 +487,7 @@
       "examples": [
         {
           "title": "信息获取成功:",
-          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"year\": 2016  //数字型 学年\n      \"team\": 2  //  数字型 学期\n      \"remark\": \"2016-2017下学期\" // 备注说明\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"year\": 2016  //数字型 学年\n      \"team\": 2  //  数字型 学期\n      \"remark\": \"2016-2017下学期\" // 备注说明\n      \"one\": 20,  // 高一年级班级数\n      \"two\": 20,  // 高二年级班级数\n      \"three\": 20  // 高三年级班级数\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
           "type": "json"
         }
       ]
@@ -569,6 +541,27 @@
           },
           {
             "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "one",
+            "description": "<p>高一班级数</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "two",
+            "description": "<p>高二班级数</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "three",
+            "description": "<p>高三班级数</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "string",
             "optional": true,
             "field": "remark",
@@ -579,7 +572,7 @@
       "examples": [
         {
           "title": "请求事例 建立学期 2017-2018上学期:",
-          "content": "  {\n     year: 2017,\n     team: 1,\n     remark: '2017-2018上学期'\n}",
+          "content": "  {\n     year: 2017,\n     team: 1,\n     remark: '2017-2018上学期',\n     one: 20,\n     two: 20,\n     three: 20\n\n}",
           "type": "object"
         }
       ]
@@ -644,6 +637,27 @@
           },
           {
             "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "one",
+            "description": "<p>高一班级数</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "two",
+            "description": "<p>高二班级数</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "three",
+            "description": "<p>高三班级数</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "string",
             "optional": true,
             "field": "remark",
@@ -654,7 +668,7 @@
       "examples": [
         {
           "title": "请求事例 建立学期 2017-2018上学期:",
-          "content": "  {\n     year: 2017,\n     team: 1\n}",
+          "content": "  {\n     year: 2017,\n     team: 1,\n     one: 20,\n     two: 20,\n     three: 20\n}",
           "type": "object"
         }
       ]

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RoleRequest;
+use App\Http\Resources\RoleCollection;
 use App\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+     use Result;
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +18,8 @@ class RoleController extends Controller
     public function index()
     {
         //
+        $data = Role::paginate(15);
+        return new RoleCollection($data);
     }
 
     /**
@@ -33,9 +38,15 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         //
+        $data = $request->only(['name', 'explain', 'resource', 'remark']);
+        if (Role::updateOrCreate($data)) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 
     /**
@@ -58,6 +69,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         //
+
     }
 
     /**
@@ -67,9 +79,19 @@ class RoleController extends Controller
      * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
         //
+        $data = $request->only(['name', 'explain', 'resource', 'remark']);
+        $role->name = $data['name'];
+        $role->explain = $data['explain'];
+        $role->resource = $data['resource'];
+        $role->remark = $data['remark'];
+        if ($role->save()) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 
     /**
@@ -81,5 +103,10 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
+        if ($role->delete()) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 }

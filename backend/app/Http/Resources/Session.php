@@ -18,7 +18,10 @@ class Session extends Resource
           'id' => $this->id,
           'year' => $this->year,
           'team' => $this->team,
-          'remark' => $this->remark
+          'remark' => $this->remark,
+          'one' => $this->one,
+          'two' => $this->two,
+          'three' => $this->three
         ];
     }
 

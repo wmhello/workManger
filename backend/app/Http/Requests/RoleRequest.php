@@ -13,7 +13,7 @@ class RoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,10 @@ class RoleRequest extends FormRequest
     {
         return [
             //
+            'name' => 'required|string|max:20',
+            'explain' => 'required|string|max:20',
+            'resource' => 'nullable|string|max:50',
+            'remark' => 'nullable|string|max:50',
         ];
     }
 }

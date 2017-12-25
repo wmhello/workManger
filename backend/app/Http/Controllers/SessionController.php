@@ -16,7 +16,6 @@ class SessionController extends Controller
      * @api {get} /api/session 显示学期列表
      * @apiGroup session
      *
-     *
      * @apiSuccessExample 返回学期信息列表，分页显示，每页15条记录,
      * HTTP/1.1 200 OK
      * {
@@ -26,6 +25,9 @@ class SessionController extends Controller
      *       "year": 2016  //数字型 学年
      *       "team": 2  //  数字型 学期
      *       "remark": "2016-2017下学期" // 备注说明
+     *       "one": 20,  // 高一年级班级数
+     *       "two": 20,  // 高二年级班级数
+     *       "three": 20  // 高三年级班级数
      *     }
      *   ],
      *  "status": "success",
@@ -78,11 +80,17 @@ class SessionController extends Controller
      * @apiGroup session
      * @apiParam {number} year 学年
      * @apiParam {number=1,2} team 学期(1=>上学期 2=>下学期)
+     * @apiParam {number} one 高一班级数
+     * @apiParam {number} two 高二班级数
+     * @apiParam {number} three 高三班级数
      * @apiParam {string} [remark] 备注 可选
      * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
      *   {
      *      year: 2017,
-     *      team: 1
+     *      team: 1,
+     *      one: 20,
+     *      two: 20,
+     *      three: 20
      * }
      *@apiHeaderExample {json} 请求头:
      *{ "Content-Type": "application/x-www-form-urlencoded" }
@@ -116,7 +124,10 @@ class SessionController extends Controller
         $validator = Validator::make($data, [
             'year' => 'required|integer',
             'team' => 'required| in:1,2',
-            'remark' => 'nullable'
+            'remark' => 'nullable',
+            'one' => 'required|integer',
+            'two' => 'required|integer',
+            'three' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return $this->errorWithInfo('验证出错,请按要求填写');
@@ -151,6 +162,9 @@ class SessionController extends Controller
      *       "year": 2016  //数字型 学年
      *       "team": 2  //  数字型 学期
      *       "remark": "2016-2017下学期" // 备注说明
+     *       "one": 20,  // 高一年级班级数
+     *       "two": 20,  // 高二年级班级数
+     *       "three": 20  // 高三年级班级数
      *     }
      *   ],
      *  "status": "success",
@@ -198,12 +212,19 @@ class SessionController extends Controller
      * @apiParam {number} id 学期标识 路由上使用
      * @apiParam {number} year 学年
      * @apiParam {number=1,2} team 学期(1=>上学期 2=>下学期)
+     * @apiParam {number} one 高一班级数
+     * @apiParam {number} two 高二班级数
+     * @apiParam {number} three 高三班级数
      * @apiParam {string} [remark] 备注 可选
      * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
      *   {
      *      year: 2017,
      *      team: 1,
-     *      remark: '2017-2018上学期'
+     *      remark: '2017-2018上学期',
+     *      one: 20,
+     *      two: 20,
+     *      three: 20
+     *
      * }
      *@apiHeaderExample {json} 请求头:
      *{ "Content-Type": "application/x-www-form-urlencoded" }
@@ -229,7 +250,10 @@ class SessionController extends Controller
         $validator = Validator::make($data, [
             'year' => 'required|integer',
             'team' => 'required| in:1,2',
-            'remark' => 'nullable'
+            'remark' => 'nullable',
+            'one' => 'required|integer',
+            'two' => 'required|integer',
+            'three' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return $this->errorWithInfo('验证出错,请重新填写');
@@ -237,6 +261,9 @@ class SessionController extends Controller
            $session->year = $data['year'];
            $session->team = $data['team'];
            $session->remark = $data['remark'];
+           $session->one = $data['one'];
+           $session->two = $data['two'];
+           $session->three = $data['three'];
            $session->save();
            return $this->success();
         }
