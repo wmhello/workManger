@@ -93,6 +93,34 @@ export const asyncRouterMap = [
       }
     ]
   },
+  //角色管理
+  {
+    path: '/role',
+    component: Layout,
+    redirect: '/role/index',
+    icon: 'tubiao',
+    name: '角色管理',
+    meta: {
+      role: ['admin']
+    },
+    children: [{
+        path: 'index',
+        name: '角色列表',
+        component: _import('role/Index'),
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'new',
+        name: '新增角色',
+        component: _import('role/New'),
+        meta: {
+          role: ['admin']
+        }
+      }
+    ]
+  },
   //教学过程管理
   {
     path: '/teachmanage',
@@ -113,7 +141,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'leader',
-        name: '校领导管理',
+        name: '学校行政管理',
         component: _import('teachmanage/Leader'),
         meta: {
           role: ['admin']

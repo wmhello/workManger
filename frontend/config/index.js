@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // '/api': {
-      //   target: 'http://manger.test/api',
+      //   target: 'http://wmhello.natapp1.cc/api',
       //   changeOrigin: true,
       //   pathRewrite: {
       //     '^/api': ''

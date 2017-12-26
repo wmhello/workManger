@@ -102,7 +102,7 @@ export default {
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {           
+        if (valid) {
           addNewAdmin(this.form).then(response => {
               this.$alert('新管理员用户建立成功','友情提示', {
                 callback: action => {
