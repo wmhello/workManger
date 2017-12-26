@@ -15,6 +15,7 @@ class Role extends Resource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'explain' => $this->explain,
             'remark' => $this->remark
