@@ -18,7 +18,7 @@ export function updataTeachInfo(id, data) {
   return fetch({
     url: '/api/session/' + id,
     method: 'patch',
-    params: {
+    data: {
       year: data.year,
       team: data.team,
       one: data.one,
