@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
+    use Result;
     /**
      * Display a listing of the resource.
      *
@@ -81,5 +82,11 @@ class TeacherController extends Controller
     public function destroy(Teacher $teacher)
     {
         //
+    }
+
+    public function getTeacher()
+    {
+        $data = Teacher::select('id','name')->get()->toArray();
+        return $this->successWithData($data);
     }
 }

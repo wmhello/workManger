@@ -316,4 +316,10 @@ class SessionController extends Controller
 
     }
 
+    public function getSession()
+    {
+        $data = Session::select('id','year','team')->get()->toArray();
+        return $this->successWithData($data);
+    }
+    
 }
