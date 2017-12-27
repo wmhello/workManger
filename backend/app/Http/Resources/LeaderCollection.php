@@ -14,6 +14,10 @@ class LeaderCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->collection,
+            'status' => 'success',
+            'status_code' => 200
+        ];
     }
 }

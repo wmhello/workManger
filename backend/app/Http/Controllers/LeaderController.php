@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Import\LeaderImport;
+use App\Http\Requests\LeaderRequest;
 use App\Http\Requests\LeaderUploadRequest;
 use App\Leader;
 
@@ -19,9 +20,25 @@ class LeaderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $data = $request->only(['pageSize', 'page', 'name', 'session_id']);
+       $pageSize = $data['pageSize']??15;
+       $name = nullata['name']??null;
+       $session_id = $data['session_id']??null;
+       $page = $data['page']??1;
+      if ($name && $session_id) {
+          $lists = Leader::where('name', $name)->where('session_id',$session_id)->paginate($pageSize);
+      }
+      if (! $name && $session_id) {
+          $lists = Leader::where('session_id',$session_id)->paginate($pageSize);
+      }
+      if ($name && !$session_id) {
+            $lists = Leader::where('name', $name)->paginate($pageSize);
+       }
+
+
     }
 
     /**
@@ -40,7 +57,7 @@ class LeaderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LeaderRequest $request)
     {
         //
     }
@@ -74,7 +91,7 @@ class LeaderController extends Controller
      * @param  \App\Leader  $leader
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Leader $leader)
+    public function update(LeaderRequest $request, Leader $leader)
     {
         //
     }

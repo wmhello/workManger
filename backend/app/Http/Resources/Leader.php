@@ -14,6 +14,21 @@ class Leader extends Resource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'session_id' => $this->session_id,
+            'teacher_id' => $this->teacher_id,
+            'leader_type' => $this->leader_type,
+            'job' => $this->job,
+            'remark' => $this->remark
+        ];
+    }
+
+    public function with($request)
+    {
+        return [
+            'status' => 'success',
+            'status_code' => 200
+        ];
     }
 }

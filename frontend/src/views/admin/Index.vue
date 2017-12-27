@@ -78,7 +78,18 @@
         <el-button type="primary" @click="submit()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-pagination
+      @current-change="handleCurrentChange" 
+      :current-page.sync="current_page" 
+      layout="prev, pager, next, jumper"
+      :page-size="15"
+      :total="total">
+    </el-pagination>
+
   </div>
+
+  
 </template>
 
 <script>
@@ -89,7 +100,8 @@ import {
   resetAdminByPsw,
   uploadAdminByImg,
   updataAdminInfo,
-  deletAdminById
+  deletAdminById,
+  getCurrentPage
 } from "@/api/admin";
 
 import adminConfig from "./../../../static/config";
@@ -120,7 +132,10 @@ export default {
       form2: {
         psw: "",
         newpsw: ""
-      }
+      },
+      current_page: 1,
+      path: "http://wmhello.natapp1.cc/api/admin",
+      total: 0
     };
   },
   methods: {
@@ -141,6 +156,8 @@ export default {
           //成功执行内容
           let result = response.data;
           this.tableData = result;
+          this.total = response.meta.total;
+          //console.log(this.total);
         })
         .catch(() => {
           //失败执行内容
@@ -234,6 +251,17 @@ export default {
             });
         })
         .catch(() => {});
+    },
+
+    // 分页功能
+    handleCurrentChange(val){
+      let current_page = val;
+      this.current_page = current_page;
+      //console.log(`当前页: ${val}`);
+      getCurrentPage(current_page).then(response => {
+          let result = response.data;
+          this.tableData = result;
+        })
     }
   },
   mounted() {
@@ -279,5 +307,10 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+
+.el-pagination{
+  padding: 0;
+  margin-top: 10px;
 }
 </style>
