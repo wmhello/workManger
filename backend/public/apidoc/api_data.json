@@ -1,5 +1,33 @@
 [
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./public/apidoc/main.js",
+    "group": "E__manger_backend_public_apidoc_main_js",
+    "groupTitle": "E__manger_backend_public_apidoc_main_js",
+    "name": ""
+  },
+  {
     "type": "delete",
     "url": "/api/admin/:id",
     "title": "删除指定的管理员",
@@ -404,6 +432,44 @@
     "filename": "./app/Http/Controllers/Auth/LoginController.php",
     "groupTitle": "login",
     "name": "PostApiTokenRefresh"
+  },
+  {
+    "type": "get",
+    "url": "/api/getSession",
+    "title": "获取学期信息",
+    "group": "other",
+    "success": {
+      "examples": [
+        {
+          "title": "返回学期信息列表,",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"year\": 2016  //数字型 学年\n      \"team\": 2  //  数字型 学期\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/SessionController.php",
+    "groupTitle": "other",
+    "name": "GetApiGetsession"
+  },
+  {
+    "type": "get",
+    "url": "/api/getTeacher",
+    "title": "获取教师姓名和ＩＤ",
+    "group": "other",
+    "success": {
+      "examples": [
+        {
+          "title": "返回教师姓名和ＩＤ列表,",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"name\":  '测试'  //字符型 教师姓名\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/TeacherController.php",
+    "groupTitle": "other",
+    "name": "GetApiGetteacher"
   },
   {
     "type": "delete",

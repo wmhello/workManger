@@ -316,6 +316,25 @@ class SessionController extends Controller
 
     }
 
+    /**
+ * @api {get} /api/getSession 获取学期信息
+ * @apiGroup other
+ *
+ * @apiSuccessExample 返回学期信息列表,
+ * HTTP/1.1 200 OK
+ * {
+ *  "data": [
+ *     {
+ *       "id": 2 // 整数型  学期标识
+ *       "year": 2016  //数字型 学年
+ *       "team": 2  //  数字型 学期
+ *     }
+ *   ],
+ *  "status": "success",
+ *  "status_code": 200
+ * }
+ *
+ */
     public function getSession()
     {
         $data = Session::select('id','year','team')->get()->toArray();

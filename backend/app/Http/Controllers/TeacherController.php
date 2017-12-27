@@ -84,6 +84,24 @@ class TeacherController extends Controller
         //
     }
 
+    /**
+     * @api {get} /api/getTeacher 获取教师姓名和ＩＤ
+     * @apiGroup other
+     *
+     * @apiSuccessExample 返回教师姓名和ＩＤ列表,
+     * HTTP/1.1 200 OK
+     * {
+     *  "data": [
+     *     {
+     *       "id": 2 // 整数型  学期标识
+     *       "name":  '测试'  //字符型 教师姓名
+     *     }
+     *   ],
+     *  "status": "success",
+     *  "status_code": 200
+     * }
+     *
+     */
     public function getTeacher()
     {
         $data = Teacher::select('id','name')->get()->toArray();
