@@ -7,6 +7,16 @@ export function getAdmin() {
   })
 }
 
+export function getCurrentPage(current_page) {
+  return fetch({
+    url: '/api/admin',
+    method: 'get',
+    params: {
+      page: current_page,
+    },
+  })
+}
+
 export function getAdminById(id) {
   return fetch({
     url: '/api/admin/' + id,
