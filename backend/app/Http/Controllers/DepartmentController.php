@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Department;
-use App\Http\Controllers\Import\DepartmentsImport;
+use App\Http\Controllers\Import\DepartmentImport;
 use App\Http\Requests\DepartmentsUploadRequest;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    use Result;
     /**
      * Display a listing of the resource.
      *
@@ -85,7 +86,7 @@ class DepartmentController extends Controller
         //
     }
 
-    public function upload(DepartmentsImport $import, DepartmentsUploadRequest $request)
+    public function upload(DepartmentImport $import, DepartmentsUploadRequest $request)
     {
         $bool = $import->handleImport($import);
         if ($bool) {

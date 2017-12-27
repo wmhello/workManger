@@ -32,14 +32,29 @@ class UserController extends Controller
      *     }
      *   ],
      * "status": "success",
-     * "status_code": 200
+     * "status_code": 200,
+     * "links": {
+     * "first": "http://manger.test/api/admin?page=1",
+     * "last": "http://manger.test/api/admin?page=19",
+     * "prev": null,
+     * "next": "http://manger.test/api/admin?page=2"
+     * },
+     * "meta": {
+     * "current_page": 1, // 当前页
+     * "from": 1, //当前页开始的记录
+     * "last_page": 19, //总页数
+     * "path": "http://manger.test/api/admin",
+     * "per_page": 15,
+     * "to": 15, //当前页结束的记录
+     * "total": 271  // 总条数
+     * }
      * }
      *
      */
     public function index()
     {
         //
-        $users = User::all();
+        $users = User::paginate(15);
         return new UserCollection($users);
     }
 
