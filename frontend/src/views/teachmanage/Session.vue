@@ -2,7 +2,7 @@
   <div>
     <el-button type="info" size="large" @click="add()">添加</el-button>
 
-    <el-table :data="tableData" :border="true" style="width: 80%">
+    <el-table :data="tableData" :border="true" style="width: 80%" scope="scope">
       <el-table-column prop="id" label="序号" width="80">
       </el-table-column>
       <el-table-column prop="year" label="学年">
@@ -68,7 +68,6 @@
     <el-dialog title="学期信息" :visible.sync="addDialogFormVisible" :close-on-click-modal="false">
     <el-form :model="newform"   label-width="100px">
       <el-form-item label="学年" prop="year">
-        <!-- <el-input v-model="newform.year"></el-input> -->
         <el-date-picker v-model="newform.year" align="right" type="year" placeholder="选择年">
       </el-date-picker>
       </el-form-item>
@@ -110,13 +109,13 @@ import {
   deletTeachById
 } from "@/api/session";
 
-function Teach(year=null, team = null, one = null, two = null, three = null)  {
+function Teach (year = null, team = null, one = null, two = null, three = null) {
   this.year = year
   this.team = team
   this.one = one
   this.two = two
   this.three = three
-  }
+}
 
 export default {
   data () {
@@ -141,9 +140,19 @@ export default {
   },
   methods: {
     fetchData () {
+
       getTeach().then(response => {
         //成功执行内容
         let result = response.data;
+        let count = result.length;
+
+        for (let i = 0; i < count; i++) {
+          if (result[i].team == 1) {
+            result[i].team = "上学期";
+          } else if (result[i].team == 2) {
+            result[i].team = "下学期";
+          }
+        }
         this.tableData = result;
       })
         .catch(() => {
@@ -191,7 +200,7 @@ export default {
         this.$alert('新建成功', '友情提示', {
           callback: action => {
             // 清空内容，重新开始建立
-             this.newform = new Teach()
+            this.newform = new Teach()
           }
         })
       }).catch(error => {
@@ -199,39 +208,39 @@ export default {
       })
     },
 
-  del (row) {
-    this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning"
-    })
-      .then(() => {
-        let id = row.id;
-        let record = null;
-        record = this.tableData.findIndex(val => val.id == id);
-
-        deletTeachById(id).then(response => {
-          let result = response.status_code;
-          if (result == 200) {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-            this.tableData.splice(record, 1);
-          }
-        })
-          .catch(() => {
-            //失败执行内容
-          });
+    del (row) {
+      this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
-      .catch(() => { });
-  }
-},
-mounted() {
-  this.fetchData()
-},
-created() {
+        .then(() => {
+          let id = row.id;
+          let record = null;
+          record = this.tableData.findIndex(val => val.id == id);
 
-}
+          deletTeachById(id).then(response => {
+            let result = response.status_code;
+            if (result == 200) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.tableData.splice(record, 1);
+            }
+          })
+            .catch(() => {
+              //失败执行内容
+            });
+        })
+        .catch(() => { });
+    }
+  },
+  mounted () {
+    this.fetchData()
+  },
+  created () {
+
+  }
 };
 </script>
