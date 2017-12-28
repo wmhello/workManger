@@ -24,18 +24,18 @@ class LeaderController extends Controller
     public function index(Request $request)
     {
         //
-        $data = $request->only(['pageSize', 'name', 'session_id']);
+        $data = $request->only(['pageSize', 'teacher_id', 'session_id']);
        $pageSize = $data['pageSize']??15;
-       $name = nullata['name']??null;
+        $teacher_id = $data['teacher_id']??null;
        $session_id = $data['session_id']??null;
-      if ($name && $session_id) {
-          $lists = Leader::where('name', $name)->where('session_id',$session_id)->paginate($pageSize);
+      if ($teacher_id && $session_id) {
+          $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
       }
-      if (! $name && $session_id) {
+      if (! $teacher_id && $session_id) {
           $lists = Leader::where('session_id',$session_id)->paginate($pageSize);
       }
-      if ($name && !$session_id) {
-            $lists = Leader::where('name', $name)->paginate($pageSize);
+      if ($teacher_id && !$session_id) {
+            $lists = Leader::where('teacher_id', $teacher_id)->paginate($pageSize);
        }
       return new LeaderCollection($lists);
     }
