@@ -454,14 +454,33 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/getTeacher",
-    "title": "获取教师姓名和ＩＤ",
+    "url": "/api/getTeach",
+    "title": "获取学科名称和id",
     "group": "other",
     "success": {
       "examples": [
         {
-          "title": "返回教师姓名和ＩＤ列表,",
-          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学期标识\n      \"name\":  '测试'  //字符型 教师姓名\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
+          "title": "返回学科和id列表,",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  学科标识\n      \"name\":  '体育'  //字符型 教学科目\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/TeachController.php",
+    "groupTitle": "other",
+    "name": "GetApiGetteach"
+  },
+  {
+    "type": "get",
+    "url": "/api/getTeacher",
+    "title": "获取教师姓名和id",
+    "group": "other",
+    "success": {
+      "examples": [
+        {
+          "title": "返回教师姓名和id列表,",
+          "content": "HTTP/1.1 200 OK\n{\n \"data\": [\n    {\n      \"id\": 2 // 整数型  教师标识\n      \"name\":  '测试'  //字符型 教师姓名\n    }\n  ],\n \"status\": \"success\",\n \"status_code\": 200\n}",
           "type": "json"
         }
       ]
@@ -492,7 +511,7 @@ define({ "api": [
     "success": {
       "examples": [
         {
-          "title": "信息获取成功:",
+          "title": "信息删除成功:",
           "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
           "type": "json"
         }
@@ -515,12 +534,12 @@ define({ "api": [
   {
     "type": "get",
     "url": "/api/role",
-    "title": "显示学期列表",
+    "title": "获取角色列表",
     "group": "role",
     "success": {
       "examples": [
         {
-          "title": "返回所有的角色",
+          "title": "返回角色列表",
           "content": "HTTP/1.1 200 OK\n {\n \"data\": [\n {\n \"id\": 2,\n \"name\": \"admin\",\n \"explain\": \"管理员\",\n \"remark\": null\n }\n ],\n \"status\": \"success\",\n \"status_code\": 200,\n \"links\": {\n \"first\": \"http://manger.test/api/role?page=1\",\n \"last\": \"http://manger.test/api/role?page=1\",\n \"prev\": null,\n \"next\": null\n },\n \"meta\": {\n \"current_page\": 1,\n \"from\": 1,\n  \"last_page\": 1,\n \"path\": \"http://manger.test/api/role\",\n \"per_page\": 15,\n \"to\": 30,\n \"total\": 5\n }\n }",
           "type": "json"
         }
@@ -534,7 +553,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/api/role/:id",
-    "title": "获取一条角色",
+    "title": "获取指定的角色信息",
     "group": "role",
     "parameter": {
       "fields": {
@@ -612,7 +631,7 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "请求事例 建立学期 2017-2018上学期:",
+          "title": "请求事例 更新角色信息:",
           "content": "{\nname: 'admin',\nexplain: '管理员',\nremark: '管理员'\n}",
           "type": "object"
         }
@@ -653,7 +672,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/role",
-    "title": "新建一条角色信息",
+    "title": "创建新的角色信息",
     "group": "role",
     "parameter": {
       "fields": {
@@ -683,7 +702,7 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "请求事例 建立学期 2017-2018上学期:",
+          "title": "请求事例 建立新的角色:",
           "content": "{\nname: 'app',\nexplain: '应用管理者'\n}",
           "type": "object"
         }
