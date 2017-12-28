@@ -125,6 +125,11 @@ class LeaderController extends Controller
     public function destroy(Leader $leader)
     {
         //
+        if ($leader->delete()) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 
     public function upload( LeaderImport $import,LeaderUploadRequest $request)

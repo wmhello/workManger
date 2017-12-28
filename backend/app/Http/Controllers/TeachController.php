@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Teacher;
+use App\Teach;
 use Illuminate\Http\Request;
 
-class TeacherController extends Controller
+class TeachController extends Controller
 {
     use Result;
     /**
@@ -42,10 +42,10 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Teach  $teach
      * @return \Illuminate\Http\Response
      */
-    public function show(Teacher $teacher)
+    public function show(Teach $teach)
     {
         //
     }
@@ -53,10 +53,10 @@ class TeacherController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Teach  $teach
      * @return \Illuminate\Http\Response
      */
-    public function edit(Teacher $teacher)
+    public function edit(Teach $teach)
     {
         //
     }
@@ -65,10 +65,10 @@ class TeacherController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Teach  $teach
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Teacher $teacher)
+    public function update(Request $request, Teach $teach)
     {
         //
     }
@@ -76,25 +76,24 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Teach  $teach
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $teacher)
+    public function destroy(Teach $teach)
     {
         //
     }
-
     /**
-     * @api {get} /api/getTeacher 获取教师姓名和id
+     * @api {get} /api/getTeach 获取学科名称和id
      * @apiGroup other
      *
-     * @apiSuccessExample 返回教师姓名和id列表,
+     * @apiSuccessExample 返回学科和id列表,
      * HTTP/1.1 200 OK
      * {
      *  "data": [
      *     {
-     *       "id": 2 // 整数型  教师标识
-     *       "name":  '测试'  //字符型 教师姓名
+     *       "id": 2 // 整数型  学科标识
+     *       "name":  '体育'  //字符型 教学科目
      *     }
      *   ],
      *  "status": "success",
@@ -102,9 +101,9 @@ class TeacherController extends Controller
      * }
      *
      */
-    public function getTeacher()
+    public function getTeach()
     {
-        $data = Teacher::select('id','name')->get()->toArray();
-        return $this->successWithData($data);
+       $data = Teach::select('id', 'teaching_name as name')->get();
+       return $this->successWithData($data);
     }
 }

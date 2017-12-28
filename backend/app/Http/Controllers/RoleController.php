@@ -16,11 +16,11 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {get} /api/role 显示学期列表
+     * @api {get} /api/role 获取角色列表
      * @apiGroup role
      *
      *
-     * @apiSuccessExample 返回所有的角色
+     * @apiSuccessExample 返回角色列表
      * HTTP/1.1 200 OK
      *  {
      *  "data": [
@@ -74,12 +74,12 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {post}/api/role 新建一条角色信息
+     * @api {post}/api/role 创建新的角色信息
      * @apiGroup role
      * @apiParam {string} name 角色名称
      * @apiParam {string} explain 角色说明
      * @apiParam {string} [remark] 角色备注 可选
-     * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
+     * @apiParamExample {object} 请求事例 建立新的角色:
      * {
      * name: 'app',
      * explain: '应用管理者'
@@ -118,7 +118,7 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {get} /api/role/:id 获取一条角色
+     * @api {get} /api/role/:id 获取指定的角色信息
      * @apiGroup role
      * @apiParam {number} id 角色标识
      * @apiSuccessExample {json} 信息获取成功:
@@ -176,7 +176,7 @@ class RoleController extends Controller
      * @apiParam {string} name 角色名称
      * @apiParam {string} explain 角色描述
      * @apiParam {string} [remark] 备注 可选
-     * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
+     * @apiParamExample {object} 请求事例 更新角色信息:
      * {
      * name: 'admin',
      * explain: '管理员',
@@ -221,7 +221,7 @@ class RoleController extends Controller
      * @api {delete} /api/role/:id 删除指定的角色信息
      * @apiGroup role
      * @apiParam {number} id 角色标识
-     * @apiSuccessExample {json} 信息获取成功:
+     * @apiSuccessExample {json} 信息删除成功:
      * HTTP/1.1 200 OK
      * {
      * "status": "success",
