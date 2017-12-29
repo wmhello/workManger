@@ -15,7 +15,8 @@ Vue.use(Router)
  * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
  * meta : `{ role: ['admin'] }`  will control the page role
  **/
-export const constantRouterMap = [{
+export const constantRouterMap = [
+  {
     path: '/login',
     component: _import('login/index'),
     hidden: true
@@ -39,7 +40,7 @@ export const constantRouterMap = [{
 ]
 
 export default new Router({
-  mode: 'history', //后端支持可开
+  mode: 'history',
   scrollBehavior: () => ({
     y: 0
   }),
@@ -75,7 +76,8 @@ export const asyncRouterMap = [
     meta: {
       role: ['admin']
     },
-    children: [{
+    children: [
+      {
         path: 'index',
         name: '用户列表',
         component: _import('admin/Index'),
@@ -93,7 +95,7 @@ export const asyncRouterMap = [
       }
     ]
   },
-  //角色管理
+
   {
     path: '/role',
     component: Layout,
@@ -103,7 +105,8 @@ export const asyncRouterMap = [
     meta: {
       role: ['admin']
     },
-    children: [{
+    children: [
+      {
         path: 'index',
         name: '角色列表',
         component: _import('role/Index'),
@@ -121,7 +124,7 @@ export const asyncRouterMap = [
       }
     ]
   },
-  //教学过程管理
+
   {
     path: '/teachmanage',
     component: Layout,
@@ -131,7 +134,8 @@ export const asyncRouterMap = [
     meta: {
       role: ['admin']
     },
-    children: [{
+    children: [
+      {
         path: 'session',
         name: '学期管理',
         component: _import('teachmanage/Session'),

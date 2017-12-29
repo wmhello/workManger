@@ -79,7 +79,7 @@ class RoleController extends Controller
      * @apiParam {string} name 角色名称
      * @apiParam {string} explain 角色说明
      * @apiParam {string} [remark] 角色备注 可选
-     * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
+     * @apiParamExample {object} 请求事例 建
      * {
      * name: 'app',
      * explain: '应用管理者'

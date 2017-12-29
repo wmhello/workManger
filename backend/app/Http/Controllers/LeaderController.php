@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Import\LeaderImport;
 use App\Http\Requests\LeaderRequest;
 use App\Http\Requests\LeaderUploadRequest;
+use App\Http\Resources\LeaderCollection;
 use App\Leader;
 
 use Illuminate\Http\Request;
@@ -23,22 +24,20 @@ class LeaderController extends Controller
     public function index(Request $request)
     {
         //
-        $data = $request->only(['pageSize', 'page', 'name', 'session_id']);
+        $data = $request->only(['pageSize', 'teacher_id', 'session_id']);
        $pageSize = $data['pageSize']??15;
-       $name = nullata['name']??null;
+        $teacher_id = $data['teacher_id']??null;
        $session_id = $data['session_id']??null;
-       $page = $data['page']??1;
-      if ($name && $session_id) {
-          $lists = Leader::where('name', $name)->where('session_id',$session_id)->paginate($pageSize);
+      if ($teacher_id && $session_id) {
+          $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
       }
-      if (! $name && $session_id) {
+      if (! $teacher_id && $session_id) {
           $lists = Leader::where('session_id',$session_id)->paginate($pageSize);
       }
-      if ($name && !$session_id) {
-            $lists = Leader::where('name', $name)->paginate($pageSize);
+      if ($teacher_id && !$session_id) {
+            $lists = Leader::where('teacher_id', $teacher_id)->paginate($pageSize);
        }
-
-
+      return new LeaderCollection($lists);
     }
 
     /**
@@ -49,6 +48,7 @@ class LeaderController extends Controller
     public function create()
     {
         //
+
     }
 
     /**
@@ -60,6 +60,12 @@ class LeaderController extends Controller
     public function store(LeaderRequest $request)
     {
         //
+        $data = $request->only(['session_id', 'teacher_id', 'leader_type', 'job', 'remark']);
+        if (Leader::create($data)) {
+            return $this->success();
+        } else  {
+            return $this->error();
+        }
     }
 
     /**
@@ -71,6 +77,7 @@ class LeaderController extends Controller
     public function show(Leader $leader)
     {
         //
+        return new \App\Http\Resources\Leader($leader);
     }
 
     /**
@@ -94,6 +101,19 @@ class LeaderController extends Controller
     public function update(LeaderRequest $request, Leader $leader)
     {
         //
+        $data = $request->only(['session_id', 'teacher_id', 'leader_type', 'job', 'remark']);
+        $leader->session_id = $data['session_id'];
+        $leader->teacher_id = $data['teacher_id'];
+        $leader->leader_type = $data['leader_type'];
+        $leader->job = $data['job'];
+        $leader->remark = $data['remark'];
+
+        if ($leader->save()) {
+            return $this->success();
+        } else  {
+            return $this->error();
+        }
+
     }
 
     /**
@@ -105,6 +125,11 @@ class LeaderController extends Controller
     public function destroy(Leader $leader)
     {
         //
+        if ($leader->delete()) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
     }
 
     public function upload( LeaderImport $import,LeaderUploadRequest $request)
