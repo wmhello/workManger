@@ -30,13 +30,7 @@
           <el-input v-model="form.name" placeholder=''></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-select v-model="form.explain" placeholder="请选择">
-            <el-option label="管理员" value="管理员">管理员</el-option>
-            <el-option label="用户" value="用户">用户</el-option>
-            <el-option label="教师" value="教师">教师</el-option>
-            <el-option label="办公管理人员" value="办公管理人员">办公管理人员</el-option>
-            <el-option label="财务人员" value="财务人员">财务人员</el-option>
-          </el-select>
+           <el-input v-model="form.explain" placeholder=''></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="form.remark"></el-input>
