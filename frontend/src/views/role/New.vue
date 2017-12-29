@@ -64,6 +64,9 @@ export default {
           }).catch(error => {
               console.log(error.response)
           })
+        } else {
+          this.$message.error('数据校验不通过，请重新填写')
+          return false;
         }
       });
     },
