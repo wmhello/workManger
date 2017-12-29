@@ -17,6 +17,7 @@
            <img v-if="scope.row.avatar" :src="scope.row.avatar|avatarFilter" alt="" width="50" height="50">
         </template>
       </el-table-column>
+
       <el-table-column label="操作">
         <template scope="scope">
           <el-tooltip content="编辑" placement="top">
@@ -55,7 +56,6 @@
         </el-form-item>
       </el-form>
 
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveData()">确 定</el-button>
@@ -80,16 +80,13 @@
     </el-dialog>
 
     <el-pagination
-      @current-change="handleCurrentChange" 
-      :current-page.sync="current_page" 
-      layout="prev, pager, next, jumper"
+      @current-change="handleCurrentChange"
+      :current-page.sync="current_page"
+      layout="total, prev, pager, next"
       :page-size="15"
       :total="total">
     </el-pagination>
-
   </div>
-
-  
 </template>
 
 <script>
@@ -311,6 +308,7 @@ export default {
 
 .el-pagination{
   padding: 0;
-  margin-top: 10px;
+  margin-top: 20px;
+  text-align: right;
 }
 </style>
