@@ -23,6 +23,8 @@ class LeaderController extends Controller
      * @api {get} /api/leader 获取学校行政列表
      * @apiGroup leader
      *
+     * @apiParam {number} [session_id] 学期ID
+     * @apiParam {number} [teacher_id] 教师ID
      * @apiSuccessExample 获取学校行政列表，分页显示，每页15条记录,
      * HTTP/1.1 200 OK
      * {

@@ -370,6 +370,26 @@ define({ "api": [
     "url": "/api/leader",
     "title": "获取学校行政列表",
     "group": "leader",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "teacher_id",
+            "description": "<p>教师ID</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "examples": [
         {
