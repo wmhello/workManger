@@ -14,7 +14,14 @@ class ClassTeacher extends Resource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'session_id' => $this->session_id,
+            'teacher_id' => $this->teacher_id,
+            'grade' => $this->grade,
+            'class' => $this->class,
+            'remark' => $this->remark
+        ];
     }
 
     public function with($request)

@@ -292,6 +292,371 @@
     "name": "PutApiAdminId"
   },
   {
+    "type": "delete",
+    "url": "/api/classTeacher/:id",
+    "title": "删除指定的班主任信息",
+    "group": "classTeacher",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>班主任标识</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "操作失败 指定的信息不存在:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/ClassTeacherController.php",
+    "groupTitle": "classTeacher",
+    "name": "DeleteApiClassteacherId"
+  },
+  {
+    "type": "get",
+    "url": "/api/classTeacher",
+    "title": "获取班主任列表",
+    "group": "classTeacher",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "session_id",
+            "description": "<p>学期ID 默认为当前学期</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "teacher_id",
+            "description": "<p>教师ID 默认为空</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "获取班主任列表，分页显示，每页15条记录,",
+          "content": "HTTP/1.1 200 OK\n{\n\"data\": [\n{\n\"id\": 1,\n\"session_id\": 3,\n\"teacher_id\": 140,\n\"grade\": 1,\n\"class\": 1,\n\"remark\": null\n}\n],\n\"status\": \"success\",\n\"status_code\": 200,\n\"links\": {\n\"first\": \"http://manger.test/api/classTeacher?page=1\",\n\"last\": \"http://manger.test/api/classTeacher?page=1\",\n\"prev\": null,\n\"next\": null\n},\n\"meta\": {\n\"current_page\": 1,\n\"from\": 1,\n\"last_page\": 1,\n\"path\": \"http://manger.test/api/classTeacher\",\n\"per_page\": 15,\n\"to\": 13,\n\"total\": 13\n}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/ClassTeacherController.php",
+    "groupTitle": "classTeacher",
+    "name": "GetApiClassteacher"
+  },
+  {
+    "type": "get",
+    "url": "/api/classTeacher/:id",
+    "title": "获取指定的班主任信息",
+    "group": "classTeacher",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>班主任标识ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "获取班主任列表，分页显示，每页15条记录,",
+          "content": "HTTP/1.1 200 OK\n{\n\"data\": [\n{\n\"id\": 1,\n\"session_id\": 3,\n\"teacher_id\": 140,\n\"grade\": 1,\n\"class\": 1,\n\"remark\": null\n}\n],\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/ClassTeacherController.php",
+    "groupTitle": "classTeacher",
+    "name": "GetApiClassteacherId"
+  },
+  {
+    "type": "patch",
+    "url": "/api/classTeacher/:id",
+    "title": "更新指定的班主任信息",
+    "group": "classTeacher",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>班主任标识</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "teacher_id",
+            "description": "<p>教师ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "class",
+            "description": "<p>班级</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "1",
+              "2",
+              "3"
+            ],
+            "optional": false,
+            "field": "grade",
+            "description": "<p>年级</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "remark",
+            "description": "<p>备注 可选</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 创建新的班主任信息:",
+          "content": "{\nid: 15,\nsession_id: 3,\nteacher_id: 168,\nclass: 10,\ngrade: 1,\nremark: '高一10班'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "数据验证出错:",
+          "content": "HTTP/1.1 422 Not Found\n{\n\"status\": 422,\n}",
+          "type": "json"
+        },
+        {
+          "title": "指定的班级不存在:",
+          "content": "HTTP/1.1 416 Satisfiable\n{\n\"status\": 'error',\n\"status_code\": 416,\n\"message\": '数据校验出错，指定的班级不存在'\n}",
+          "type": "json"
+        },
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/ClassTeacherController.php",
+    "groupTitle": "classTeacher",
+    "name": "PatchApiClassteacherId"
+  },
+  {
+    "type": "post",
+    "url": "/api/classTeacher",
+    "title": "创建新的班主任信息",
+    "group": "classTeacher",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "teacher_id",
+            "description": "<p>教师ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "class",
+            "description": "<p>班级</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "1",
+              "2",
+              "3"
+            ],
+            "optional": false,
+            "field": "grade",
+            "description": "<p>年级</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "remark",
+            "description": "<p>备注 可选</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 创建新的班主任信息:",
+          "content": "{\nsession_id: 3,\nteacher_id: 168,\nclass: 10,\ngrade: 1,\nremark: '高一10班'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "数据验证出错:",
+          "content": "HTTP/1.1 422 Not Found\n{\n\"status\": 422,\n}",
+          "type": "json"
+        },
+        {
+          "title": "指定的班级不存在:",
+          "content": "HTTP/1.1 416 Satisfiable\n{\n\"status\": 'error',\n\"status_code\": 416,\n\"message\": '数据校验出错，指定的班级不存在'\n}",
+          "type": "json"
+        },
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/ClassTeacherController.php",
+    "groupTitle": "classTeacher",
+    "name": "PostApiClassteacher"
+  },
+  {
+    "type": "post",
+    "url": "/api/classTeacher/upload",
+    "title": "导入班主任信息",
+    "group": "classTeacher",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "file",
+            "description": "<p>要导入的文件</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 导入指定学期的班主任数据:",
+          "content": "{\nsession_id: 3,\nfile: 'd:/3.xls'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "header": {
+      "examples": [
+        {
+          "title": "http头部例子",
+          "content": "{\n  \"content-type\": \"multipart/form-data\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/ClassTeacherController.php",
+    "groupTitle": "classTeacher",
+    "name": "PostApiClassteacherUpload"
+  },
+  {
     "success": {
       "fields": {
         "Success 200": [

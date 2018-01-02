@@ -13,7 +13,7 @@ class ClassTeacherRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class ClassTeacherRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'session_id' => 'required|exists:sessions,id',
+            'teacher_id' => 'required|exists:yz_teacher,id',
+            'class' => 'required|numeric',
+            'grade' => 'required|in:1,2,3',
+            'remark' => 'nullable|string|max:50',
         ];
     }
 }
