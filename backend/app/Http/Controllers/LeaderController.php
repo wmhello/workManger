@@ -266,6 +266,37 @@ class LeaderController extends Controller
         }
     }
 
+    /**
+     * @api {post} /api/leader/upload 导入行政领导信息
+     * @apiGroup leader
+     *
+     * @apiParam {number} session_id 学期ID
+     * @apiParam {string} file 要导入的文件
+
+     * @apiHeaderExample {json} http头部例子
+     *     {
+     *       "content-type": "multipart/form-data"
+     *     }
+     *
+     * @apiParamExample {object} 请求事例 导入指定学期的行政领导数据:
+     * {
+     * session_id: 3,
+     * file: 'd:/3.xls'
+     * }
+     *
+     * @apiSuccessExample {json} 操作成功:
+     * HTTP/1.1 200 OK
+     * {
+     * "status": "success",
+     * "status_code": 200
+     * }
+     * @apiErrorExample {json} 操作失败:
+     * HTTP/1.1 404 Not Found
+     * {
+     * "status": "error",
+     * "status_code": 404
+     * }
+     */
     public function upload( LeaderImport $import,LeaderUploadRequest $request)
     {
            $bool = $import->handleImport($import);

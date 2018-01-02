@@ -15,6 +15,7 @@ class Department extends Resource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'session_id' => $this->session_id,
             'teacher_id' => $this->teacher_id,
             'teach_id' => $this->teach_id,

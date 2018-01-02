@@ -18,7 +18,46 @@ class DepartmentController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
+    /**
+     * @api {get} /api/department 获取学科组长列表
+     * @apiGroup department
+     *
+     * @apiParam {number} [session_id] 学期ID 默认为当前学期
+     * @apiParam {number} [teacher_id] 教师ID
+     * @apiParam {number=0,1} [leader] 学科组长 0=>备课组长 1=>学科组长 默认包含所有
+     * @apiSuccessExample 获取学科组长列表，分页显示，每页15条记录,
+     * HTTP/1.1 200 OK
+     * {
+     * "data": [
+     * {
+     * "id": 1,
+     * "session_id": 3,
+     * "teacher_id": 129,
+     * "teach_id": 17,
+     * "leader": 0,
+     * "grade": 1,
+     * "remark": "高一语文"
+     * }
+     * ],
+     * "status": "success",
+     * "status_code": 200,
+     * "links": {
+     * "first": "http://manger.test/api/department?page=1",
+     * "last": "http://manger.test/api/department?page=1",
+     * "prev": null,
+     * "next": null
+     * },
+     * "meta": {
+     * "current_page": 1,
+     * "from": 1,
+     * "last_page": 1,
+     * "path": "http://manger.test/api/department",
+     * "per_page": 15,
+     * "to": 9,
+     * "total": 9
+     * }
+     * }
+     */
     public function index(Request $request)
     {
         //
@@ -55,6 +94,46 @@ class DepartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    /**
+     * @api {post} /api/department 创建新的学科组长信息
+     * @apiGroup department
+     *
+     * @apiParam {number} session_id 学期ID
+     * @apiParam {number} teacher_id 教师ID
+     * @apiParam {number=0,1} leader 学科组长类型(0=>备课组长 1=>学科组长)
+     * @apiParam {number=1,2,3} grade 年级
+     * @apiParam {number} teach_id 科目  结合科目表
+     * @apiParam {string} [remark] 备注 可选
+     * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
+     * {
+     * session_id: 3,
+     * teacher_id: 168,
+     * leader: 0,
+     * grade: 1,
+     * teach_id: 7
+     * remark: '高一信息技术'
+     * }
+     *
+     * @apiSuccessExample {json} 操作成功:
+     * HTTP/1.1 200 OK
+     * {
+     * "status": "success",
+     * "status_code": 200
+     * }
+     * @apiErrorExample {json} 数据验证出错:
+     * HTTP/1.1 422 Not Found
+     * {
+     * "status": 422,
+     * }
+     * @apiErrorExample {json} 操作失败:
+     * HTTP/1.1 404 Not Found
+     * {
+     * "status": "error",
+     * "status_code": 404
+     * }
+     */
+
     public function store(DepartmentRequest  $request)
     {
         //
@@ -72,6 +151,31 @@ class DepartmentController extends Controller
      * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
+
+    /**
+     * @api {get} /api/department/:id  获取指定的学科组长信息
+     * @apiGroup department
+     *
+     * @apiParam {number} id 学科组长标识ID
+     * @apiSuccessExample 获取指定的学科组长信息
+     * HTTP/1.1 200 OK
+     * {
+     * "data": [
+     * {
+     * "id": 1,
+     * "session_id": 3,
+     * "teacher_id": 129,
+     * "teach_id": 17,
+     * "leader": 0,
+     * "grade": 1,
+     * "remark": "高一语文"
+     * }
+     * ],
+     * "status": "success",
+     * "status_code": 200
+     * }
+     */
+
     public function show(Department $department)
     {
         //
@@ -97,6 +201,46 @@ class DepartmentController extends Controller
      * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @api {patch} /api/department/:id 更新指定的学科组长信息
+     * @apiGroup department
+     *
+     * @apiParam {number} id 学科组长标识ID
+     * @apiParam {number} session_id 学期ID
+     * @apiParam {number} teacher_id 教师ID
+     * @apiParam {number=0,1} leader 学科组长类型(0=>备课组长 1=>学科组长)
+     * @apiParam {number=1,2,3} grade 年级
+     * @apiParam {number} teach_id 科目  结合科目表
+     * @apiParam {string} [remark] 备注 可选
+     * @apiParamExample {object} 请求事例 建立学期 2017-2018上学期:
+     * {
+     * id：10,
+     * session_id: 3,
+     * teacher_id: 168,
+     * leader: 0,
+     * grade: 1,
+     * teach_id: 7
+     * remark: '信息技术'
+     * }
+     *
+     * @apiSuccessExample {json} 操作成功:
+     * HTTP/1.1 200 OK
+     * {
+     * "status": "success",
+     * "status_code": 200
+     * }
+     * @apiErrorExample {json} 数据验证出错:
+     * HTTP/1.1 422 Not Found
+     * {
+     * "status": 422,
+     * }
+     * @apiErrorExample {json} 操作失败:
+     * HTTP/1.1 404 Not Found
+     * {
+     * "status": "error",
+     * "status_code": 404
+     * }
+     */
     public function update(DepartmentRequest $request, Department $department)
     {
         //
@@ -120,6 +264,27 @@ class DepartmentController extends Controller
      * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @api {delete} /api/department/:id 删除指定的学科组长信息
+     * @apiGroup department
+     *
+     * @apiParam {number} id 学科组长标识ID
+     *
+     * @apiSuccessExample {json} 操作成功:
+     * HTTP/1.1 200 OK
+     * {
+     * "status": "success",
+     * "status_code": 200
+     * }
+
+     * @apiErrorExample {json} 操作失败，指定的内容已经删除:
+     * HTTP/1.1 404 Not Found
+     * {
+     * "status": "error",
+     * "status_code": 404
+     * }
+     */
+
     public function destroy(Department $department)
     {
         //
@@ -129,6 +294,39 @@ class DepartmentController extends Controller
             return $this->error();
         }
     }
+
+
+    /**
+     * @api {post} /api/department/upload 导入学科组长信息
+     * @apiGroup department
+     *
+     * @apiParam {number} session_id 学期ID
+     * @apiParam {string} file 要导入的文件
+
+     * @apiHeaderExample {json} http头部例子
+     *     {
+     *       "content-type": "multipart/form-data"
+     *     }
+     *
+     * @apiParamExample {object} 请求事例 导入指定学期的学科组长数据:
+     * {
+     * session_id: 3,
+     * file: 'd:/3.xls'
+     * }
+     *
+     * @apiSuccessExample {json} 操作成功:
+     * HTTP/1.1 200 OK
+     * {
+     * "status": "success",
+     * "status_code": 200
+     * }
+     * @apiErrorExample {json} 操作失败:
+     * HTTP/1.1 404 Not Found
+     * {
+     * "status": "error",
+     * "status_code": 404
+     * }
+     */
 
     public function upload(DepartmentImport $import, DepartmentsUploadRequest $request)
     {

@@ -321,6 +321,394 @@
   },
   {
     "type": "delete",
+    "url": "/api/department/:id",
+    "title": "删除指定的学科组长信息",
+    "group": "department",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>学科组长标识ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "操作失败，指定的内容已经删除:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/DepartmentController.php",
+    "groupTitle": "department",
+    "name": "DeleteApiDepartmentId"
+  },
+  {
+    "type": "get",
+    "url": "/api/department",
+    "title": "获取学科组长列表",
+    "group": "department",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "session_id",
+            "description": "<p>学期ID 默认为当前学期</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": true,
+            "field": "teacher_id",
+            "description": "<p>教师ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "leader",
+            "description": "<p>学科组长 0=&gt;备课组长 1=&gt;学科组长 默认包含所有</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "获取学科组长列表，分页显示，每页15条记录,",
+          "content": "HTTP/1.1 200 OK\n{\n\"data\": [\n{\n\"id\": 1,\n\"session_id\": 3,\n\"teacher_id\": 129,\n\"teach_id\": 17,\n\"leader\": 0,\n\"grade\": 1,\n\"remark\": \"高一语文\"\n}\n],\n\"status\": \"success\",\n\"status_code\": 200,\n\"links\": {\n\"first\": \"http://manger.test/api/department?page=1\",\n\"last\": \"http://manger.test/api/department?page=1\",\n\"prev\": null,\n\"next\": null\n},\n\"meta\": {\n\"current_page\": 1,\n\"from\": 1,\n\"last_page\": 1,\n\"path\": \"http://manger.test/api/department\",\n\"per_page\": 15,\n\"to\": 9,\n\"total\": 9\n}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/DepartmentController.php",
+    "groupTitle": "department",
+    "name": "GetApiDepartment"
+  },
+  {
+    "type": "get",
+    "url": "/api/department/:id",
+    "title": "获取指定的学科组长信息",
+    "group": "department",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>学科组长标识ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "获取指定的学科组长信息",
+          "content": "HTTP/1.1 200 OK\n{\n\"data\": [\n{\n\"id\": 1,\n\"session_id\": 3,\n\"teacher_id\": 129,\n\"teach_id\": 17,\n\"leader\": 0,\n\"grade\": 1,\n\"remark\": \"高一语文\"\n}\n],\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/DepartmentController.php",
+    "groupTitle": "department",
+    "name": "GetApiDepartmentId"
+  },
+  {
+    "type": "patch",
+    "url": "/api/department/:id",
+    "title": "更新指定的学科组长信息",
+    "group": "department",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>学科组长标识ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "teacher_id",
+            "description": "<p>教师ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": false,
+            "field": "leader",
+            "description": "<p>学科组长类型(0=&gt;备课组长 1=&gt;学科组长)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "1",
+              "2",
+              "3"
+            ],
+            "optional": false,
+            "field": "grade",
+            "description": "<p>年级</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "teach_id",
+            "description": "<p>科目  结合科目表</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "remark",
+            "description": "<p>备注 可选</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 建立学期 2017-2018上学期:",
+          "content": "{\nid：10,\nsession_id: 3,\nteacher_id: 168,\nleader: 0,\ngrade: 1,\nteach_id: 7\nremark: '信息技术'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "数据验证出错:",
+          "content": "HTTP/1.1 422 Not Found\n{\n\"status\": 422,\n}",
+          "type": "json"
+        },
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/DepartmentController.php",
+    "groupTitle": "department",
+    "name": "PatchApiDepartmentId"
+  },
+  {
+    "type": "post",
+    "url": "/api/department",
+    "title": "创建新的学科组长信息",
+    "group": "department",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "teacher_id",
+            "description": "<p>教师ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": false,
+            "field": "leader",
+            "description": "<p>学科组长类型(0=&gt;备课组长 1=&gt;学科组长)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "allowedValues": [
+              "1",
+              "2",
+              "3"
+            ],
+            "optional": false,
+            "field": "grade",
+            "description": "<p>年级</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "teach_id",
+            "description": "<p>科目  结合科目表</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "remark",
+            "description": "<p>备注 可选</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 建立学期 2017-2018上学期:",
+          "content": "{\nsession_id: 3,\nteacher_id: 168,\nleader: 0,\ngrade: 1,\nteach_id: 7\nremark: '高一信息技术'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "数据验证出错:",
+          "content": "HTTP/1.1 422 Not Found\n{\n\"status\": 422,\n}",
+          "type": "json"
+        },
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/DepartmentController.php",
+    "groupTitle": "department",
+    "name": "PostApiDepartment"
+  },
+  {
+    "type": "post",
+    "url": "/api/department/upload",
+    "title": "导入学科组长信息",
+    "group": "department",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "file",
+            "description": "<p>要导入的文件</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 导入指定学期的学科组长数据:",
+          "content": "{\nsession_id: 3,\nfile: 'd:/3.xls'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "header": {
+      "examples": [
+        {
+          "title": "http头部例子",
+          "content": "{\n  \"content-type\": \"multipart/form-data\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/DepartmentController.php",
+    "groupTitle": "department",
+    "name": "PostApiDepartmentUpload"
+  },
+  {
+    "type": "delete",
     "url": "/api/leader/:id",
     "title": "删除指定的学校行政信息",
     "group": "leader",
@@ -612,6 +1000,70 @@
     "filename": "./app/Http/Controllers/LeaderController.php",
     "groupTitle": "leader",
     "name": "PostApiLeaderId"
+  },
+  {
+    "type": "post",
+    "url": "/api/leader/upload",
+    "title": "导入行政领导信息",
+    "group": "leader",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "session_id",
+            "description": "<p>学期ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "file",
+            "description": "<p>要导入的文件</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "请求事例 导入指定学期的行政领导数据:",
+          "content": "{\nsession_id: 3,\nfile: 'd:/3.xls'\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "header": {
+      "examples": [
+        {
+          "title": "http头部例子",
+          "content": "{\n  \"content-type\": \"multipart/form-data\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "操作成功:",
+          "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "操作失败:",
+          "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./app/Http/Controllers/LeaderController.php",
+    "groupTitle": "leader",
+    "name": "PostApiLeaderUpload"
   },
   {
     "type": "get",
