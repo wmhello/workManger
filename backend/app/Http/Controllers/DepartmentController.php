@@ -18,6 +18,7 @@ class DepartmentController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
     public function index(Request $request)
     {
         //
@@ -26,15 +27,14 @@ class DepartmentController extends Controller
         $teacher_id = $data['teacher_id']??null;
         $session_id = $data['session_id']??$this->getCurrentSessionId();
         $leader = $data['leader']??[1,0];
-        dd($session_id);
         if ($teacher_id && $session_id) {
-            $lists = Department::where('teacher_id', $teacher_id)->where('session_id',$session_id)->whereIn('id', $leader)->paginate($pageSize);
+            $lists = Department::where('teacher_id', $teacher_id)->where('session_id',$session_id)->whereIn('leader', $leader)->paginate($pageSize);
         }
         if (! $teacher_id && $session_id) {
-            $lists = Department::where('session_id',$session_id)->whereIn('id', $leader)->paginate($pageSize);
+            $lists = Department::where('session_id',$session_id)->whereIn('leader', $leader)->paginate($pageSize);
         }
         if ($teacher_id && !$session_id) {
-            $lists = Department::where('teacher_id', $teacher_id)->whereIn('id', $leader)->paginate($pageSize);
+            $lists = Department::where('teacher_id', $teacher_id)->whereIn('leader', $leader)->paginate($pageSize);
         }
         return new DepartmentCollection($lists);
     }
