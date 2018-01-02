@@ -11,12 +11,15 @@ namespace App\Http\Controllers;
 use App\Session;
 use Carbon\Carbon;
 
-trait tools
+trait Tools
 {
    public function getCurrentSessionId(){
        $date = Carbon::now();
        $year = $date->year;
        $team = ($date->month>1 && $date->month<=7)?2:1;
+       if ($date->month>=1 && $date->month<=7) {
+           $year--;
+       }
        $session_id = Session::where('year', $year) ->where('team', $team)->value('id');
        return $session_id;
    }

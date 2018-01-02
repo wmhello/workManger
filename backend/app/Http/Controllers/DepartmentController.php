@@ -11,20 +11,22 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    use Result;
+    use Result,Tools;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
     {
         //
         $data = $request->only(['session_id', 'page', 'pageSize', 'teacher_id', 'leader']);
         $pageSize = $data['pageSize']??15;
         $teacher_id = $data['teacher_id']??null;
-        $session_id = $data['session_id']??null;
+        $session_id = $data['session_id']??$this->getCurrentSessionId();
         $leader = $data['leader']??[1,0];
+        dd($session_id);
         if ($teacher_id && $session_id) {
             $lists = Department::where('teacher_id', $teacher_id)->where('session_id',$session_id)->whereIn('id', $leader)->paginate($pageSize);
         }

@@ -17,7 +17,7 @@ use \Maatwebsite\Excel\Facades\Excel;
 class LeaderController extends Controller
 {
     use Result;
-    use tools;
+    use Tools;
 
     /**
      * @api {get} /api/leader 获取学校行政列表
