@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-button type="info" size="large" @click="add()">添加</el-button>
-
+    <el-button type="primary" plain size="large" icon="el-icon-document" @click="add()">添加</el-button>
+    <div style="margin-bottom: 10px;"></div>
     <el-table :data="tableData" :border="true" style="width: 80%" scope="scope">
       <el-table-column prop="id" label="序号" width="80">
       </el-table-column>
@@ -21,14 +21,14 @@
       </el-table-column>
 
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip content="编辑" placement="top">
-            <el-button plain icon="edit" type="info" size="small" @click="edit(scope.row)"></el-button>
+            <el-button plain icon="el-icon-edit" type="info" size="small" @click="edit(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="top">
-            <el-button plain icon="delete" type="danger" size="small" @click="del(scope.row)"></el-button>
+            <el-button plain icon="el-icon-delete" type="danger" size="small" @click="del(scope.row)"></el-button>
           </el-tooltip>
-</template>
+        </template>
       </el-table-column>
     </el-table>
 
