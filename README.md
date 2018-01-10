@@ -58,6 +58,7 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 >- 跨域(https://github.com/barryvdh/laravel-cors)
 >- 短信集成(https://github.com/overtrue/easy-sms)
 >- vueAdmin-template(https://github.com/PanJiaChen/vueAdmin-template)
+>- API接口文档书写(http://apidocjs.com/)
 
 # License
 
