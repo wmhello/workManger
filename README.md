@@ -36,12 +36,12 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 - 前端使用了vue.js 技术  可以参考vue.js的项目流程来进行发布与测试
 
 # 项目界面
-![后台文档](https://github.com/wmhello/workManger/Screenshot/doc.png)
-![登录页面](https://github.com/wmhello/workManger/Screenshot/login.png)
-![控制面板](https://github.com/wmhello/workManger/Screenshot/dsshboard.png)
-![学期管理页面](https://github.com/wmhello/workManger/Screenshot/manger3.png)
-![用户管理页面](https://github.com/wmhello/workManger/Screenshot/user-manger.png)
-![用户编辑页面](https://github.com/wmhello/workManger/Screenshot/edit-user.png)
+![后台文档](https://github.com/wmhello/workManger/blob/master/Screenshot/doc.png)
+![登录页面](https://github.com/wmhello/workManger/blob/master/Screenshot/login.png)
+![控制面板](https://github.com/wmhello/workManger/blob/master/Screenshot/dsshboard.png)
+![学期管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/manger3.png)
+![用户管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/user-manger.png)
+![用户编辑页面](https://github.com/wmhello/workManger/blob/master/Screenshot/edit-user.png)
 
 
 # 说明
