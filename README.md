@@ -37,7 +37,7 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 
 # 项目界面截图
 ### 后台文档
-![后台文档](https://github.com/wmhello/workManger/blob/master/Screenshot/doc.png)
+<img src="https://github.com/wmhello/workManger/blob/master/Screenshot/doc.png" width="365" height="619"/> 
 ### 登录页面
 ![登录页面](https://github.com/wmhello/workManger/blob/master/Screenshot/login.png)
 ### 控制面板
