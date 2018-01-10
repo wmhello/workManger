@@ -4,7 +4,7 @@
    php artisan migrate
 4、生成passport的密钥
    php artisan passport:key --force
-   php artisan passport:install
+   php artisan passport:install --force
 5、复制生成的密钥到env文件为
    PERSONAL_Client_ID=
    PERSONAL_Client_Secret=
