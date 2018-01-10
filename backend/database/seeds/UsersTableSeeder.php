@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'wmhello',
             'email' => '871228582@qq.com',
-            'password' => bcrypt('514728'),
+            'password' => bcrypt('123456'),
             'role' => 'admin',
             'avatar' => 'uploads/201711251441th5a19812148058.jpg',
             'remember_token' => str_random(10),
