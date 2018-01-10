@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <!-- 角色列表 -->
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="序号" width="70">
@@ -12,19 +11,19 @@
       <el-table-column prop="remark" label="备注" width="500">
       </el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip content="编辑" placement="top">
-            <el-button plain icon="edit" type="info" size="small" @click="edit(scope.row)"></el-button>
+            <el-button plain icon="el-icon-edit" type="info" size="small" @click="edit(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="top">
-            <el-button plain icon="delete" type="danger" size="small" @click="del(scope.row)"></el-button>
+            <el-button plain icon="el-icon-delete" type="danger" size="small" @click="del(scope.row)"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 修改角色信息 -->
-    <el-dialog title="修改角色信息" :visible.sync="dialogVisible" size="tiny">
+    <el-dialog title="修改角色信息" :visible.sync="dialogVisible">
       <el-form :model="form" label-width="80px">
         <el-form-item label="角色">
           <el-input v-model="form.name" placeholder=''></el-input>
@@ -46,13 +45,13 @@
  </template>
 
 <script>
-import { getToken } from "@/utils/auth";
-import {
+  import { getToken } from "@/utils/auth";
+  import {
   getRole,
   getRoleById,
   updataRoleInfo,
   deleteRoleById
-} from "@/api/role";
+ } from "@/api/role";
 
 import roleConfig from "./../../../static/config";
 

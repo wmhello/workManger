@@ -1,5 +1,9 @@
-@import './element-ui.scss';
+@import './variables.scss';
 @import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
@@ -15,6 +19,10 @@ html {
 *:before,
 *:after {
   box-sizing: inherit;
+}
+
+div:focus{
+  outline: none;
 }
 
 a:focus,
@@ -41,17 +49,6 @@ a:hover {
   }
 }
 
-//vue router transition css
-.fade-enter-active,
-.fade-leave-active {
-  transition: all .2s ease
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
-
 //main-container全局样式
 .app-main{
   min-height: 100%
@@ -60,12 +57,3 @@ a:hover {
 .app-container {
   padding: 20px;
 }
-
-.svg-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
-

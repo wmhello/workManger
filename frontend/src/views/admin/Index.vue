@@ -8,26 +8,26 @@
       <el-table-column prop="email" label="email">
       </el-table-column>
       <el-table-column  label="权限" width="100">
-      <template scope="scope">
+      <template slot-scope="scope">
         <span style="margin-left: 10px">{{ scope.row.role|roleFilter }}</span>
       </template>
       </el-table-column>
       <el-table-column  label="头像" width="80">
-        <template scope="scope">
+        <template slot-scope="scope">
            <img v-if="scope.row.avatar" :src="scope.row.avatar|avatarFilter" alt="" width="50" height="50">
         </template>
       </el-table-column>
 
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip content="编辑" placement="top">
-            <el-button plain icon="edit" type="info" size="small" @click="edit(scope.row)"></el-button>
+            <el-button size="small" plain icon="el-icon-edit-outline" @click="edit(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="重置密码" placement="top">
-            <el-button plain icon="setting" type="primary" size="small" @click="reset(scope.row)"></el-button>
+            <el-button plain icon="el-icon-setting" size="small" @click="reset(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="top">
-            <el-button plain icon="delete" type="danger" size="small" @click="del(scope.row)"></el-button>
+            <el-button plain icon="el-icon-delete" type="danger" size="small" @click="del(scope.row)"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -62,8 +62,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="密码重置" :visible.sync="resetDialogFormVisible" size="tiny"
-    :close-on-click-modal="false">
+    <el-dialog title="密码重置" :visible.sync="resetDialogFormVisible" :close-on-click-modal="false">
       <el-form :model="form2" label-width="100px">
         <el-form-item label="请输入新密码">
           <el-input v-model="form2.psw" type="password"></el-input>
@@ -80,6 +79,7 @@
     </el-dialog>
 
     <el-pagination
+      background
       @current-change="handleCurrentChange"
       :current-page.sync="current_page"
       layout="total, prev, pager, next"
