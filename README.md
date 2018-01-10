@@ -35,12 +35,18 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
   系统登录密码从backend\database\seeds里面去找 具体可以参考laravel教程
 - 前端使用了vue.js 技术  可以参考vue.js的项目流程来进行发布与测试
 
-# 项目界面
+# 项目界面截图
+### 后台文档
 ![后台文档](https://github.com/wmhello/workManger/blob/master/Screenshot/doc.png)
+### 登录页面
 ![登录页面](https://github.com/wmhello/workManger/blob/master/Screenshot/login.png)
+### 控制面板
 ![控制面板](https://github.com/wmhello/workManger/blob/master/Screenshot/dsshboard.png)
+### 学期管理页面
 ![学期管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/manger3.png)
+### 用户管理页面
 ![用户管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/user-manger.png)
+### 用户编辑页面
 ![用户编辑页面](https://github.com/wmhello/workManger/blob/master/Screenshot/edit-user.png)
 
 
