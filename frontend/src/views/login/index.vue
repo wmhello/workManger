@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"  class="card-box login-form">
-       <h3 class="title">新平一中工作网</h3>
+       <h3 class="title">学校工作网</h3>
          <el-form-item prop="username">
              <el-input prefix-icon="el-icon-search" type="text" name="username" v-model="loginForm.username"  placeholder="登陆名">  </el-input>
          </el-form-item> 

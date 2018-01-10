@@ -312,7 +312,7 @@ define({ "api": [
     "success": {
       "examples": [
         {
-          "title": "操作成功:",
+          "title": "操作成功",
           "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
           "type": "json"
         }
@@ -321,7 +321,7 @@ define({ "api": [
     "error": {
       "examples": [
         {
-          "title": "操作失败 指定的信息不存在:",
+          "title": "操作失败 指定的信息不存在",
           "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
           "type": "json"
         }
@@ -462,7 +462,7 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "请求事例 创建新的班主任信息:",
+          "title": "请求事例 创建新的班主任信息",
           "content": "{\nid: 15,\nsession_id: 3,\nteacher_id: 168,\nclass: 10,\ngrade: 1,\nremark: '高一10班'\n}",
           "type": "object"
         }
@@ -471,7 +471,7 @@ define({ "api": [
     "success": {
       "examples": [
         {
-          "title": "操作成功:",
+          "title": "操作成功",
           "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
           "type": "json"
         }
@@ -480,17 +480,17 @@ define({ "api": [
     "error": {
       "examples": [
         {
-          "title": "数据验证出错:",
+          "title": "数据验证出错",
           "content": "HTTP/1.1 422 Not Found\n{\n\"status\": 422,\n}",
           "type": "json"
         },
         {
-          "title": "指定的班级不存在:",
+          "title": "指定的班级不存在",
           "content": "HTTP/1.1 416 Satisfiable\n{\n\"status\": 'error',\n\"status_code\": 416,\n\"message\": '数据校验出错，指定的班级不存在'\n}",
           "type": "json"
         },
         {
-          "title": "操作失败:",
+          "title": "操作失败",
           "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
           "type": "json"
         }
@@ -618,7 +618,7 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "请求事例 导入指定学期的班主任数据:",
+          "title": "请求事例 导入指定学期的班主任数据",
           "content": "{\nsession_id: 3,\nfile: 'd:/3.xls'\n}",
           "type": "object"
         }
@@ -636,7 +636,7 @@ define({ "api": [
     "success": {
       "examples": [
         {
-          "title": "操作成功:",
+          "title": "操作成功",
           "content": "HTTP/1.1 200 OK\n{\n\"status\": \"success\",\n\"status_code\": 200\n}",
           "type": "json"
         }
@@ -645,7 +645,7 @@ define({ "api": [
     "error": {
       "examples": [
         {
-          "title": "操作失败:",
+          "title": "操作失败",
           "content": "HTTP/1.1 404 Not Found\n{\n\"status\": \"error\",\n\"status_code\": 404\n}",
           "type": "json"
         }
@@ -655,34 +655,6 @@ define({ "api": [
     "filename": "./app/Http/Controllers/ClassTeacherController.php",
     "groupTitle": "classTeacher",
     "name": "PostApiClassteacherUpload"
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./public/apidoc/main.js",
-    "group": "d__manger_backend_public_apidoc_main_js",
-    "groupTitle": "d__manger_backend_public_apidoc_main_js",
-    "name": ""
   },
   {
     "type": "delete",
@@ -1071,6 +1043,34 @@ define({ "api": [
     "filename": "./app/Http/Controllers/DepartmentController.php",
     "groupTitle": "department",
     "name": "PostApiDepartmentUpload"
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./public/apidoc/main.js",
+    "group": "e__manger_backend_public_apidoc_main_js",
+    "groupTitle": "e__manger_backend_public_apidoc_main_js",
+    "name": ""
   },
   {
     "type": "delete",
