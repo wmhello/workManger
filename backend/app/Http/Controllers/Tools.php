@@ -20,8 +20,8 @@ trait Tools
        if ($date->month>=1 && $date->month<=7) {
            $year--;
        }
+       dd($year. ' '.$team);
        $session_id = Session::where('year', $year) ->where('team', $team)->value('id');
-       dd('当前学期'.$session_id);
        return $session_id;
    }
 }
