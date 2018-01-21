@@ -58,6 +58,7 @@ class ClassTeacherController extends Controller
         $pageSize = array_key_exists('pageSize', $data)?$data['pageSize']:15;
         $teacher_id = array_key_exists('teacher_id', $data)?$data['teacher_id']:null;
         $session_id = array_key_exists('session_id', $data)?$data['session_id']:$this->getCurrentSessionId();
+        dd($session_id);
         if ($session_id) {
             $lists = ClassTeacher::where('session_id',$session_id)->paginate($pageSize);
         }
