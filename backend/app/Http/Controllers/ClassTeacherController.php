@@ -55,6 +55,7 @@ class ClassTeacherController extends Controller
     public function index(Request $request)
     {
         $data = $request->only(['session_id', 'page', 'pageSize', 'teacher_id']);
+        dd($data) ;
         $pageSize = $data['pageSize']?$data['pageSize']:15;
         $teacher_id = $data['teacher_id']?$data['teacher_id']:null;
         $session_id = $data['session_id']?$data['session_id']:$this->getCurrentSessionId();
