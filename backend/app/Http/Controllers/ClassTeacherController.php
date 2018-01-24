@@ -55,14 +55,14 @@ class ClassTeacherController extends Controller
     public function index(Request $request)
     {
         $data = $request->only(['session_id', 'page', 'pageSize', 'teacher_id']);
-        $pageSize = $data['pageSize']??15;
-        $teacher_id = $data['teacher_id']??null;
-        $session_id = $data['session_id']??$this->getCurrentSessionId();
+        $pageSize = array_key_exists('pageSize', $data)?$data['pageSize']:15;
+        $teacher_id = array_key_exists('teacher_id', $data)?$data['teacher_id']:null;
+        $session_id = array_key_exists('session_id', $data)?$data['session_id']:$this->getCurrentSessionId();
+        if ($session_id) {
+            $lists = ClassTeacher::where('session_id',$session_id)->paginate($pageSize);
+        }
         if ($teacher_id && $session_id) {
             $lists = ClassTeacher::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
-        }
-        if (! $teacher_id && $session_id) {
-            $lists = ClassTeacher::where('session_id',$session_id)->paginate($pageSize);
         }
         return new ClassTeacherCollection($lists);
     }
