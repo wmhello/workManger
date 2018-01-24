@@ -1,6 +1,44 @@
 <template>
   <div>
     <el-button type="primary" plain size="large" icon="el-icon-document" @click="add()">添加</el-button>
+
+    <!-- 下拉搜索 -->
+    <!-- <el-dropdown @command="handleCommand">
+      <el-button type="primary">
+        按行政查询<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="学校">学校</el-dropdown-item>
+        <el-dropdown-item command="中层">中层</el-dropdown-item>
+        <el-dropdown-item command="全部">全部</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown> -->
+
+    <!-- <el-dropdown split-button type="primary" @command="handleCommand">
+      按行政查询
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="学校">学校</el-dropdown-item>
+        <el-dropdown-item command="中层">中层</el-dropdown-item>
+        <el-dropdown-item command="全部">全部</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown> -->
+
+    <!-- <el-select v-model="value8"
+      filterable
+      remote
+      placeholder="按行政查询">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select> -->
+
+    <el-input placeholder="请输入ID" v-model="search_teacherID">
+      <el-button slot="append" icon="el-icon-search" @click="searchTeacherID"></el-button>
+    </el-input>
+
     <div style="margin-bottom: 10px;"></div>
 
     <!-- 学校行政列表 -->
@@ -104,6 +142,7 @@
       background
       @current-change="handleCurrentChange"
       :current-page.sync="current_page"
+      v-show="paginationVisible"
       layout="total, prev, pager, next"
       :page-size="15"
       :total="total">
@@ -119,10 +158,13 @@
     getLeaderById,
     addNewLeader,
     updateLeaderInfo,
-    deleteLeaderById
- } from "@/api/leader";
-
-import leaderConfig from "./../../../static/config";
+    deleteLeaderById,
+    getTeacher
+  } from "@/api/leader";
+  // import {
+  //   getTeacher
+  // } from "@/api/getTeacher";
+  import leaderConfig from "./../../../static/config";
 
 function Leader (session_id = null, teacher_id = null, leader_type = null, job = null, remark = null) {
   this.session_id = session_id
@@ -140,6 +182,7 @@ export default {
       resetDialogFormVisible: false,
       editDialogFormVisible: false,
       addDialogFormVisible: false,
+      paginationVisible: true,
       resetId: "",
       uploadId: "",
       form: {
@@ -152,7 +195,21 @@ export default {
       },
       newform: new Leader(),
       current_page: 1,
-      total: 0
+      leader_type_search: "",
+      total: 0,
+      options: [{
+          value: '选项1',
+          label: '中层'
+        }, {
+          value: '选项2',
+          label: '学校'
+        }, {
+          value: '选项3',
+          label: '全部'
+      }],
+      value8: '',
+      teacherData:[],
+      search_teacherID:''
     }
   },
   methods:{
@@ -172,6 +229,15 @@ export default {
         })
         .catch(() => {
           //失败执行内容
+        });
+      // console.log(this.teacherData);
+      getTeacher().then(response => {
+          let result = response.data;
+          this.teacherData = result;
+          console.log(this.teacherData);
+        })
+        .catch(() => {
+
         });
     },
     add () {
@@ -266,15 +332,50 @@ export default {
       getLeader(current_page).then(response => {
         let result = response.data;
         this.tableData = result;
+        console.log(this.tableData);
         for(var i=0;i<result.length;i++){
           this.tableData[i].leader_type =
             result[i].leader_type == '1'?'中层':'学校';
         }
       })
+    },
+    handleCommand(command) {
+      console.log(command);
+      let leader_type_search = command;
+      this.leader_type_search = leader_type_search;
+      getLeader(leader_type_search).then(response => {
+        let result = response.data;
+        this.tableData = result;
+        console.log(this.tableData);
+        for(var i=0;i<result.length;i++){
+          this.tableData[i].leader_type =
+          result[i].leader_type == '1'?'中层':'学校';
+        }
+      })
+    },
+    searchTeacherID(){
+      getLeaderById (this.search_teacherID).then(response=>{
+        let result = response.data;
+        console.log(result);
+        this.tableData = [];
+        this.tableData.push(result);
+        this.paginationVisible = false;
+      }).catch(() => {
+        if(this.search_teacherID == ''){
+          this.fetchData();
+        }else{
+          this.$message({
+            type: "false",
+            message: "查无此人!"
+          });
+          this.tableData = [];
+          this.paginationVisible = false;
+        }
+      });
     }
   },
   mounted(){
-    this.fetchData()
+    this.fetchData();
   },
   created(){
 
@@ -287,5 +388,9 @@ export default {
   padding: 0;
   margin-top: 20px;
   text-align: right;
+}
+.el-input{
+  width: 200px;
+  margin-left: 10px;
 }
 </style>
