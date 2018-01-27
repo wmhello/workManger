@@ -7,6 +7,13 @@ export function getRole () {
   })
 }
 
+export function getRoles() {
+  return fetch({
+    url: '/api/getRoles',
+    method: 'get',
+  })
+}
+
 export function getRoleById (id) {
   return fetch({
     url: '/api/role/' + id,

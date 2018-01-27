@@ -3,13 +3,15 @@
     <el-table :data="tableData" :border="true" style="width: 100%">
       <el-table-column prop="id" label="序号" width="70">
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="180">
+      <el-table-column prop="name" label="姓名" width="100">
       </el-table-column>
       <el-table-column prop="email" label="email">
       </el-table-column>
-      <el-table-column  label="权限" width="100">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.role|roleFilter }}</span>
+      <el-table-column  label="权限" width="150" class="box">
+      <template slot-scope="scope" >
+
+        <el-tag style="margin-right: 5px" v-for="item in scope.row.role" size="medium">{{item|roleFilter(roles)}}</el-tag>
+        <!-- <span style="margin-left: 10px">{{ scope.row.role|roleFilter(roles) }}</span> -->
       </template>
       </el-table-column>
       <el-table-column  label="头像" width="80">
@@ -42,9 +44,8 @@
           <el-input v-model="form.email"></el-input>
         </el-form-item>
         <el-form-item label="用户权限">
-          <el-select v-model="form.role" placeholder="请选择">
-            <el-option label="管理员" value="admin">管理员</el-option>
-            <el-option label="编辑员" value="editor">编辑员</el-option>
+          <el-select v-model="form.role" multiple placeholder="用户权限">
+            <el-option v-for="item in roles"   :label="item.explain" :value="item.name">{{item.explain}}</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户头像">
@@ -100,6 +101,7 @@ import {
   deletAdminById,
   getCurrentPage
 } from "@/api/admin";
+import {getRoles }  from "@/api/role";
 
 import adminConfig from "./../../../static/config";
 
@@ -130,6 +132,7 @@ export default {
         psw: "",
         newpsw: ""
       },
+      roles: [],
       current_page: 1,
       path: "http://wmhello.natapp1.cc/api/admin",
       total: 0
@@ -259,17 +262,39 @@ export default {
           let result = response.data;
           this.tableData = result;
         })
+    },
+    getRoleAll() {
+       getRoles().then(res => {
+         this.roles = res.data
+       })
+       .catch(err => {
+
+       })
     }
   },
   mounted() {
-    this.fetchData()
-  },
-  created () {
 
   },
+  beforeCreate() {
+        getRoles().then(res => {
+         this.roles = res.data
+         this.fetchData()
+       })
+       .catch(err => {
+       })
+  },
   filters: {
-    roleFilter(val) {
-      return val == "admin" ? "管理员" : "编辑者";
+    roleFilter(val, items) {
+/*             let arrRoles = val;
+            let strRoles = ''
+            arrRoles.forEach(role => {
+              let strRole = items.find(item => item.name == role)
+              strRoles += strRole.explain + ''
+            })
+            return strRoles */
+            let role = items.find(item => item.name == val)
+            return  role.explain
+
     },
     avatarFilter(val) {
       return adminConfig.site + val;

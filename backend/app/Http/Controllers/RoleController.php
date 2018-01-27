@@ -57,6 +57,13 @@ class RoleController extends Controller
         return new RoleCollection($data);
     }
 
+    public function getRoles()
+    {
+        $data = Role::select('name', 'explain')->get();
+        return $this->successWithData($data);
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

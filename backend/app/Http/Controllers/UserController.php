@@ -100,20 +100,13 @@ class UserController extends Controller
         //  新建管理员信息
        $all =$request->validate([
            'name'=>'required',
-           'role' =>'nullable|string',
+           'role' =>'nullable|array',
            'password' => 'required',
            'email' => 'required|email|unique:users',
            'avatar' => 'nullable|string']);
-       // 对role进行特殊处理  role内容为空或者不为editor或者admin的话删除
-       if (! $all['role']){
-           $all = array_except($all,["role"]);
-       } else {
-           $role = $all['role'];
-           if( ! in_array($role,$this->roles) ){
-               $all = array_except($all,["role"]);
-           }
-       }
        $all['password'] = bcrypt($all['password']);
+       $all['role'] = implode(',', $all['role']);
+       dd($all);
        if (User::create($all)) {
             return $this->success();
        }

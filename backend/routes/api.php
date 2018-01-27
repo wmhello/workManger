@@ -72,6 +72,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/department/upload', 'DepartmentController@upload');
 
     Route::Resource('role', 'RoleController');
+    Route::get('getRoles', 'RoleController@getRoles');
 
     Route::get('/getSession', 'SessionController@getSession');
     Route::get('/getTeacher', 'TeacherController@getTeacher');

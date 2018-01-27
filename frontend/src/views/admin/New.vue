@@ -14,9 +14,8 @@
         <el-input type="password" v-model="form.checkPass" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="用户权限" prop="role">
-        <el-select v-model="form.role" placeholder="请选择权限">
-          <el-option label="编辑员" value="editor"></el-option>
-          <el-option label="管理员" value="admin"></el-option>
+        <el-select v-model="form.role" multiple placeholder="请选择权限">
+          <el-option v-for="item in roles" :label="item.explain" :value="item.name">{{item.explain}}</el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="用户头像">
@@ -34,6 +33,7 @@
 <script>
 import { getToken } from "@/utils/auth";
 import { addNewAdmin,uploadAdminByImg } from "@/api/admin";
+import { getRoles } from "@/api/role";
 import avatarUploader from "@/components/avatar";
 import adminConfig from "@/../static/config";
 
@@ -74,6 +74,7 @@ export default {
     return {
       imageUrl:'',
       form: new Admin(),
+      roles: [],
       rules: {
         name: [
           { required: true, message: '请填写名称', trigger: 'blur' },
@@ -137,8 +138,12 @@ export default {
   mounted () {
 
   },
-  created() {
-
+  beforeCreate() {
+    getRoles().then(res => {
+         this.roles = res.data
+    })
+    .catch(err => {
+    })
   }
 };
 </script>
