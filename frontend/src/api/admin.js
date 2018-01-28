@@ -71,6 +71,6 @@ export function addNewAdmin(data) {
   return fetch({
     url: '/api/admin',
     method: 'post',
-    data,
+    data
   })
 }

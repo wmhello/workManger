@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item label="用户权限" prop="role">
         <el-select v-model="form.role" multiple placeholder="请选择权限">
-          <el-option v-for="item in roles" :label="item.explain" :value="item.name">{{item.explain}}</el-option>
+          <el-option v-for="item in roles" :key="item.name" :label="item.explain" :value="item.name">{{item.explain}}</el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="用户头像">
@@ -37,7 +37,7 @@ import { getRoles } from "@/api/role";
 import avatarUploader from "@/components/avatar";
 import adminConfig from "@/../static/config";
 
-function Admin(name='', email = '', role = 'editor', password = '', checkPass = '', avatar = '')  {
+function Admin(name='', email = '', role = 'user', password = '', checkPass = '', avatar = '')  {
   this.name = name
   this.email = email
   this.role = role
@@ -113,7 +113,18 @@ export default {
                 }
               })
           }).catch(error => {
-              console.log(error.response)
+              let result = error.response.data
+              if (result.status_code == 422) {
+              let message = [];
+              let obj = result.message
+              Object.keys(obj).forEach(item => {
+                message.push(obj[item])
+              })
+              this.$notify.error({
+                title: '后台数据校验出错',
+                message: message.join('||')
+              });
+              }
           })
         } else {
           this.$message.error('数据校验不通过，请重新填写')

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -98,16 +99,28 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //  新建管理员信息
-       $all =$request->validate([
-           'name'=>'required',
-           'role' =>'nullable|array',
-           'password' => 'required',
-           'email' => 'required|email|unique:users',
-           'avatar' => 'nullable|string']);
-       $all['password'] = bcrypt($all['password']);
-       $all['role'] = implode(',', $all['role']);
-       dd($all);
-       if (User::create($all)) {
+        $data = $request->only(['name', 'role', 'password', 'email', 'avatar']);
+        $rules = [
+            'name'=>'required',
+            'role' =>'nullable|array',
+            'password' => 'required',
+            'email' => 'required|email|unique:users',
+            'avatar' => 'nullable|string'
+        ];
+       $message = [
+           'name.required' => '用户昵称是必填项',
+           'password.required' => '用户密码是必填项',
+           'email.required' => 'Email是必填项',
+           'email.unique' => 'Email已经存在，请重新填写',
+       ];
+       $validator = Validator::make($data, $rules, $message);
+       if ($validator->fails()) {
+           $errors = $validator->errors($validator);
+           return $this->errorWithCodeAndInfo(422, $errors);
+       }
+       $data['password'] = bcrypt($data['password']);
+       $data['role'] = implode(',', $data['role']);
+       if (User::create($data)) {
             return $this->success();
        }
     }

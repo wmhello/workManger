@@ -158,8 +158,7 @@
     getLeaderById,
     addNewLeader,
     updateLeaderInfo,
-    deleteLeaderById,
-    getTeacher
+    deleteLeaderById
   } from "@/api/leader";
   // import {
   //   getTeacher

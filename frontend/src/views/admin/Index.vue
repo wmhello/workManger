@@ -10,7 +10,7 @@
       <el-table-column  label="权限" width="150" class="box">
       <template slot-scope="scope" >
 
-        <el-tag style="margin-right: 5px" v-for="item in scope.row.role" size="medium">{{item|roleFilter(roles)}}</el-tag>
+        <el-tag style="margin-right: 5px" v-for="item in scope.row.role" :key="item" size="medium">{{item|roleFilter(roles)}}</el-tag>
         <!-- <span style="margin-left: 10px">{{ scope.row.role|roleFilter(roles) }}</span> -->
       </template>
       </el-table-column>
@@ -45,7 +45,7 @@
         </el-form-item>
         <el-form-item label="用户权限">
           <el-select v-model="form.role" multiple placeholder="用户权限">
-            <el-option v-for="item in roles"   :label="item.explain" :value="item.name">{{item.explain}}</el-option>
+            <el-option v-for="item in roles"  :key="item.name" :label="item.explain" :value="item.name">{{item.explain}}</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户头像">
