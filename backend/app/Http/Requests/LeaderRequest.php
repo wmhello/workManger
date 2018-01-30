@@ -24,12 +24,19 @@ class LeaderRequest extends FormRequest
     public function rules()
     {
         return [
-            'session_id' => "required|exists:sessions,id",
             'teacher_id' => "required|exists:yz_teacher,id",
             'leader_type' => "required|in:1,2",
             'job' => "nullable|string|max:20",
             'remark' => "nullable|string|max:50",
+        ];
+    }
 
+    public function message()
+    {
+        return [
+         'teacher_id.required' => '教师信息必须选择',
+         'teacher_id.exists' => '所选择的教师信息不存在',
+         'leader_type.required' => "行政类型必须填写",
         ];
     }
 }

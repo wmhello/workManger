@@ -20,9 +20,8 @@ export function getLeaderById (id) {
 export function updateLeaderInfo (id, data) {
   return fetch({
     url: '/api/leader/' + id,
-    method: 'get',
+    method: 'patch',
     data: {
-      session_id: data.session_id,
       teacher_id: data.teacher_id,
       leader_type: data.leader_type,
       job: data.job,

@@ -132,7 +132,8 @@ class LeaderController extends Controller
     public function store(LeaderRequest $request)
     {
         //
-        $data = $request->only(['session_id', 'teacher_id', 'leader_type', 'job', 'remark']);
+        $data = $request->only(['teacher_id', 'leader_type', 'job', 'remark']);
+        $data['session_id'] = $this->getCurrentSessionId();
         if (Leader::create($data)) {
             return $this->success();
         } else  {
@@ -218,13 +219,11 @@ class LeaderController extends Controller
     public function update(LeaderRequest $request, Leader $leader)
     {
         //
-        $data = $request->only(['session_id', 'teacher_id', 'leader_type', 'job', 'remark']);
-        $leader->session_id = $data['session_id'];
+        $data = $request->only( ['teacher_id', 'leader_type', 'job', 'remark']);
         $leader->teacher_id = $data['teacher_id'];
         $leader->leader_type = $data['leader_type'];
         $leader->job = $data['job'];
         $leader->remark = $data['remark'];
-
         if ($leader->save()) {
             return $this->success();
         } else  {
@@ -306,7 +305,6 @@ class LeaderController extends Controller
                return $this->error();
            }
     }
-
 
 
 }

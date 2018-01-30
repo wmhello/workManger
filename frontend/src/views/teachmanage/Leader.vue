@@ -1,55 +1,46 @@
 <template>
   <div>
-    <el-button type="primary" plain size="large" icon="el-icon-document" @click="add()">添加</el-button>
-
-    <!-- 下拉搜索 -->
-    <!-- <el-dropdown @command="handleCommand">
-      <el-button type="primary">
-        按行政查询<i class="el-icon-arrow-down el-icon--right"></i>
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="学校">学校</el-dropdown-item>
-        <el-dropdown-item command="中层">中层</el-dropdown-item>
-        <el-dropdown-item command="全部">全部</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown> -->
-
-    <!-- <el-dropdown split-button type="primary" @command="handleCommand">
-      按行政查询
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="学校">学校</el-dropdown-item>
-        <el-dropdown-item command="中层">中层</el-dropdown-item>
-        <el-dropdown-item command="全部">全部</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown> -->
-
-    <!-- <el-select v-model="value8"
-      filterable
-      remote
-      placeholder="按行政查询">
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
-      </el-option>
-    </el-select> -->
-
-    <el-input placeholder="请输入ID" v-model="search_teacherID">
-      <el-button slot="append" icon="el-icon-search" @click="searchTeacherID"></el-button>
-    </el-input>
-
-    <div style="margin-bottom: 10px;"></div>
-
+       <el-form id="toolbar" :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="姓名">
+            <el-input v-model="formInline.name" placeholder="姓名"></el-input>
+          </el-form-item>
+         <el-form-item label="行政类型">
+             <el-select v-model="formInline.leader_type" placeholder="行政类型">
+                 <el-option label="中层领导" value="1"></el-option>
+                 <el-option label="学校领导" value="2"></el-option>
+             </el-select>
+       </el-form-item>
+           <el-form-item label="学期">
+               <el-select v-model="formInline.session_id" placeholder="学期">
+                   <el-option v-for="item in sessions" :label="item.remark |adjustSessionMark(item)" :value="item.id" :key="item.id"></el-option>
+               </el-select>
+           </el-form-item>
+           <el-form-item>
+               <el-button  @click="search" plain>查询</el-button>
+               <el-button type="info" @click="searchReset" plain>重置</el-button>
+           </el-form-item>
+     </el-form>
+  <div id="datagrid">
+    <div class="toolbar">
+      <el-button  plain icon="el-icon-plus" @click="add()">添加</el-button>
+      <el-button  plain icon="el-icon-download" @click="add()">导出</el-button>
+      <el-button  plain icon="el-icon-upload" @click="add()">导入</el-button>
+    </div>
     <!-- 学校行政列表 -->
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="序号" width="70">
       </el-table-column>
-      <el-table-column prop="session_id" label="学期ID" width="120">
+      <el-table-column label="教师" width="120">
+          <template slot-scope="scope">
+              <span>{{scope.row.teacher_id|getTeacherName(teachers) }}</span>
+          </template>
       </el-table-column>
-      <el-table-column prop="teacher_id" label="教师ID" width="120">
-      </el-table-column>
-      <el-table-column prop="leader_type" label="行政类型" width="120">
+      <el-table-column label="行政类型" width="120">
+          <template slot-scope="scope">
+                      <el-tag
+          :type="scope.row.leader_type === 1 ? 'primary' : 'success'"
+          close-transition>{{scope.row.leader_type==1?'中层':'学校'}}</el-tag>
+          </template>
       </el-table-column>
       <el-table-column prop="job" label="职务描述" width="180">
       </el-table-column>
@@ -57,87 +48,17 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-tooltip content="编辑" placement="top">
-            <el-button plain icon="el-icon-edit" type="info" size="small" @click="edit(scope.row)"></el-button>
+          <el-tooltip content="编辑" placement="right-end"  effect="light">
+            <el-button plain icon="el-icon-edit" type="primary" size="small" @click="edit(scope.row)"></el-button>
           </el-tooltip>
-          <el-tooltip content="删除" placement="top">
+          <el-tooltip content="删除" placement="right-end"  effect="light">
             <el-button plain icon="el-icon-delete" type="danger" size="small" @click="del(scope.row)"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-
-    <!-- 编辑列表 -->
-    <el-dialog title="行政信息" :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
-      <el-form :model="form" label-width="100px">
-        <el-form-item label="学期ID"  prop="session_id">
-          <el-input v-model="form.session_id" placeholder="请填写学期ID" required>
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="教师ID"  prop="teacher_id">
-          <el-input v-model="form.teacher_id" placeholder="请填写教师ID" required>
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="行政类型" prop="leader_type">
-          <el-select v-model="form.leader_type" placeholder="请选择行政类型">
-            <el-option label="中层" :value="1">中层</el-option>
-            <el-option label="学校" :value="2">学校</el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="职务描述"  prop="job">
-          <el-input v-model="form.job"></el-input>
-        </el-form-item>
-
-        <el-form-item label="备注"  prop="remark">
-          <el-input v-model="form.remark"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveData()">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 新增列表 -->
-    <el-dialog title="行政信息" :visible.sync="addDialogFormVisible" :close-on-click-modal="false">
-      <el-form :model="newform" label-width="100px">
-        <el-form-item label="学期ID"  prop="session_id">
-          <el-input v-model="newform.session_id" placeholder="请填写学期ID" required>
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="教师ID"  prop="teacher_id">
-          <el-input v-model="newform.teacher_id" placeholder="请填写教师ID" required>
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="行政类型" prop="leader_type">
-          <el-select v-model="newform.leader_type" placeholder="请选择行政类型">
-            <el-option label="中层" :value="1">中层</el-option>
-            <el-option label="学校" :value="2">学校</el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="职务描述"  prop="job">
-          <el-input v-model="newform.job"></el-input>
-        </el-form-item>
-
-        <el-form-item label="备注"  prop="remark">
-          <el-input v-model="newform.remark"></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('newform')">立即创建</el-button>
-          <el-button @click="resetForm('newform')">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-
     <!-- 分页 -->
+    <div class="pagination">
     <el-pagination
       background
       @current-change="handleCurrentChange"
@@ -147,35 +68,89 @@
       :page-size="15"
       :total="total">
     </el-pagination>
+    </div>
+  </div>
+        <!-- 编辑列表 -->
+    <el-dialog title="行政信息" center :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
+      <el-form :model="form" label-width="100px">
+        <el-row>
+          <el-col :span="12">
+        <el-form-item label="教师"  >
+            <el-select v-model="form.teacher_id" filterable placeholder="请选择">
+                  <el-option v-for="item in teachers" :key="item.id" :label="item.name" :value="item.id">
+                  </el-option>
+            </el-select>
+        </el-form-item>
+          </el-col>
+          <el-col :span="12">
+        <el-form-item label="行政类型" prop="leader_type">
+          <el-select v-model="form.leader_type" placeholder="请选择行政类型">
+            <el-option label="中层" :value="1">中层</el-option>
+            <el-option label="学校" :value="2">学校</el-option>
+          </el-select>
+        </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+        <el-form-item label="职务描述"  prop="job">
+          <el-input v-model="form.job"></el-input>
+        </el-form-item>
+          </el-col>
+          <el-col :span="12">
+        <el-form-item label="备注"  prop="remark">
+          <el-input v-model="form.remark"></el-input>
+        </el-form-item>
+          </el-col>
+        </el-row>
+        </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveData()">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
-  import { getToken } from "@/utils/auth";
-  import {
-    getLeader,
-    getLeaderById,
-    addNewLeader,
-    updateLeaderInfo,
-    deleteLeaderById
-  } from "@/api/leader";
-  // import {
-  //   getTeacher
-  // } from "@/api/getTeacher";
-  import leaderConfig from "./../../../static/config";
+import { getToken } from "@/utils/auth";
+import {
+  getLeader,
+  getLeaderById,
+  addNewLeader,
+  updateLeaderInfo,
+  deleteLeaderById
+} from "@/api/leader";
+import { getSession, getTeacher, getDefaultSession} from "@/api/other";
+import leaderConfig from "./../../../static/config";
 
-function Leader (session_id = null, teacher_id = null, leader_type = null, job = null, remark = null) {
-  this.session_id = session_id
-  this.teacher_id = teacher_id
-  this.leader_type = leader_type
-  this.job = job
-  this.remark = remark
+function Leader(
+  session_id = null,
+  teacher_id = null,
+  leader_type = null,
+  job = null,
+  remark = null
+) {
+  this.session_id = session_id;
+  this.teacher_id = teacher_id;
+  this.leader_type = leader_type;
+  this.job = job;
+  this.remark = remark;
+}
+
+function SearchTemplate(name='', leader_type=null, session_id = null) {
+{
+        this.name = name
+        this.leader_type = leader_type
+        this.session_id = session_id
+      }
 }
 
 export default {
-  data(){
-    return{
+  data() {
+    return {
+      formInline: new SearchTemplate(),
       tableData: [],
       dialogFormVisible: false,
       resetDialogFormVisible: false,
@@ -184,6 +159,8 @@ export default {
       paginationVisible: true,
       resetId: "",
       uploadId: "",
+      teachers: [],
+      sessions: [],
       form: {
         id: "",
         session_id: 0,
@@ -192,111 +169,107 @@ export default {
         job: "",
         remark: ""
       },
+      session_id: null,
+      isNew: false,
+      isEdit: false,
+      leaderType: ["无", "中层", "学校"],
       newform: new Leader(),
       current_page: 1,
       leader_type_search: "",
       total: 0,
-      options: [{
-          value: '选项1',
-          label: '中层'
-        }, {
-          value: '选项2',
-          label: '学校'
-        }, {
-          value: '选项3',
-          label: '全部'
-      }],
-      value8: '',
-      teacherData:[],
-      search_teacherID:''
-    }
+      value8: "",
+      teacherData: [],
+      search_teacherID: ""
+    };
   },
-  methods:{
+  methods: {
     fetchData() {
       getLeader()
         .then(response => {
           //成功执行内容
           let result = response.data;
-          // console.log(result);
           this.tableData = result;
           this.total = response.meta.total;
-          for(var i=0;i<result.length;i++){
-            // console.log(result[i].leader_type);
-            this.tableData[i].leader_type =
-              result[i].leader_type == '1'?'中层':'学校';
-          }
         })
         .catch(() => {
           //失败执行内容
         });
-      // console.log(this.teacherData);
-      getTeacher().then(response => {
-          let result = response.data;
-          this.teacherData = result;
-          console.log(this.teacherData);
-        })
-        .catch(() => {
-
-        });
     },
-    add () {
-      this.addDialogFormVisible = true;
+    add() {
+      //this.addDialogFormVisible = true;
+      this.editDialogFormVisible = true;
+      this.isNew = true;
+      this.form = new Leader();
     },
-    edit (row) {
+    edit(row) {
       let id = row.id;
       this.uploadId = id;
       getLeaderById(id).then(response => {
         let result = response.data;
         this.form = result;
+        this.isEdit = true;
         this.editDialogFormVisible = true;
       });
     },
-    saveData () {
-      updateLeaderInfo(this.uploadId, this.form).then(response => {
-        //成功执行内容
-        let result = response.status_code;
-        // console.log(result);
-        if (result == 200) {
-          let currentId = this.form.id;
-          let record = 0;
-          record = this.tableData.findIndex((val, index) => {
-            return val.id == currentId;
-          });
-          this.tableData.splice(record, 1, this.form);
-          for(var i=0;i<this.tableData.length;i++){
-            // console.log(this.tableData[i].leader_type);
-            this.tableData[i].leader_type =
-              this.tableData[i].leader_type == '1'?'中层':'学校';
-          }
-          this.editDialogFormVisible = false;
-        }
-      })
-      .catch(() => {
-        //失败执行内容
-        console.log('连接失败');
-        // console.log(error.response);
-      });
-    },
-    resetForm () {
-      this.newform = new Leader();
-      this.resetDialogFormVisible = true;
+    saveData() {
+      this.editDialogFormVisible = false;
+      if (this.isNew) {
+        this.isNew = false
+        this.addLeaderData()
+      }
+      if (this.isEdit) {
+        this.isEdit = false
+        this.updateLeaderData()
+      }
 
     },
-    submitForm () {
-      addNewLeader(this.newform).then(response => {
-        // console.log(response)
-        this.$alert('新建成功', '友情提示', {
-          callback: action => {
-            // 清空内容，重新开始建立
-            // this.newform = new Leader()
-            this.addDialogFormVisible = false;
+    updateLeaderData() {
+      updateLeaderInfo(this.uploadId, this.form)
+        .then(response => {
+          //成功执行内容
+          let result = response.status_code;
+          if (result == 200) {
+            let currentId = this.form.id;
+            let record = 0;
+
+            record = this.tableData.findIndex((val, index) => {
+              return val.id == currentId;
+            });
+            this.tableData.splice(record, 1, this.form);
+            this.$message({
+                  type: "success",
+                  message: "用户信息更新成功"
+            });
           }
         })
-      }).catch(error => {
-        console.log(error.response)
-      })
+        .catch(() => {
+          //失败执行内容
+          console.log("连接失败");
+          // console.log(error.response);
+        });
     },
-    del (row) {
+    addLeaderData() {
+      addNewLeader(this.form)
+        .then(response => {
+            this.$message({
+                  type: "success",
+                  message: "用户信息添加成功"
+            });
+        })
+        .catch(error => {
+          console.log(error.response);
+        });
+    },
+
+    // 搜索相关
+    search () {
+       console.log(this.formInline)
+    },
+    searchReset() {
+      this.formInline = new SearchTemplate('', null, this.session_id)
+    },
+
+    del(row) {
       this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -306,37 +279,32 @@ export default {
           let id = row.id;
           let record = null;
           record = this.tableData.findIndex(val => val.id == id);
-
-          deleteLeaderById(id).then(response => {
-            let result = response.status_code;
-            if (result == 200) {
-              this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-              this.tableData.splice(record, 1);
-            }
-          })
-          .catch(() => {
-            //失败执行内容
-            console.log('删除失败');
-          });
+          deleteLeaderById(id)
+            .then(response => {
+              let result = response.status_code;
+              if (result == 200) {
+                this.$message({
+                  type: "success",
+                  message: "删除成功!"
+                });
+                this.tableData.splice(record, 1);
+              }
+            })
+            .catch(() => {
+              //失败执行内容
+              console.log("删除失败");
+            });
         })
-        .catch(() => { });
+        .catch(() => {});
     },
-    handleCurrentChange(val){
+    // 分页相关
+    handleCurrentChange(val) {
       let current_page = val;
       this.current_page = current_page;
-      //console.log(`当前页: ${val}`);
       getLeader(current_page).then(response => {
         let result = response.data;
         this.tableData = result;
-        console.log(this.tableData);
-        for(var i=0;i<result.length;i++){
-          this.tableData[i].leader_type =
-            result[i].leader_type == '1'?'中层':'学校';
-        }
-      })
+      });
     },
     handleCommand(command) {
       console.log(command);
@@ -345,51 +313,88 @@ export default {
       getLeader(leader_type_search).then(response => {
         let result = response.data;
         this.tableData = result;
-        console.log(this.tableData);
-        for(var i=0;i<result.length;i++){
-          this.tableData[i].leader_type =
-          result[i].leader_type == '1'?'中层':'学校';
-        }
-      })
-    },
-    searchTeacherID(){
-      getLeaderById (this.search_teacherID).then(response=>{
-        let result = response.data;
-        console.log(result);
-        this.tableData = [];
-        this.tableData.push(result);
-        this.paginationVisible = false;
-      }).catch(() => {
-        if(this.search_teacherID == ''){
-          this.fetchData();
-        }else{
-          this.$message({
-            type: "false",
-            message: "查无此人!"
-          });
-          this.tableData = [];
-          this.paginationVisible = false;
-        }
       });
-    }
-  },
-  mounted(){
-    this.fetchData();
-  },
-  created(){
+    },
+    getSessions() {
+      // 获取学期信息
+      return new Promise((resolve, reject) => {
+        getSession()
+          .then(response => {
+            this.sessions = response.data;
+            resolve("sessions ok");
+          })
+          .catch(err => {
+            reject("学期信息调用出错");
+          });
+      });
+    },
+    getTeachers() {
+      // 获取教师姓名和id信息
+      return new Promise((resolve, reject) => {
+        getTeacher()
+          .then(response => {
+            this.teachers = response.data;
+            resolve("teachers ok");
+          })
+          .catch(err => {
+            reject("教师信息调用出错");
+          });
+      });
+    },
 
+  },
+  mounted() {
+    Promise.all([this.getSessions(), this.getTeachers()]).then(res => {
+      this.fetchData();
+      getDefaultSession().then(response => {
+        let result = response.data;
+        this.session_id = result.id
+        this.formInline = new SearchTemplate('', null, this.session_id)
+      })
+    });
+  },
+  filters: {
+    getTeacherName(value, teachers) {
+      let item = teachers.find(val => val.id == value);
+      return item.name;
+    },
+    getLeaderType(value, leaderType) {
+      return leaderType[value];
+    },
+    adjustSessionMark(value, item){
+      let year = item.year + 1
+      let teamNote = item.team==1? '上学期': '下学期'
+      return item.year+'-'+year+'学年'+teamNote
+    }
   }
-}
+};
 </script>
 
 <style>
-.el-pagination{
+.el-pagination {
   padding: 0;
   margin-top: 20px;
   text-align: right;
 }
-.el-input{
+.el-input {
   width: 200px;
   margin-left: 10px;
+}
+#toolbar {
+    background-color: #e8e8e8 !important;
+    margin-bottom: 5px;
+}
+#toolbar .el-form-item {
+   margin-bottom: 5px;
+   margin-top: 5px;
+   margin-left: 5px;
+}
+#datagrid{
+  border:1px solid #ddd
+}
+#datagrid .toolbar{
+  padding-left: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 </style>

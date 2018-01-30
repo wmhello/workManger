@@ -75,8 +75,10 @@ Route::middleware('auth:api')->group(function() {
     Route::get('getRoles', 'RoleController@getRoles');
 
     Route::get('/getSession', 'SessionController@getSession');
+    Route::get('/getDefaultSession', 'SessionController@getDefaultSession');
     Route::get('/getTeacher', 'TeacherController@getTeacher');
     Route::get('/getTeach', 'TeachController@getTeach');
+
 
 
 });

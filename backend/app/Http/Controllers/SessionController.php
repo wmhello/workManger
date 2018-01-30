@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SessionController extends Controller
 {
-    use Result;
+    use Result, Tools;
 
     /**
      * @api {get} /api/session 显示学期列表
@@ -340,5 +340,17 @@ class SessionController extends Controller
         $data = Session::select('id','year','team')->get()->toArray();
         return $this->successWithData($data);
     }
-    
+
+    public function getDefaultSession()
+    {
+
+        $id  = $this->getCurrentSessionId();
+        return response()->json([
+            'data' => [
+                'id' => $id
+            ],
+            'status' => 'success',
+            'status_code' => 200
+        ], 200);
+    }
 }

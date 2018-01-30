@@ -25,7 +25,7 @@ class LeaderUploadRequest extends FormRequest
     {
         return [
             //
-            'session_id' => 'required|exists:sessions,id'
+
         ];
     }
 }

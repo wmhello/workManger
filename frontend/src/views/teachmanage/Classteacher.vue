@@ -7,9 +7,10 @@
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="序号" width="70">
       </el-table-column>
-      <el-table-column prop="session_id" label="学期ID" width="120">
-      </el-table-column>
-      <el-table-column prop="teacher_id" label="教师ID" width="120">
+      <el-table-column label="教师" width="120">
+          <template slot-scope="scope">
+              <span>{{scope.row.teacher_id|getTeacherName(teachers) }}</span>
+          </template>
       </el-table-column>
       <el-table-column prop="class" label="班级" width="120">
       </el-table-column>
@@ -125,7 +126,7 @@
     updateClassTeacherInfo,
     deleteClassTeacherById
  } from "@/api/classTeacher";
-
+  import { getTeacher, getSession } from "@/api/other";
 import ClassTeacherConfig from "./../../../static/config";
 
 function ClassTeacher (session_id = null, teacher_id = null, leader_type = null, grade = null, remark = null) {
@@ -146,6 +147,8 @@ export default {
       addDialogFormVisible: false,
       resetId: "",
       uploadId: "",
+      sessions:[],
+      teachers:[],
       form: {
         id: "",
         session_id: 0,
@@ -266,13 +269,43 @@ export default {
         let result = response.data;
         this.tableData = result;
       })
+    },
+        getSessions() {  // 获取学期信息
+      return new Promise((resolve, reject) => {
+       getSession().then(response => {
+            this.sessions = response.data
+            resolve('sessions ok')
+       }).catch(err => {
+          reject('学期信息调用出错')
+         // console.log(err.response)
+       })
+      })
+    },
+    getTeachers() {  // 获取教师姓名和id信息
+      return new Promise((resolve, reject) => {
+         getTeacher().then(response => {
+              this.teachers = response.data
+              resolve('teachers ok')
+         }).catch(err => {
+              reject('教师信息调用出错')
+         // console.log(err.response)
+         })
+     })
     }
   },
   mounted(){
-    this.fetchData()
+    Promise.all([this.getSessions(),this.getTeachers()]).then(res => {
+         this.fetchData()
+    })
   },
   created(){
 
+  },
+    filters: {
+     getTeacherName(value, teachers) {
+      let item = teachers.find(val => val.id == value)
+      return item.name
+     }
   }
 }
 </script>
