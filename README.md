@@ -31,7 +31,7 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 >- **结合实际开发中的webpack的各种配置方式**
   
 ## 项目测试
-- 后端使用了laravel 可以参考backend中的[相关资料](https://github.com/wmhello/workManger/blob/master/backend/%E7%94%9F%E6%88%90%E9%A1%B9%E7%9B%AE%E5%90%8E%E5%8F%B0.txt)进行发布与测试  后端只提供api接口和api文档
+- 后端使用了laravel 可以参考backend中的[相关资料](https://github.com/wmhello/workManger/blob/master/backend/%E9%A1%B9%E7%9B%AE%E5%90%8E%E5%8F%B0%E5%AE%89%E8%A3%85.md)进行发布与测试  后端只提供api接口和api文档
   系统登录密码从backend\database\seeds里面去找 具体可以参考laravel教程
 - 前端使用了vue.js 技术  可以参考vue.js的项目流程来进行发布与测试
 
