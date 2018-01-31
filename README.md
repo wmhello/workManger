@@ -48,7 +48,10 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 ![用户管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/user-manger.png)
 ### 用户编辑页面
 ![用户编辑页面](https://github.com/wmhello/workManger/blob/master/Screenshot/edit-user.png)
-
+### 行政管理页面
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-manger.png)
+### 创建新学期页面
+![创建新学期页面](https://github.com/wmhello/workManger/blob/master/Screenshot/new-session.png)
 
 # 说明
 
