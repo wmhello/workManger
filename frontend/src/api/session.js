@@ -1,50 +1,49 @@
 import fetch from '@/utils/fetch'
 
-export function getTeach() {
+export function getInfo() {
   return fetch({
     url: '/api/session',
     method: 'get'
   })
 }
 
-export function getTeachById(id) {
+export function getInfoById(id) {
   return fetch({
     url: '/api/session/' + id,
     method: 'get'
   })
 }
 
-export function updataTeachInfo(id, data) {
+export function updateInfo(id, data) {
+
+  data.year = parseInt(data.year.getFullYear())
   return fetch({
     url: '/api/session/' + id,
     method: 'patch',
-    data: {
-      year: data.year,
-      team: data.team,
-      one: data.one,
-      two: data.two,
-      three: data.three
-    },
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    data
   })
 }
 
-export function addNewTeach(data) {
+export function addInfo(data) {
+  data.year = parseInt(data.year.getFullYear())
   return fetch({
     url: '/api/session',
     method: 'post',
-    data,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    data
   })
 }
 
-export function deletTeachById(id) {
+export function deleteInfoById(id) {
   return fetch({
     url: '/api/session/' + id,
     method: 'delete'
   })
+}
+
+export function Model (year = new Date(), team = 1, one = 1, two = 1, three = 1) {
+  this.year = year
+  this.team = team
+  this.one = one
+  this.two = two
+  this.three = three
 }

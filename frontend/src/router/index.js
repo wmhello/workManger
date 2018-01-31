@@ -62,6 +62,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/admin/index',
     name: 'admin',
+    alwaysShow: true,
     meta: {
       role: ['admin'],
       icon: 'user',
@@ -77,16 +78,6 @@ export const asyncRouterMap = [
           title: '用户列表',
           icon: 'table'
         }
-      },
-      {
-        path: 'new',
-        name: 'admin/new',
-        component: _import('admin/New'),
-        meta: {
-          role: ['admin'],
-          title: '新增用户',
-          icon: 'a'
-        }
       }
     ]
   },
@@ -96,6 +87,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/role/index',
     name: 'role',
+    alwaysShow: true,
     meta: {
       role: ['admin'],
       icon: 'tab',
@@ -110,16 +102,6 @@ export const asyncRouterMap = [
           role: ['admin'],
           title: '角色列表',
           icon: 'table'
-        }
-      },
-      {
-        path: 'new',
-        name: 'role/new',
-        component: _import('role/New'),
-        meta: {
-          role: ['admin'],
-          title: '新增角色',
-          icon: 'wujiaoxing'
         }
       }
     ]

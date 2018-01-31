@@ -1,6 +1,6 @@
 import fetch from '@/utils/fetch'
 
-export function getRole () {
+export function getInfo() {
   return fetch({
     url: '/api/role',
     method: 'get',
@@ -14,39 +14,39 @@ export function getRoles() {
   })
 }
 
-export function getRoleById (id) {
+export function getInfoById (id) {
   return fetch({
     url: '/api/role/' + id,
     method: 'get',
   })
 }
 
-export function updataRoleInfo (id, data) {
+export function updateInfo (id, data) {
   return fetch({
     url: '/api/role/' + id,
     method: 'PATCH',
-    params: {
-      name: data.name,
-      explain: data.explain,
-      remark: data.remark
-    },
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
+    data,
   })
 }
 
-export function deleteRoleById (id) {
+export function deleteInfoById (id) {
   return fetch({
     url: '/api/role/' + id,
     method: 'delete',
   })
 }
 
-export function addNewRole (data) {
+export function addInfo (data) {
   return fetch({
     url: '/api/role',
     method: 'post',
     data,
   })
+}
+
+export function Model (name='', explain='', remark='') {
+    this.name = name
+    this.explain = explain
+    this.remark = remark
+
 }

@@ -1,9 +1,30 @@
 <template>
-  <div>
-    <el-button type="primary" plain size="large" icon="el-icon-document" @click="add()">添加</el-button>
-    <div style="margin-bottom: 10px;"></div>
-
-    <!-- 班主任列表 -->
+  <div id="class_teacher">
+       <el-form id="toolbar" :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="姓名">
+            <el-input v-model="formInline.name" placeholder="姓名"></el-input>
+          </el-form-item>
+         <el-form-item label="行政类型">
+             <el-select v-model="formInline.leader_type" placeholder="行政类型">
+                 <el-option label="中层领导" value="1"></el-option>
+                 <el-option label="学校领导" value="2"></el-option>
+             </el-select>
+       </el-form-item>
+           <el-form-item label="学期">
+               <el-select v-model="formInline.session_id" placeholder="学期">
+                   <el-option v-for="item in sessions" :label="item.remark |adjustSessionMark(item)" :value="item.id" :key="item.id"></el-option>
+               </el-select>
+           </el-form-item>
+           <el-form-item>
+               <el-button  @click="search" plain>查询</el-button>
+               <el-button type="info" @click="searchReset" plain>重置</el-button>
+           </el-form-item>
+     </el-form>
+  <div id="datagrid">
+    <div class="toolbar">
+      <el-button plain  icon="el-icon-plus" @click="add()">添加</el-button>
+    </div>
+        <!-- 班主任列表 -->
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="序号" width="70">
       </el-table-column>
@@ -113,7 +134,7 @@
       :page-size="15"
       :total="total">
     </el-pagination>
-
+  </div>
   </div>
 </template>
 
@@ -137,6 +158,13 @@ function ClassTeacher (session_id = null, teacher_id = null, leader_type = null,
   this.remark = remark
 }
 
+function SearchTemplate(name='', leader_type=null, session_id = null)
+{
+    this.name = name
+    this.leader_type = leader_type
+    this.session_id = session_id
+}
+
 export default {
   data(){
     return{
@@ -157,6 +185,7 @@ export default {
         grade: "",
         remark: ""
       },
+      formInline: new SearchTemplate(),
       newform: new ClassTeacher(),
       current_page: 1,
       total: 0
@@ -185,11 +214,6 @@ export default {
       getClassTeacherById(id).then(response => {
         let result = response.data;
         this.form = result;
-        /*
-        this.form.gradeBig =  this.form.grade == '1'?'一':
-                              this.form.grade == '2'?'二':'三';
-        this.form.remark = `高${this.form.gradeBig}（${this.form.class}）班`;
-        */
         this.editDialogFormVisible = true;
       });
     },
@@ -310,10 +334,7 @@ export default {
 }
 </script>
 
-<style>
-.el-pagination{
-  padding: 0;
-  margin-top: 20px;
-  text-align: right;
-}
+<style lang="scss">
+ @import './../../styles/app-main.scss';
+
 </style>

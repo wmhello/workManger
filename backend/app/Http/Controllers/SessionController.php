@@ -120,17 +120,17 @@ class SessionController extends Controller
     {
         //
         //
-        $data = $request->only('year', 'team', 'remark');
+        $data = $request->only('year', 'team', 'one', 'two', 'three');
         $validator = Validator::make($data, [
             'year' => 'required|integer',
             'team' => 'required| in:1,2',
-            'remark' => 'nullable',
             'one' => 'required|integer',
             'two' => 'required|integer',
             'three' => 'required|integer',
         ]);
         if ($validator->fails()) {
-            return $this->errorWithInfo('验证出错,请按要求填写');
+            $errors = $validator->errors($validator);
+            return $this->errorWithCodeAndInfo(422, $errors);
         } else {
             if (! Session::where('year',$data['year'])->where('team', $data['team'])->count()) {
                 Session::create($data);
@@ -246,21 +246,20 @@ class SessionController extends Controller
     public function update(Request $request, Session $session)
     {
         //
-        $data = $request->only('year', 'team', 'remark');
+        $data = $request->only('year', 'team', 'one', 'two', 'three');
         $validator = Validator::make($data, [
             'year' => 'required|integer',
             'team' => 'required| in:1,2',
-            'remark' => 'nullable',
             'one' => 'required|integer',
             'two' => 'required|integer',
             'three' => 'required|integer',
         ]);
         if ($validator->fails()) {
-            return $this->errorWithInfo('验证出错,请重新填写');
+            $errors = $validator->errors($validator);
+            return $this->errorWithCodeAndInfo(422, $errors);
         } else {
            $session->year = $data['year'];
            $session->team = $data['team'];
-           $session->remark = $data['remark'];
            $session->one = $data['one'];
            $session->two = $data['two'];
            $session->three = $data['three'];

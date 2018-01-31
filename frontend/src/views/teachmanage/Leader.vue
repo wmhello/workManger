@@ -1,17 +1,20 @@
 <template>
-  <div>
+  <div id="leader">
        <el-form id="toolbar" :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="姓名">
-            <el-input v-model="formInline.name" placeholder="姓名"></el-input>
+            <el-select v-model="formInline.teacher_id" clearable filterable placeholder="请查找或选择">
+                  <el-option v-for="item in teachers" :key="item.id" :label="item.name" :value="item.id">
+                  </el-option>
+            </el-select>
           </el-form-item>
          <el-form-item label="行政类型">
-             <el-select v-model="formInline.leader_type" placeholder="行政类型">
+             <el-select v-model="formInline.leader_type" clearable placeholder="行政类型">
                  <el-option label="中层领导" value="1"></el-option>
                  <el-option label="学校领导" value="2"></el-option>
              </el-select>
        </el-form-item>
            <el-form-item label="学期">
-               <el-select v-model="formInline.session_id" placeholder="学期">
+               <el-select v-model="formInline.session_id" clearable placeholder="学期">
                    <el-option v-for="item in sessions" :label="item.remark |adjustSessionMark(item)" :value="item.id" :key="item.id"></el-option>
                </el-select>
            </el-form-item>
@@ -139,12 +142,11 @@ function Leader(
   this.remark = remark;
 }
 
-function SearchTemplate(name='', leader_type=null, session_id = null) {
+function SearchTemplate(teacher_id= null, leader_type=null, session_id = null)
 {
-        this.name = name
-        this.leader_type = leader_type
-        this.session_id = session_id
-      }
+    this.teacher_id = teacher_id
+    this.leader_type = leader_type
+    this.session_id = session_id
 }
 
 export default {
@@ -153,9 +155,7 @@ export default {
       formInline: new SearchTemplate(),
       tableData: [],
       dialogFormVisible: false,
-      resetDialogFormVisible: false,
       editDialogFormVisible: false,
-      addDialogFormVisible: false,
       paginationVisible: true,
       resetId: "",
       uploadId: "",
@@ -196,7 +196,6 @@ export default {
         });
     },
     add() {
-      //this.addDialogFormVisible = true;
       this.editDialogFormVisible = true;
       this.isNew = true;
       this.form = new Leader();
@@ -370,31 +369,10 @@ export default {
 };
 </script>
 
-<style>
-.el-pagination {
-  padding: 0;
-  margin-top: 20px;
-  text-align: right;
-}
-.el-input {
+<style lang="scss">
+ @import './../../styles/app-main.scss';
+#leader .el-input {
   width: 200px;
   margin-left: 10px;
-}
-#toolbar {
-    background-color: #e8e8e8 !important;
-    margin-bottom: 5px;
-}
-#toolbar .el-form-item {
-   margin-bottom: 5px;
-   margin-top: 5px;
-   margin-left: 5px;
-}
-#datagrid{
-  border:1px solid #ddd
-}
-#datagrid .toolbar{
-  padding-left: 5px;
-  margin-bottom: 5px;
-  margin-top: 5px;
 }
 </style>
