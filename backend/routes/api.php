@@ -65,8 +65,8 @@ Route::middleware('auth:api')->group(function() {
 
     Route::Resource('leader', 'LeaderController');
     Route::post('/leader/upload', 'LeaderController@upload');
-    Route::post('/leader/export', 'LeaderController@export');
-    Route::post('/leader/exportAll', 'LeaderController@exportAll');
+    Route::get('/leader/export', 'LeaderController@export');
+    Route::get('/leader/exportAll', 'LeaderController@exportAll');
 
 
     Route::Resource('classTeacher', 'ClassTeacherController');
