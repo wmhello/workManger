@@ -31,12 +31,4 @@ class LeaderRequest extends FormRequest
         ];
     }
 
-    public function message()
-    {
-        return [
-         'teacher_id.required' => '教师信息必须选择',
-         'teacher_id.exists' => '所选择的教师信息不存在',
-         'leader_type.required' => "行政类型必须填写",
-        ];
-    }
 }

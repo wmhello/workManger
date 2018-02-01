@@ -10,6 +10,7 @@ use App\Leader;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Validation\ValidationException;
 use \Maatwebsite\Excel\Facades\Excel;
@@ -62,22 +63,22 @@ class LeaderController extends Controller
     public function index(Request $request)
     {
         //
-        $data = $request->only(['pageSize', 'teacher_id', 'session_id']);
-        $pageSize = $data['pageSize']?? 15;
-        $teacher_id = $data['teacher_id']?? null;
-        $session_id = $data['session_id']??$this->getCurrentSessionId();
-      if ($teacher_id && $session_id) {
-          $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
-      }
-      if (! $teacher_id && $session_id) {
-          $lists = Leader::where('session_id',$session_id)->paginate($pageSize);
-      }
-      if ($teacher_id && !$session_id) {
-            $lists = Leader::where('teacher_id', $teacher_id)->paginate($pageSize);
-       }
-        if (! $teacher_id && !$session_id) {
-            $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
-        }
+
+        $pageSize = $request->input('pageSize');
+        $pageSize = isset($pageSize)?isset($pageSize):10;
+        $lists = Leader::LeaderType()->SessionId()->TeacherId()->paginate($pageSize);
+//      if ($teacher_id && $session_id) {
+//          $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
+//      }
+//      if (! $teacher_id && $session_id) {
+//          $lists = Leader::where('session_id',$session_id)->paginate($pageSize);
+//      }
+//      if ($teacher_id && !$session_id) {
+//            $lists = Leader::where('teacher_id', $teacher_id)->paginate($pageSize);
+//       }
+//        if (! $teacher_id && !$session_id) {
+//            $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
+//        }
       return new LeaderCollection($lists);
     }
 
@@ -305,6 +306,101 @@ class LeaderController extends Controller
                return $this->error();
            }
     }
+
+
+    public function exportAll(Request $request) {
+        //$sessionId = $request->has('session_id')? $request->input('session_id'):$this->getCurrentSessionId();
+        // $rec = Leader::where('session_id', $sessionId)->count(); // 获得总记录数,因为是所有的数据
+        $this->generator(null, 1);
+    }
+
+    public function export(Request $request)
+    {
+        $pageSize = $request->has('pageSize')?(int)$request->input('pageSize'): 10;
+        $page = $request->has('page')? $request->input('page'):'';
+        $this->generator($pageSize, $page);
+    }
+
+    public function generator($pageSize, $page)
+    {
+        $sessionId = request()->has('session_id')? request()->input('session_id'):$this->getCurrentSessionId();
+        $teacherId = request()->has('teacher_id')? (int)request()->input('teacher_id'):0;
+        $leaderType = request()->has('leader_type')? (int)request()->input('leader_type'):[1,2];
+        if (is_numeric($leaderType)) {
+            $arr = [];
+            array_push($arr,$leaderType);
+            $leaderType = $arr;
+        }
+        $lists = $this->queryData($pageSize, $page,$sessionId, $leaderType,$teacherId);
+        $data = $lists->toArray();  // 分页内容
+        $items = $this->generatorData($data);
+        $this->generatorXls($items);
+    }
+
+    protected  function queryData($pageSize = 10, $page = 1, $sessionId, $leaderType,$teacherId){
+        // 查询条件  根据姓名或者电话号码进行查询
+        $offset = $pageSize * ($page - 1) == 0? 0: $pageSize * ($page - 1);
+        $lists = DB::table('leaders')->join('yz_teacher', 'leaders.teacher_id','=', 'yz_teacher.id')
+            ->join('sessions', 'leaders.session_id', '=', 'sessions.id' )
+            ->select(['yz_teacher.name', 'sessions.year', 'sessions.team','leaders.leader_type', 'leaders.job', 'leaders.remark'])
+            ->where('session_id', $sessionId)
+            ->whereIn('leader_type', $leaderType)
+            ->when($teacherId,function ($query) use ($teacherId) {
+                return $query->where('teacher_id', $teacherId);
+            })
+            ->when($pageSize,function($query) use($offset, $pageSize) {
+                return $query->offset($offset)->limit($pageSize);
+             })
+             ->get();
+
+        return $lists;
+    }
+
+    /**
+     * 根据传入的数据生成内容
+     * @param $data
+     * @return array
+     */
+    protected function generatorData($data): array
+    {
+        $items = [];
+        // $data = $data['data'];  // 数据库中的数据
+        foreach ($data as $item) {
+            $arr = [];
+            $arr['name'] = $item->name;
+            $nextYear = $item->year + 1;
+            $arr['year'] = $item->year.'--'.$nextYear.'学年';
+            $arr['team'] = $item->team ==1 ? '上学期':'下学期';
+            $arr['leader_type'] = $item->leader_type == 1? '中层':'学校';
+            $arr['job'] = $item->job;
+            $arr['remark'] = $item->remark;
+            array_push($items, $arr);
+        }
+        array_unshift($items, ['姓名', '学年', '学期', '行政类型', '任职岗位', '岗位备注']);
+        return $items;
+    }
+
+    /**
+     * 生成xls文件  名称叫做员工信息
+     */
+    protected function generatorXls($items): void
+    {
+        $file = time();
+        Excel::create('行政管理', function ($excel) use ($items) {
+            $excel->sheet('score', function ($sheet) use ($items) {
+                $sheet->rows($items);
+            });
+        })->store('xls', public_path('xls'));
+    }
+
+    /**
+     * @param $pageSize
+     * @param $name
+     * @param $phone
+     * 从数据库中找到数据并生成xls文件
+     */
+
+
 
 
 }

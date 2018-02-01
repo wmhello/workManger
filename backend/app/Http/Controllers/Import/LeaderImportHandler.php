@@ -17,11 +17,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LeaderImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
 {
+    use App\Http\Controllers\Tools;
     public function handle($import)
     {
         $data = $import->first()->toArray();
         $lists = [];
-        $session_id = (int)request()->input('session_id');
+        $session_id = $this->getCurrentSessionId();
         foreach($data as $val) {
             // 获取每条记录  为验证做准备
             $item = [

@@ -1,23 +1,27 @@
 import fetch from '@/utils/fetch'
 
-export function getLeader (current_page) {
+export function getInfo (searchObj = {}, page = 1 ) {
+
   return fetch({
     url: '/api/leader',
     method: 'get',
     params: {
-      page: current_page,
+      page: page,
+      session_id: searchObj.session_id,
+      teacher_id: searchObj.teacher_id,
+      leader_type: searchObj.leader_type,
     },
   })
 }
 
-export function getLeaderById (id) {
+export function getInfoById (id) {
   return fetch({
     url: '/api/leader/' + id,
     method: 'get'
   })
 }
 
-export function updateLeaderInfo (id, data) {
+export function updateInfo (id, data) {
   return fetch({
     url: '/api/leader/' + id,
     method: 'patch',
@@ -30,7 +34,7 @@ export function updateLeaderInfo (id, data) {
   })
 }
 
-export function addNewLeader (data) {
+export function addInfo (data) {
   return fetch({
     url: '/api/leader',
     method: 'post',
@@ -38,9 +42,67 @@ export function addNewLeader (data) {
   })
 }
 
-export function deleteLeaderById (id) {
+export function deleteInfoById (id) {
   return fetch({
     url: '/api/leader/' + id,
     method: 'delete'
   })
 }
+
+export function uploadFile(data) {
+  return fetch({
+    url: '/api/leader/upload',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+
+}
+
+// 导出当前内容
+export function exportCurrentPage (pageSize = 10, page = 1, searchObj={}) {
+  return fetch({
+    url: '/api/leader/export',
+    method: 'get',
+    params: {
+      page,
+      pageSize,
+      session_id: searchObj.session_id,
+      teacher_id: searchObj.teacher_id,
+      leader_type: searchObj.leader_type,
+    }
+  })
+}
+
+export function exportAll (pageSize = 10, page = 1, searchObj = {}) {
+  return fetch({
+    url: '/api/leader/exportAll',
+    method: 'get',
+    params: {
+      page,
+      pageSize,
+      session_id: searchObj.session_id,
+      teacher_id: searchObj.teacher_id,
+      leader_type: searchObj.leader_type,
+    },
+  })
+}
+
+
+export function Model (session_id = null, teacher_id = null, leader_type = null, job = null, remark = null) {
+  this.session_id = session_id;
+  this.teacher_id = teacher_id;
+  this.leader_type = leader_type;
+  this.job = job;
+  this.remark = remark;
+}
+
+export function SearchModel(session_id = null, teacher_id = null, leader_type = null) {
+  this.session_id = session_id;
+  this.teacher_id = teacher_id;
+  this.leader_type = leader_type;
+}
+
+
