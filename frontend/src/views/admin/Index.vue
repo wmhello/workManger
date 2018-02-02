@@ -11,7 +11,6 @@
       <template slot-scope="scope" >
 
         <el-tag style="margin-right: 5px" v-for="item in scope.row.role" :key="item" size="medium">{{item|roleFilter(roles)}}</el-tag>
-        <!-- <span style="margin-left: 10px">{{ scope.row.role|roleFilter(roles) }}</span> -->
       </template>
       </el-table-column>
       <el-table-column  label="头像" width="80">
@@ -103,7 +102,7 @@ import {
 } from "@/api/admin";
 import {getRoles }  from "@/api/role";
 
-import adminConfig from "./../../../static/config";
+import {config} from "./../../config/index";
 
 export default {
   data() {
@@ -114,7 +113,6 @@ export default {
         Authorization: "Bearer " + getToken(),
         Accept: "application/json, text/plain"
       },
-      importFileUrl: "/api/admin/upload",
       tableData: [],
       dialogFormVisible: false,
       resetDialogFormVisible: false,
@@ -134,7 +132,6 @@ export default {
       },
       roles: [],
       current_page: 1,
-      path: "http://wmhello.natapp1.cc/api/admin",
       total: 0
     };
   },
@@ -146,7 +143,7 @@ export default {
       uploadAdminByImg(fd).then(res => {
         let file = res.data.url;
         this.form.avatar = file;
-        this.imageUrl = adminConfig.site + file;
+        this.imageUrl = config.site + file;
       });
       return true;
     },
@@ -171,7 +168,7 @@ export default {
         this.form = result;
         // 显示图像
         if (result.avatar) {
-          this.imageUrl = adminConfig.site + result.avatar;
+          this.imageUrl = config.site + result.avatar;
         } else {
           this.imageUrl = "";
         }
@@ -285,19 +282,12 @@ export default {
   },
   filters: {
     roleFilter(val, items) {
-/*             let arrRoles = val;
-            let strRoles = ''
-            arrRoles.forEach(role => {
-              let strRole = items.find(item => item.name == role)
-              strRoles += strRole.explain + ''
-            })
-            return strRoles */
             let role = items.find(item => item.name == val)
             return  role.explain
 
     },
     avatarFilter(val) {
-      return adminConfig.site + val;
+      return config.site + val;
     }
   }
 };
