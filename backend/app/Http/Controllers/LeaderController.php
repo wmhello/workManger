@@ -65,7 +65,7 @@ class LeaderController extends Controller
         //
 
         $pageSize = $request->input('pageSize');
-        $pageSize = isset($pageSize)?isset($pageSize):10;
+        $pageSize = isset($pageSize) && $pageSize ?$pageSize:10;
         $lists = Leader::LeaderType()->SessionId()->TeacherId()->paginate($pageSize);
 //      if ($teacher_id && $session_id) {
 //          $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
@@ -309,23 +309,32 @@ class LeaderController extends Controller
 
 
     public function exportAll(Request $request) {
-        //$sessionId = $request->has('session_id')? $request->input('session_id'):$this->getCurrentSessionId();
-        // $rec = Leader::where('session_id', $sessionId)->count(); // 获得总记录数,因为是所有的数据
-        $this->generator(null, 1);
+        $sessionId =$request->input('session_id');
+        $sessionId = isset($sessionId)?$sessionId:$this->getCurrentSessionId();
+        $rec = Leader::where('session_id', $sessionId)->count(); // 获得总记录数,因为是所有的数据
+        $this->generator($rec, 1);
     }
 
     public function export(Request $request)
     {
-        $pageSize = $request->has('pageSize')?(int)$request->input('pageSize'): 10;
-        $page = $request->has('page')? $request->input('page'):'';
+        $pageSize = (int)$request->input('pageSize');
+        $pageSize = isset($pageSize) && $pageSize? $pageSize: 10;
+        $page = (int)$request->input('page');
+        $page = isset($page) && $page ? $page: 1;
         $this->generator($pageSize, $page);
     }
 
     public function generator($pageSize, $page)
+
     {
-        $sessionId = request()->has('session_id')? request()->input('session_id'):$this->getCurrentSessionId();
-        $teacherId = request()->has('teacher_id')? (int)request()->input('teacher_id'):0;
-        $leaderType = request()->has('leader_type')? (int)request()->input('leader_type'):[1,2];
+
+        $sessionId = (int)request()->input('session_id');
+        $teacherId = (int)request()->input('teacher_id');
+        $leaderType = (int)request()->input('leader_type');
+
+        $sessionId = (isset($sessionId)&&$sessionId)?$sessionId: $this->getCurrentSessionId();
+        $teacherId = (isset($teacherId)&&$teacherId)?$teacherId: null;
+        $leaderType = (isset($leaderType)&&$leaderType)?$leaderType: [1,2];
         if (is_numeric($leaderType)) {
             $arr = [];
             array_push($arr,$leaderType);
@@ -393,12 +402,10 @@ class LeaderController extends Controller
         })->store('xls', public_path('xls'));
     }
 
-    /**
-     * @param $pageSize
-     * @param $name
-     * @param $phone
-     * 从数据库中找到数据并生成xls文件
-     */
+    public function test()
+    {
+        
+    }
 
 
 

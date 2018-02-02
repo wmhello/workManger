@@ -65,8 +65,11 @@
     <el-pagination
       background
       @current-change="pagination"
+      @size-change="sizeChange"
       :current-page.sync="current_page"
-      layout="total, prev, pager, next"
+      layout="total,sizes,prev,pager,next"
+      :page-sizes="[10, 20, 25,50]"
+      :page-size.sync="pageSize"
       :total="total">
     </el-pagination>
     </div>
@@ -133,13 +136,13 @@
     </el-dialog>
 
      <!-- 数据导出对话框 -->
-    <el-dialog title="数据导出" :visible.sync="exportDialogFormVisible" size="tiny" :close-on-click-modal="false">
+    <el-dialog title="数据导出" :visible.sync="exportDialogFormVisible"   :close-on-click-modal="false">
     <div>
            <p>请选择导出的数据范围</p>
     </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="exportType=1;exportData()">当前页</el-button>
-        <el-button type="primary" @click="exportType=2;exportData()">全部</el-button>
+        <el-button type="primary" @click="exportData(1)">当前页</el-button>
+        <el-button type="primary" @click="exportData(2)">全部</el-button>
       </div>
     </el-dialog>
 
@@ -160,7 +163,7 @@ import {
   SearchModel
 } from "@/api/leader";
 import { getSession, getTeacher, getDefaultSession} from "@/api/other";
-import adminConfig from "./../../../static/config"
+import {config} from "./../../config/index"
 
 export default {
   data() {
@@ -181,9 +184,8 @@ export default {
       total: 0,
       pageSize: 10,
       session_id: null,
-      xlsUrl: adminConfig.site + "/xls/leader.xls",
-      exportXls: adminConfig.site + "/xls/行政管理.xls",
-      exportType:2,
+      xlsUrl: config.site + "/xls/leader.xls",
+      exportXls: config.site + "/xls/行政管理.xls"
     };
   },
   methods: {
@@ -195,8 +197,8 @@ export default {
       this. searchForm = new SearchModel(this.session_id, null,null)
       this.fetchData()
     },
-    fetchData(searchObj = this.searchForm , page = this.current_page) {
-      getInfo(searchObj, page)
+    fetchData(searchObj = this.searchForm , page = this.current_page, pageSize = this.pageSize) {
+      getInfo(searchObj, page, pageSize)
         .then(response => {
           //成功执行内容
           let result = response.data;
@@ -284,9 +286,10 @@ export default {
     download(){
         this.exportDialogFormVisible = true
     },
-    exportData() {
-      switch (this.exportType) {
+    exportData(type) {
+      switch (type) {
         case 1:
+          console.log('导出当前页')
           exportCurrentPage(this.pageSize, this.current_page, this.searchForm)
             .then(res => {
               location.href = this.exportXls;
@@ -296,7 +299,8 @@ export default {
             });
           break;
         case 2:
-          exportAll(null, 1, this.searchForm)
+        console.log('导出全部页')
+          exportAll(this.searchForm)
             .then(res => {
               location.href = this.exportXls;
             })
@@ -410,6 +414,10 @@ export default {
       this.current_page = val;
       this.fetchData()
     },
+    sizeChange(val) {
+       this.pageSize = val;
+       this.fetchData()
+    },
     getSessions() {
       // 获取学期信息
       return new Promise((resolve, reject) => {
@@ -439,7 +447,6 @@ export default {
 
   },
   mounted() { // 操作相关的DOM
-   console.log(document.querySelector('.el-dialog__body'))
 
   },
   created() { // 获取数据，无法操作节点

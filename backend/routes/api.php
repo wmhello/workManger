@@ -53,7 +53,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request)
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/token/refresh', 'Auth\LoginController@refresh');
 Route::post('/logout', 'Auth\LoginController@logout');
-Route::get('/test', 'LeaderController@exportAll');
+Route::post('/test', 'LeaderController@export');
 Route::middleware('auth:api')->group(function() {
     Route::Resource('admin', 'UserController');
 
@@ -65,8 +65,8 @@ Route::middleware('auth:api')->group(function() {
 
     Route::Resource('leader', 'LeaderController');
     Route::post('/leader/upload', 'LeaderController@upload');
-    Route::get('/leader/export', 'LeaderController@export');
-    Route::get('/leader/exportAll', 'LeaderController@exportAll');
+    Route::post('/leader/export', 'LeaderController@export');
+    Route::post('/leader/exportAll', 'LeaderController@exportAll');
 
 
     Route::Resource('classTeacher', 'ClassTeacherController');

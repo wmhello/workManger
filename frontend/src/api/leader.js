@@ -1,12 +1,13 @@
 import fetch from '@/utils/fetch'
 
-export function getInfo (searchObj = {}, page = 1 ) {
+export function getInfo (searchObj = {}, page = 1 , pageSize = 10) {
 
   return fetch({
     url: '/api/leader',
     method: 'get',
     params: {
-      page: page,
+      pageSize,
+      page,
       session_id: searchObj.session_id,
       teacher_id: searchObj.teacher_id,
       leader_type: searchObj.leader_type,
@@ -62,11 +63,11 @@ export function uploadFile(data) {
 }
 
 // 导出当前内容
-export function exportCurrentPage (pageSize = 10, page = 1, searchObj={}) {
+export function exportCurrentPage(pageSize = 10, page = 1, searchObj={}) {
   return fetch({
     url: '/api/leader/export',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       page,
       pageSize,
       session_id: searchObj.session_id,
@@ -76,17 +77,15 @@ export function exportCurrentPage (pageSize = 10, page = 1, searchObj={}) {
   })
 }
 
-export function exportAll (pageSize = 10, page = 1, searchObj = {}) {
+export function exportAll (searchObj = {}) {
   return fetch({
     url: '/api/leader/exportAll',
-    method: 'get',
-    params: {
-      page,
-      pageSize,
+    method: 'post',
+    data: {
       session_id: searchObj.session_id,
       teacher_id: searchObj.teacher_id,
       leader_type: searchObj.leader_type,
-    },
+    }
   })
 }
 
