@@ -91,7 +91,7 @@ export const asyncRouterMap = [
     meta: {
       role: ['admin'],
       icon: 'tab',
-      title: '角色管理',
+      title: '权限管理',
     },
     children: [
       {
@@ -100,7 +100,7 @@ export const asyncRouterMap = [
         component: _import('role/Index'),
         meta: {
           role: ['admin'],
-          title: '角色列表',
+          title: '角色管理',
           icon: 'table'
         }
       }

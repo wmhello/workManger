@@ -22,6 +22,7 @@ Route::middleware('auth:api')->group(function() {
     Route::Resource('admin', 'UserController');
     Route::post('/admin/modify', 'UserController@modify' );
     Route::post('/admin/{id}/reset', 'UserController@reset');
+    Route::post('/admin/uploadAvatar', 'UserController@uploadAvatar');
     Route::post('/admin/upload', 'UserController@upload');
 
     Route::Resource('session', 'SessionController');

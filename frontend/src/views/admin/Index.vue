@@ -133,7 +133,10 @@
       :total="total">
     </el-pagination>
     </div>
-
+  <upload-xls :show="isShowUpload"
+              :template-file="templateFile"
+              module="admin"
+  @close-upload="closeUpload"></upload-xls>
   </div>
 </template>
 
@@ -146,6 +149,7 @@ import {
   uploadAdminByImg,
   updateInfo,
   addInfo,
+  uploadFile,
   deleteInfoById,
   getCurrentPage,
   SearchModel,
@@ -154,8 +158,11 @@ import {
 import {getRoles }  from "@/api/role";
 
 import {config} from "./../../config/index";
-
+import UploadXls from "@/views/components/UploadXls";
 export default {
+  components: {
+    UploadXls
+  },
   data() {
     return {
       searchForm: new SearchModel(),
@@ -164,10 +171,12 @@ export default {
       tableData: [],
       resetDialogFormVisible: false,
       editDialogFormVisible: false,
+      templateFile: config.site + '/xls/user.xls',
       resetId: "",
       uploadId: "",
       isNew: false,
       isEdit: false,
+      isShowUpload: false,
       form2: {
         psw: "",
         newpsw: ""
@@ -179,6 +188,9 @@ export default {
     };
   },
   methods: {
+    getModule() {
+      return 'admin';
+    },
     find(){
        this.fetchData()
     },
@@ -192,7 +204,22 @@ export default {
        this.editDialogFormVisible = true
     },
     upload() {
-       console.log('导入操作')
+       this.isShowUpload = true
+    },
+    closeUpload() {
+      this.isShowUpload = false
+    },
+    uploadHandle(file) {
+      let fd = new FormData();
+      fd.append("file", file);
+      uploadFile(fd).then(res => {
+           this.$message({
+             message: '文件信息上传成功',
+             type: 'success'
+           })
+           this.fetchData();
+      });
+      return true;
     },
     download() {
       console.log('导出操作')

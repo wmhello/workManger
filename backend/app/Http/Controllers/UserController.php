@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Import\UserImport;
 use App\Http\Resources\UserCollection;
 use App\User;
 use Illuminate\Http\Request;
@@ -293,7 +294,7 @@ class UserController extends Controller
      * }
      */
 
-    public function upload(Request $request)
+    public function uploadAvatar(Request $request)
     {
         if ($request->isMethod('POST')) {
 //            var_dump($_FILES);
@@ -404,4 +405,15 @@ class UserController extends Controller
             'status_code' => 200,
         ],200);
     }
+
+    public function upload(UserImport $import)
+    {
+        $bool = $import->handleImport($import);
+        if ($bool) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
+    }
+
 }

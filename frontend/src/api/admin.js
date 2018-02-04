@@ -42,7 +42,7 @@ export function resetAdminByPsw(id, password) {
 
 export function uploadAdminByImg(data) {
   return fetch({
-    url: '/api/admin/upload',
+    url: '/api/admin/uploadAvatar',
     method: 'post',
     data,
     headers: {
@@ -79,6 +79,17 @@ export function addInfo(data) {
     url: '/api/admin',
     method: 'post',
     data
+  })
+}
+
+export function uploadFile (data) {
+  return fetch({
+    url: '/api/admin/upload',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 
