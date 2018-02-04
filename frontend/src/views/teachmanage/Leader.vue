@@ -26,8 +26,8 @@
   <div id="datagrid">
     <div class="toolbar">
       <el-button  plain icon="el-icon-plus" @click="add()">添加</el-button>
-      <el-button  plain icon="el-icon-download" @click="download()">导出</el-button>
       <el-button  plain icon="el-icon-upload" @click="upload()">导入</el-button>
+      <el-button  plain icon="el-icon-download" @click="download()">导出</el-button>
     </div>
     <!-- 学校行政列表 -->
     <el-table :data="tableData" border style="width: 100%">
@@ -241,7 +241,6 @@ export default {
         this.isEdit = false
         this.updateData()
       }
-
     },
     updateData() {
       updateInfo(this.uploadId, this.form)

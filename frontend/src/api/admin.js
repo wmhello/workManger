@@ -1,9 +1,15 @@
 import fetch from '@/utils/fetch'
 
-export function getAdmin() {
+export function getInfo (searchObj = {}, page = 1, pageSize = 10) {
   return fetch({
     url: '/api/admin',
     method: 'get',
+    params: {
+        page,
+        pageSize,
+        name: searchObj.name,
+        email: searchObj.email
+    }
   })
 }
 
@@ -17,7 +23,7 @@ export function getCurrentPage(current_page) {
   })
 }
 
-export function getAdminById(id) {
+export function getInfoById(id) {
   return fetch({
     url: '/api/admin/' + id,
     method: 'get',
@@ -45,7 +51,7 @@ export function uploadAdminByImg(data) {
   })
 }
 
-export function updataAdminInfo(id, data) {
+export function updateInfo(id, data) {
   return fetch({
     url: '/api/admin/' + id,
     method: 'put',
@@ -60,17 +66,32 @@ export function updataAdminInfo(id, data) {
   })
 }
 
-export function deletAdminById(id) {
+export function deleteInfoById(id) {
   return fetch({
     url: '/api/admin/' + id,
     method: 'delete',
   })
 }
 
-export function addNewAdmin(data) {
+export function addInfo(data) {
+  console.log(data)
   return fetch({
     url: '/api/admin',
     method: 'post',
     data
   })
+}
+
+export function Model (name = '', email = '', role = [], avatar = '', password = '', password_confirmation='') {
+  this.name = name
+  this.email = email
+  this.role = role
+  this.avatar = avatar
+  this.password = password
+  this.password_confirmation = password_confirmation
+}
+
+export function SearchModel(name = '', email = " ") {
+this.name = name
+this.email = email
 }

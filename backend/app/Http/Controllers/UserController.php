@@ -6,6 +6,7 @@ use App\Http\Resources\UserCollection;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
    use Result;
-    protected $roles = ['admin', 'editor'];
 
     /**
      * @api {get} /api/admin 显示管理员列表
@@ -52,10 +52,12 @@ class UserController extends Controller
      * }
      *
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $users = User::paginate(15);
+        $pageSize = (int)$request->input('pageSize');
+        $pageSize = isset($pageSize) && $pageSize?$pageSize:10;
+        $users = User::name()->email()->paginate($pageSize);
         return new UserCollection($users);
     }
 
@@ -99,19 +101,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //  新建管理员信息
-        $data = $request->only(['name', 'role', 'password', 'email', 'avatar']);
+        $data = $request->only(['name', 'role', 'password','password_confirmation', 'email', 'avatar']);
         $rules = [
             'name'=>'required',
             'role' =>'nullable|array',
-            'password' => 'required',
-            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed',
+            'email' => 'required|unique:users',
             'avatar' => 'nullable|string'
         ];
        $message = [
-           'name.required' => '用户昵称是必填项',
+           'name.required' => '用户名是必填项',
            'password.required' => '用户密码是必填项',
-           'email.required' => 'Email是必填项',
-           'email.unique' => 'Email已经存在，请重新填写',
+           'password.confirmed' => '两次输入的密码不匹配',
+           'email.required' => '登录名是必填项',
+           'email.unique' => '登录名已经存在，请重新填写',
        ];
        $validator = Validator::make($data, $rules, $message);
        if ($validator->fails()) {
@@ -195,22 +198,16 @@ class UserController extends Controller
 
         $all = $request->validate([
             'name' => 'required|string',
-            'role' => 'nullable|string',
+            'role' => 'required|array',
             'avatar' =>'nullable|string'
         ]);
-
-        // 对role进行特殊处理  role内容为空或者不为editor或者admin的话删除
-        if (! $all['role']){
-            $all = array_except($all,["role"]);
-        } else {
-            $role = $all['role'];
-            if( ! in_array($role,$this->roles) ){
-                $all = array_except($all,["role"]);
-            }
+        $roles = $all['role'];
+        $all['role'] = implode(',', $roles); // 把前台传回的数组型角色字段转化为字符型存入数据表
+        if (! (isset($all['role']) && $all['role'])) { // 没有填写内容 则删除，默认为user角色
+            //array_except($all, 'role');
+            $all['role'] = 'user';
         }
-
         $bool = User::where('id', $id)->update($all);
-
         if ($bool) {
             return $this->success();
         }
@@ -301,7 +298,6 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
 //            var_dump($_FILES);
             $file = $request->file('photo');
-
             //判断文件是否上传成功
             if ($file->isValid()) {
                 //获取原文件名
@@ -330,5 +326,82 @@ class UserController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * 修改个人密码
+     * 获取三个字段，oldPassword => 原来密码  password=>新密码 password_confirmation
+     * 原密码相同才能修改密码为新密码
+     */
+    public function modify(Request $request)
+    {
+
+        $oldPassword = $request->input('oldPassword');
+        $password = $request->input('password');
+        $data = $request->all();
+        $rules = [
+            'oldPassword'=>'required|between:6,20',
+            'password'=>'required|between:6,20|confirmed',
+        ];
+        $messages = [
+            'required' => '密码不能为空',
+            'between' => '密码必须是6~20位之间',
+            'confirmed' => '新密码和确认密码不匹配'
+        ];
+        $validator = Validator::make($data, $rules, $messages);
+        $user = Auth::user();
+        $validator->after(function($validator) use ($oldPassword, $user) {
+            if (!\Hash::check($oldPassword, $user->password)) {
+                $validator->errors()->add('oldPassword', '原密码错误');
+            }
+        });
+        if ($validator->fails()) {
+            $errors = $validator->errors($validator); //返回一次性错误
+            return $this->errorWithCodeAndInfo(422,$errors);
+        }
+        $user->password = bcrypt($password);
+        if ($user->save()) {
+            return $this->success();
+        } else {
+            return $this->error();
+        }
+        
+    }
+
+    /**
+     * @api {get} /api/user 获取当前登陆的用户信息
+     * @apiGroup login
+     *
+     *
+     * @apiSuccessExample 信息获取成功
+     * HTTP/1.1 200 OK
+     *{
+     * "data": {
+     *    "id": 1,
+     *    "name": "xxx",
+     *    "email": "xxx@qq.com",
+     *    "roles": "xxx", //角色: admin或者editor
+     *    "avatar": ""
+     *  },
+     *  "status": "success",
+     *  "status_code": 200
+     *}
+     */
+    public function getUserInfo(Request $request)
+    {
+        $user = $request->user();
+        $roles = explode(',',$user['role']);
+        $data = [
+            'id' => $user['id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'role' => $roles,
+            'avatar' => $user['avatar']
+        ];
+        return response()->json([
+            'data' => $data,
+            'status' => 'success',
+            'status_code' => 200,
+        ],200);
     }
 }

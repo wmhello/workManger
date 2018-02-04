@@ -32,7 +32,7 @@
 
 <script>
 import { getToken } from "@/utils/auth";
-import { addNewAdmin,uploadAdminByImg } from "@/api/admin";
+import { addInfo,uploadAdminByImg } from "@/api/admin";
 import { getRoles } from "@/api/role";
 import avatarUploader from "@/components/avatar";
 import adminConfig from "@/../static/config";
@@ -104,7 +104,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addNewAdmin(this.form).then(response => {
+          addInfo(this.form).then(response => {
               this.$alert('新管理员用户建立成功','友情提示', {
                 callback: action => {
                    // 清空内容，重新开始建立

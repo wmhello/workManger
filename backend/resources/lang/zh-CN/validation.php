@@ -115,7 +115,8 @@ return [
     'attributes' => [
         'session_id'         => '学期',
         'teacher_id'         => '姓名',
-        'leader_type'         => '行政类型',
+        'leader_type'        => '行政类型',
+        'role'               => '角色'
     ],
 
 ];

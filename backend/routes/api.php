@@ -13,50 +13,14 @@ use \Illuminate\Http\Response;
 |
 */
 
-/**
- * @api {get} /api/user 获取当前登陆的用户信息
- * @apiGroup login
- *
- *
- * @apiSuccessExample 信息获取成功
- * HTTP/1.1 200 OK
- *{
- * "data": {
- *    "id": 1,
- *    "name": "xxx",
- *    "email": "xxx@qq.com",
- *    "roles": "xxx", //角色: admin或者editor
- *    "avatar": ""
- *  },
- *  "status": "success",
- *  "status_code": 200
- *}
- */
-
-Route::middleware('auth:api')->get('/user', function (Request $request)
-{
-    $user = $request->user();
-    $roles = explode(',',$user['role']);
-    $data = [
-        'id' => $user['id'],
-        'name' => $user['name'],
-        'email' => $user['email'],
-        'role' => $roles,
-        'avatar' => $user['avatar']
-    ];
-    return response()->json([
-        'data' => $data,
-        'status' => 'success',
-        'status_code' => 200,
-    ],200);
-});
+Route::middleware('auth:api')->get('/user', 'UserController@getUserInfo');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/token/refresh', 'Auth\LoginController@refresh');
 Route::post('/logout', 'Auth\LoginController@logout');
 Route::post('/test', 'LeaderController@export');
 Route::middleware('auth:api')->group(function() {
     Route::Resource('admin', 'UserController');
-
+    Route::post('/admin/modify', 'UserController@modify' );
     Route::post('/admin/{id}/reset', 'UserController@reset');
     Route::post('/admin/upload', 'UserController@upload');
 
