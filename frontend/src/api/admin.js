@@ -93,6 +93,41 @@ export function uploadFile (data) {
   })
 }
 
+export function exportCurrentPage (pageSize = 10, page = 1, searchObj = {}) {
+  return fetch({
+    url: '/api/admin/export',
+    method: 'post',
+    data: {
+      page,
+      pageSize,
+      name: searchObj.name,
+      email: searchObj.email
+    }
+  })
+}
+
+export function exportAll (searchObj = {}) {
+  return fetch({
+    url: '/api/admin/exportAll',
+    method: 'post',
+    data: {
+      name: searchObj.name,
+      email: searchObj.email
+    }
+  })
+}
+
+export function deleteAll( params) {
+  return fetch({
+     url: '/api/admin/deleteAll',
+     method: 'post',
+     data: {
+       ids: params
+     }
+  })
+
+}
+
 export function Model (name = '', email = '', role = [], avatar = '', password = '', password_confirmation='') {
   this.name = name
   this.email = email

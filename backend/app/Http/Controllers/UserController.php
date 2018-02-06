@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Import\UserImport;
 use App\Http\Resources\UserCollection;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -416,4 +418,120 @@ class UserController extends Controller
         }
     }
 
+    public function exportAll(Request $request) {
+
+        // $rec = User::count(); // 获得总记录数,因为是所有的数据
+        $this->generator(null, 1);
+    }
+
+    public function export(Request $request)
+    {
+        $pageSize = (int)$request->input('pageSize');
+        $pageSize = isset($pageSize) && $pageSize? $pageSize: 10;
+        $page = (int)$request->input('page');
+        $page = isset($page) && $page ? $page: 1;
+        $this->generator($pageSize, $page);
+    }
+
+    public function generator($pageSize, $page)
+
+    {
+
+        $name = (int)request()->input('name');
+        $email= (int)request()->input('email');
+
+        $name = (isset($name)&&$name)?$name: null;
+        $email = (isset($email)&&$email)?$email: null;
+
+        $lists = $this->queryData($pageSize, $page,$name, $email);
+
+        $data = $lists->toArray();  // 分页内容
+
+        $items = $this->generatorData($data);
+        $this->generatorXls($items);
+    }
+
+    protected  function queryData($pageSize = null, $page = 1, $name, $email){
+        // 查询条件  根据姓名或者电话号码进行查询
+        $offset = $pageSize * ($page - 1) == 0? 0: $pageSize * ($page - 1);
+        $lists = User::select('name', 'email', 'role')
+                       ->name()
+                       ->email()
+                       ->when($pageSize,function($query) use($offset, $pageSize) {
+                              return $query->offset($offset)->limit($pageSize);
+                       })
+                       ->get();
+
+        return $lists;
+    }
+
+    /**
+     * 根据传入的数据生成内容
+     * @param $data
+     * @return array
+     */
+    protected function generatorData($data): array
+    {
+        $items = [];
+        // $data = $data['data'];  // 数据库中的数据
+        $arrRoles = Role::pluck('explain', 'name')->all();
+        foreach ($data as $item) {
+            $arr = [];
+            $arr['name'] = $item['name'];
+            $arr['email'] = $item['email'];
+            $tmpRoles = explode(',', $item['role']);
+            $strRoles = '';
+            foreach ($tmpRoles as $tmp) {
+              $strRoles .= $arrRoles[$tmp].',';
+            }
+            $arr['role'] = substr($strRoles,0, -1);
+            array_push($items, $arr);
+        }
+        array_unshift($items, ['姓名', '登录名', '角色']);
+        return $items;
+    }
+
+    /**
+     * 生成xls文件  名称叫做员工信息
+     */
+    protected function generatorXls($items): void
+    {
+        $file = time();
+        Excel::create('用户管理', function ($excel) use ($items) {
+            $excel->sheet('score', function ($sheet) use ($items) {
+                $sheet->rows($items);
+            });
+        })->store('xls', public_path('xls'));
+    }
+
+    public function test()
+    {
+        $str = 'abacde,';
+        dump(substr($str,0,-1));
+    }
+
+    public function deleteAll(Request $request)
+    {
+      $data = $request->only('ids');
+      $rules = [
+          'ids' => 'required | Array'
+      ];
+      $messages = [
+          'ids.required' => '必须选择相应的记录',
+          'ids.Array' => 'ids字段必须是数组'
+      ];
+
+      $validator = Validator::make($data, $rules, $messages);
+      if ($validator->fails()) {
+          $errors = $validator->error($validator);
+          return $this->errorWithCodeAndInfo(422, $errors);
+      }
+
+      if (User::destroy($data['ids'])) {
+          return $this->success();
+      } else {
+          return $this->error();
+      }
+
+    }
 }

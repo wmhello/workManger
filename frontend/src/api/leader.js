@@ -88,6 +88,15 @@ export function exportAll (searchObj = {}) {
   })
 }
 
+export function deleteAll(params) {
+  return fetch({
+    url: '/api/leader/deleteAll',
+    method: 'post',
+    data: {
+      ids:params
+    }
+  })
+}
 
 export function Model (session_id = null, teacher_id = null, leader_type = null, job = null, remark = null) {
   this.session_id = session_id;

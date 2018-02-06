@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { Tools } from "@/views/utils/Tools";
 export default {
   name: "UploadXls",
   props: {
@@ -56,15 +57,12 @@ export default {
         }).then((response) => {
             this.$refs.upload.submit()
         }).catch(()=>{
-          console.log('上传操作取消')
+          Tools.errorTips(this, '上传操作取消');
         })
     },
     beforeUpload(file) {
       if (file.type !== "application/vnd.ms-excel") {
-        this.$message({
-          type: 'error',
-          message: '文件格式不正确，无法上传'
-        })
+        Tools.errorTips(this, '文件格式不正确，无法上传');
         return false
       }
       let fd = new FormData();
@@ -72,10 +70,7 @@ export default {
       import(`./../../api/${this.module}`).then(
         ({uploadFile}) => {
           uploadFile(fd).then(res => {
-               this.$message({
-                  message: '文件信息上传成功',
-                  type: 'success'
-              })
+            Tools.success(this, '文件信息上传成功');
             try
             {
              if(typeof(eval(this.$parent.fetchData))=="function")

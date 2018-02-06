@@ -1,67 +1,71 @@
 <template>
-
+     <!-- 数据导出对话框 -->
+    <el-dialog title="数据导出" :visible="exportDialogFormVisible"   :close-on-click-modal="false" @close="cancelDownload()">
+    <div>
+           <p>请选择导出的数据范围</p>
+    </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="exportData(1)">当前页</el-button>
+        <el-button type="primary" @click="exportData(2)">全部</el-button>
+      </div>
+    </el-dialog>
 </template>
 
 <script>
+import {Tools} from "@/views/utils/Tools";
 export default {
-  name: "UploadXls",
+  name: "DownloadXls",
   props: {
     show: Boolean,
     templateFile: String,
-    module: String
+    module: String,
+    pageSize: Number,
+    page: Number,
+    search: Object
   },
   data() {
     return {};
   },
   computed: {
-    uploadDialogFormVisible() {
+    exportDialogFormVisible() {
       return this.show;
     }
   },
   methods: {
-    cancelUpload() {
-      this.$emit("close-upload");
+    cancelDownload() {
+      this.$emit("close-download")
     },
-    saveUpload() {
-      this.$emit("close-upload");
-    },
-    downloadTemplate() {
-      location.href = this.templateFile;
-    },
-    submitUpload() {
-      this.$confirm('是否上传指定的内容', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-           console.log()
-          //this.$refs.upload.submit();
-        }).catch(()=>{
-          console.log('上传操作取消')
+    exportData(type) {
+      switch (type) {
+        case 1:
+        import(`./../../api/${this.module}`).then(
+        ({exportCurrentPage}) => {
+          exportCurrentPage(this.pageSize, this.page, this.search)
+            .then(res => {
+              location.href = this.templateFile
+            })
+            .catch(err => {
+              Tools.error(this, err.response.data);
+            });
         })
-    },
-    beforeUpload(file) {
-      if (file.type !== "application/vnd.ms-excel") {
-        this.$message({
-          type: 'error',
-          message: '文件格式不正确，无法上传'
+          break;
+        case 2:
+        import(`./../../api/${this.module}`).then(
+        ({exportAll}) => {
+          exportAll(this.search)
+            .then(res => {
+              location.href = this.templateFile;
+            })
+            .catch(err => {
+             Tools.error(this, err.response.data);
+            });
         })
-        return false
+          break;
+        default:
+          break;
       }
-      let fd = new FormData();
-      fd.append("file", file);
-      import(`./../../api/${this.module}`).then(
-        ({uploadFile}) => {
-          uploadFile(fd).then(res => {
-               this.$message({
-                  message: '文件信息上传成功',
-                  type: 'success'
-              })
-           this.$parent.fetchData();
-           });
-        return true;
-        })
-    },
+    }
+
   }
 };
 </script>

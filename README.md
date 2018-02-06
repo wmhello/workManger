@@ -42,16 +42,23 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 ![登录页面](https://github.com/wmhello/workManger/blob/master/Screenshot/login.png)
 ### 控制面板
 ![控制面板](https://github.com/wmhello/workManger/blob/master/Screenshot/dsshboard.png)
-### 学期管理页面
-![学期管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/manger3.png)
 ### 用户管理页面
 ![用户管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/user-manger.png)
 ### 用户编辑页面
 ![用户编辑页面](https://github.com/wmhello/workManger/blob/master/Screenshot/edit-user.png)
-### 行政管理页面
-![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-manger.png)
+### 学期管理页面
+![学期管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/manger3.png)
 ### 创建新学期页面
 ![创建新学期页面](https://github.com/wmhello/workManger/blob/master/Screenshot/new-session.png)
+### 行政管理页面
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-manger.png)
+### 行政管理-编辑页面
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-edit.png)
+### 行政管理-人员导入
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-upload.png)
+### 行政管理--人员导出
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-download.png)
+
 
 # 说明
 

@@ -1,0 +1,1 @@
+webpackJsonp([1],{MKFb:function(o,t,e){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),e.d(t,"CURD",function(){return i});function n(){}n.prototype.add=function(){obj.isNew=!0,obj.editDialogFormVisible=!0},n.prototype.edit=function(){},n.prototype.tips=function(){console.log()},n.prototype.js="";var i=new n}});

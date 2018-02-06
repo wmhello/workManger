@@ -18,7 +18,10 @@
       <el-button  plain icon="el-icon-upload" @click="upload()">导入</el-button>
       <el-button  plain icon="el-icon-download" @click="download()">导出</el-button>
     </div>
-    <el-table :data="tableData" :border="true" style="width: 100%">
+    <el-table :data="tableData" :border="true" style="width: 100%"
+    @select-all="selectChange" @selection-change="selectChange">
+      <el-table-column type="selection" width="55">
+      </el-table-column>
       <el-table-column prop="id" label="序号" width="70">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="100">
@@ -121,7 +124,11 @@
         <el-button type="primary" @click="savePassword()">确 定</el-button>
       </div>
     </el-dialog>
-
+    <el-row class="page">
+      <el-col :span="2" :offset="1">
+        <el-button type="danger" plain @click="delAll()">删除选择</el-button>
+      </el-col>
+      <el-col :span="20">
     <el-pagination
       background
       @current-change="pagination"
@@ -132,11 +139,22 @@
       :page-size.sync="pageSize"
       :total="total">
     </el-pagination>
+      </el-col>
+    </el-row>
     </div>
+
   <upload-xls :show="isShowUpload"
               :template-file="templateFile"
               module="admin"
   @close-upload="closeUpload"></upload-xls>
+
+  <download-xls :show="isShowDownload"
+              :template-file="downloadFile"
+              module="admin"
+              :pageSize="pageSize"
+              :page="current_page"
+              :search="searchForm"
+  @close-download="closeDownload"></download-xls>
   </div>
 </template>
 
@@ -151,6 +169,7 @@ import {
   addInfo,
   uploadFile,
   deleteInfoById,
+  deleteAll,
   getCurrentPage,
   SearchModel,
   Model
@@ -159,9 +178,12 @@ import {getRoles }  from "@/api/role";
 
 import {config} from "./../../config/index";
 import UploadXls from "@/views/components/UploadXls";
+import DownloadXls from "@/views/components/DownloadXls";
+import {Tools} from "@/views/utils/Tools";
+
 export default {
   components: {
-    UploadXls
+    UploadXls, DownloadXls
   },
   data() {
     return {
@@ -172,11 +194,13 @@ export default {
       resetDialogFormVisible: false,
       editDialogFormVisible: false,
       templateFile: config.site + '/xls/user.xls',
+      downloadFile: config.site + '/xls/用户管理.xls',
       resetId: "",
       uploadId: "",
       isNew: false,
       isEdit: false,
       isShowUpload: false,
+      isShowDownload: false,
       form2: {
         psw: "",
         newpsw: ""
@@ -184,13 +208,11 @@ export default {
       roles: [],
       current_page: 1,
       total: 0,
-      pageSize: 10
+      pageSize: 10,
+      multiSelect: []
     };
   },
   methods: {
-    getModule() {
-      return 'admin';
-    },
     find(){
        this.fetchData()
     },
@@ -209,20 +231,11 @@ export default {
     closeUpload() {
       this.isShowUpload = false
     },
-    uploadHandle(file) {
-      let fd = new FormData();
-      fd.append("file", file);
-      uploadFile(fd).then(res => {
-           this.$message({
-             message: '文件信息上传成功',
-             type: 'success'
-           })
-           this.fetchData();
-      });
-      return true;
-    },
     download() {
-      console.log('导出操作')
+      this.isShowDownload = true
+    },
+    closeDownload() {
+      this.isShowDownload = false
     },
     // 头像上传
     beforeUpload(file) {
@@ -279,10 +292,10 @@ export default {
     },
     newData() {
       addInfo(this.form).then(response => {
-           this.success('用户添加成功')
+           Tools.success(this, '用户添加成功')
            this.fetchData();
       }).catch(err => {
-        this.error(err.response.data)
+         Tools.error(this, err.response.data)
       })
     },
     updateData() {
@@ -298,12 +311,12 @@ export default {
             });
             this.tableData.splice(record, 1, this.form);
             this.editDialogFormVisible = false;
-            this.success('用户信息修改成功')
+            Tools.success(this,'用户信息修改成功')
           }
         })
         .catch((err) => {
           //失败执行内容
-          this.error(err.response.data)
+          Tools.error(this, err.response.data)
         });
     },
     reset(row) {
@@ -323,14 +336,12 @@ export default {
         resetAdminByPsw(this.resetId, password).then(response => {
           let result = response.status_code;
           if (result == 200) {
-            this.success("恭喜你，重置密码成功")
+            Tools.success(this, "恭喜你，重置密码成功")
             this.resetDialogFormVisible = false;
           }
         });
       } else {
-        this.$message.error({
-          message: "输入密码为空或两次输入密码不同，请重新输入！"
-        });
+        Tools.errorTips(this, "输入密码为空或两次输入密码不同，请重新输入！");
         this.resetDialogFormVisible = false;
       }
     },
@@ -349,7 +360,7 @@ export default {
             .then(response => {
               let result = response.status_code;
               if (result == 200) {
-                this.success("删除成功!")
+                Tools.success(this, "删除成功!")
                 this.tableData.splice(record, 1);
               }
             })
@@ -359,40 +370,26 @@ export default {
         })
         .catch(() => {});
     },
-    error(result){
-      let tips = this.errorHandle(result)
-      this.$message({
-          type: "error",
-          message: tips
-      });
+    selectChange(selection) {
+       this.multiSelect = selection;
     },
-    errorHandle(result) { // 处理错误
-        let tips = '无法完成指定的操作，无法提供信息'
-        let obj = {}
-        if (result.message && typeof result.message == 'string') {
-             tips = ''
-             tips = result.message
-        }
-        if (result.message && typeof result.message == 'object') {
-             tips = this.errorHandleForEachObject(result.message)
-        }
-        if (result.errors && typeof result.errors == 'object') {
-           tips = this.errorHandleForEachObject(result.errors)
-        }
-        tips = tips.substr(0,tips.length-2)
-        return tips
-    },
-    errorHandleForEachObject(obj){  // 循环编列错误对象，用于错误处理
-        let tip ="";
-        for( let item in obj) {
-                tip =tip + obj[item].join(',')+ "☆"
-          }
-        return tip
-    },
-    success(info){
-      this.$message({
-          message: info,
-          type: 'success'
+    delAll() { // 删除所有的数据
+      this.$confirm("此操作将永久删除用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let arr = []
+        this.multiSelect.forEach(item=> {
+          arr.push(item.id);
+        })
+       deleteAll(arr).then(response=>{
+         this.fetchData()
+       }).catch(err => {
+         Tools.error(err.response.data)
+       })
+      }).catch(() => {
+          Tools.errorTips(this, '删除操作已经取消')
       })
     },
     // 分页功能
@@ -414,7 +411,6 @@ export default {
     }
   },
   mounted() {
-
   },
   beforeCreate() {
         getRoles().then(res => {
@@ -460,17 +456,10 @@ export default {
   line-height: 178px;
   text-align: center;
 }
-
 .avatar {
   width: 178px;
   height: 178px;
   display: block;
-}
-
-.el-pagination{
-  padding: 0;
-  margin-top: 20px;
-  text-align: right;
 }
 
 #admin .el-form--label-top .el-form-item__label {
@@ -483,12 +472,6 @@ export default {
 #admin .el-col-10>.el-form-item>.el-form-item__content>.el-input{
   width: 80%;
 }
-
-// #admin .el-col-16 .el-form-item__content .el-select{
-//   width: 60%;
-// }
-
-
 
 #admin .first-row .el-col {
 border:1px solid $border-color;

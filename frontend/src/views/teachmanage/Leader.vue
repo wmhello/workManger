@@ -12,7 +12,7 @@
                  <el-option label="中层领导" value="1"></el-option>
                  <el-option label="学校领导" value="2"></el-option>
              </el-select>
-       </el-form-item>
+         </el-form-item>
            <el-form-item label="学期">
                <el-select v-model="searchForm.session_id" clearable placeholder="学期">
                    <el-option v-for="item in sessions" :label="item.remark |adjustSessionMark(item)" :value="item.id" :key="item.id"></el-option>
@@ -30,7 +30,9 @@
       <el-button  plain icon="el-icon-download" @click="download()">导出</el-button>
     </div>
     <!-- 学校行政列表 -->
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" border style="width: 100%" @select-all="selectChange" @selection-change="selectChange">
+      <el-table-column type="selection" width="55">
+      </el-table-column>
       <el-table-column prop="id" label="序号" width="70">
       </el-table-column>
       <el-table-column label="教师" width="120">
@@ -61,21 +63,27 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <div class="pagination">
+    <el-row class="page">
+      <el-col :span="2" :offset="1">
+        <el-button type="danger" plain @click="delAll()">删除选择</el-button>
+      </el-col>
+      <el-col :span="20">
     <el-pagination
       background
       @current-change="pagination"
       @size-change="sizeChange"
       :current-page.sync="current_page"
-      layout="total,sizes,prev,pager,next"
-      :page-sizes="[10, 20, 25,50]"
+      :page-sizes="[10,20,25,50]"
+      layout="total,sizes,prev, pager, next"
       :page-size.sync="pageSize"
       :total="total">
     </el-pagination>
+      </el-col>
+    </el-row>
     </div>
-  </div>
+
         <!-- 编辑列表 -->
-    <el-dialog title="行政信息" center :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
+  <el-dialog title="行政信息" center :visible.sync="editDialogFormVisible" :close-on-click-modal="false">
       <el-form :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
@@ -114,39 +122,20 @@
       </div>
     </el-dialog>
 
-      <!-- 数据导入对话框 -->
-    <el-dialog title="文件导入" center :visible.sync="uploadDialogFormVisible" :close-on-click-modal="false">
-      <div style="margin-bottom:10px">
-           <el-button size="small" type="text" @click="downloadTemplate()">下载模板</el-button>
-      </div>
-        <el-upload
-          class="upload-demo"
-          ref="upload"
-          action="123"
-          :auto-upload="false"
-          :before-upload="beforeUpload" accept=".xls">
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload()">上传到服务器</el-button>
-  <div slot="tip" class="el-upload__tip">文件上传只接受xls文件</div>
-</el-upload>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelUpload()">取 消</el-button>
-        <el-button type="primary" @click="saveUpload()">确 定</el-button>
-      </div>
-    </el-dialog>
+  <upload-xls :show="isShowUpload"
+              :template-file="templateFile"
+              module="leader"
+  @close-upload="closeUpload"></upload-xls>
 
-     <!-- 数据导出对话框 -->
-    <el-dialog title="数据导出" :visible.sync="exportDialogFormVisible"   :close-on-click-modal="false">
-    <div>
-           <p>请选择导出的数据范围</p>
-    </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="exportData(1)">当前页</el-button>
-        <el-button type="primary" @click="exportData(2)">全部</el-button>
-      </div>
-    </el-dialog>
+  <download-xls :show="isShowDownload"
+              :template-file="downloadFile"
+              module="leader"
+              :pageSize="pageSize"
+              :page="current_page"
+              :search="searchForm"
+  @close-download="closeDownload"></download-xls>
 
-  </div>
+</div>
 </template>
 
 <script>
@@ -156,36 +145,42 @@ import {
   addInfo,
   updateInfo,
   deleteInfoById,
-  uploadFile,
-  exportCurrentPage,
-  exportAll,
+  deleteAll,
   Model,
   SearchModel
 } from "@/api/leader";
 import { getSession, getTeacher, getDefaultSession} from "@/api/other";
 import {config} from "./../../config/index"
+import {Tools} from "@/views/utils/Tools";
+import UploadXls from "@/views/components/UploadXls";
+import DownloadXls from "@/views/components/DownloadXls";
 
 export default {
+  components: {
+    UploadXls,
+    DownloadXls
+  },
   data() {
     return {
       searchForm: new SearchModel(),
       tableData: [],
       editDialogFormVisible: false,
-      uploadDialogFormVisible: false,
-      exportDialogFormVisible: false,
       uploadId: "",
       teachers: [],
       sessions: [],
       form: new Model(),
       isNew: false,
       isEdit: false,
+      isShowUpload: false,
+      isShowDownload: false,
       leaderType: ["无", "中层", "学校"],
       current_page: 1,
       total: 0,
       pageSize: 10,
       session_id: null,
-      xlsUrl: config.site + "/xls/leader.xls",
-      exportXls: config.site + "/xls/行政管理.xls"
+      templateFile: config.site + '/xls/leader.xls',
+      downloadFile: config.site + '/xls/行政管理.xls',
+      multiSelect: []
     };
   },
   methods: {
@@ -197,23 +192,18 @@ export default {
       this. searchForm = new SearchModel(this.session_id, null,null)
       this.fetchData()
     },
+    // 查询数据 获取信息列表
     fetchData(searchObj = this.searchForm , page = this.current_page, pageSize = this.pageSize) {
       getInfo(searchObj, page, pageSize)
         .then(response => {
           //成功执行内容
           let result = response.data;
-          if (response.meta.total === 0) {
-              this.$alert('没有找到指定的内容', '友情提示')
-          } else {
            this.tableData = result;
            this.total = response.meta.total;
            this.pageCount = response.meta.last_page
-          }
-
         })
         .catch(err => {
-           this.error(err.response.data)
-
+           Tools.error(this, err.response.data)
         });
     },
     add() {
@@ -221,6 +211,20 @@ export default {
       this.isNew = true;
       this.form = new Model();
     },
+    // 导入、导出窗口的开启与关闭
+    upload() {
+       this.isShowUpload = true
+    },
+    closeUpload() {
+      this.isShowUpload = false
+    },
+    download() {
+      this.isShowDownload = true
+    },
+    closeDownload() {
+      this.isShowDownload = false
+    },
+    // 模型的新建、编辑与更新
     edit(row) {
       let id = row.id;
       this.uploadId = id;
@@ -242,6 +246,11 @@ export default {
         this.updateData()
       }
     },
+    cancel(){
+      this.editDialogFormVisible = false
+      this.isNew = false
+      this.isEdit = false
+    },
     updateData() {
       updateInfo(this.uploadId, this.form)
         .then(response => {
@@ -254,136 +263,25 @@ export default {
               return val.id == currentId;
             });
             this.tableData.splice(record, 1, this.form);
-            this.$message({
-                  type: "success",
-                  message: "用户信息更新成功"
-            });
+            Tools.success(this, "用户信息更新成功");
           }
         })
         .catch(err => {
-          this.error(err.response.data)
+          Tools.error(this, err.response.data)
         });
     },
     newData() {
       addInfo(this.form)
         .then(response => {
-            this.$message({
-                  type: "success",
-                  message: "用户信息添加成功"
-            });
+            Tools.success(this, "用户信息添加成功");
             this.fetchData();
         })
         .catch(err => {
-          this.error(err.response.data)
+          Tools.error(this, err.response.data)
         });
     },
-    cancel(){
-      this.editDialogFormVisible = false
-      this.isNew = false
-      this.isEdit = false
-    },
-    download(){
-        this.exportDialogFormVisible = true
-    },
-    exportData(type) {
-      switch (type) {
-        case 1:
-          console.log('导出当前页')
-          exportCurrentPage(this.pageSize, this.current_page, this.searchForm)
-            .then(res => {
-              location.href = this.exportXls;
-            })
-            .catch(err => {
-              this.error(err.response.data);
-            });
-          break;
-        case 2:
-        console.log('导出全部页')
-          exportAll(this.searchForm)
-            .then(res => {
-              location.href = this.exportXls;
-            })
-            .catch(err => {
-              this.error(err.response.data);
-            });
-          break;
-        default:
-          break;
-      }
-    },
-    upload(){
-        this.uploadDialogFormVisible = true
-    },
-    cancelUpload(){
-        this.uploadDialogFormVisible = false
-    },
-    saveUpload() {
-        this.uploadDialogFormVisible = false
-        this.fetchData()
-    },
-    downloadTemplate() {
-      location.href = this.xlsUrl;
-    },
-    beforeUpload(file) {
-      if (file.type !== "application/vnd.ms-excel") {
-        this.$message({
-          type: 'error',
-          message: '文件格式不正确，无法上传'
-        })
-        return false
-      }
-      let fd = new FormData();
-      fd.append("file", file);
-      uploadFile(fd).then(res => {
-           this.$message({
-             message: '文件信息上传成功',
-             type: 'success'
-           })
-           this.fetchData();
-      });
-      return true;
-    },
-    submitUpload() {
-      this.$confirm('上传的信息将覆盖本学期的相关数据，是否上传', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$refs.upload.submit();
-        }).catch(()=>{
-          console.log('上传操作取消')
-        })
-    },
-    error(result){
-      let tips = this.errorHandle(result)
-      this.$message({
-          type: "error",
-          message: tips
-      });
-    },
-    errorHandle(result) { // 处理错误
-        let tips = '无法完成指定的操作，无法提供信息'
-        let obj = {}
-        if (result.message && typeof result.message == 'string') {
-             tips = ''
-             tips = result.message
-        }
-        if (result.message && typeof result.message == 'object') {
-             tips = this.errorHandleForEachObject(result.message)
-        }
-        if (result.errors && typeof result.errors == 'object') {
-           tips = this.errorHandleForEachObject(result.errors)
-        }
-        tips = tips.substr(0,tips.length-2)
-        return tips
-    },
-    errorHandleForEachObject(obj){  // 循环编列错误对象，用于错误处理
-        let tip ="";
-        for( let item in obj) {
-                tip =tip + obj[item].join(',')+ "☆"
-          }
-        return tip
-    },
+
+    // 删除  删除单个 批量删除
     del(row) {
       this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -404,10 +302,34 @@ export default {
               }
             }).catch(err => {
               //失败执行内容
-              this.error(err.response.data)
+              Tools.error(this, err.response.data)
         })
       })
     },
+
+    selectChange(selection) {
+       this.multiSelect = selection;
+    },
+    delAll() { // 删除所有的数据
+      this.$confirm("此操作将永久删除用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let arr = []
+        this.multiSelect.forEach(item=> {
+          arr.push(item.id);
+        })
+       deleteAll(arr).then(response=>{
+         this.fetchData()
+       }).catch(err => {
+         Tools.error(err.response.data)
+       })
+      }).catch(() => {
+          Tools.errorTips(this, '删除操作已经取消')
+      })
+    },
+
     // 分页相关
     pagination(val) {
       this.current_page = val;
@@ -417,8 +339,8 @@ export default {
        this.pageSize = val;
        this.fetchData()
     },
+    // 获取各种所需数据
     getSessions() {
-      // 获取学期信息
       return new Promise((resolve, reject) => {
         getSession()
           .then(response => {
@@ -430,8 +352,8 @@ export default {
           });
       });
     },
+    // 获取教师姓名和id信息
     getTeachers() {
-      // 获取教师姓名和id信息
       return new Promise((resolve, reject) => {
         getTeacher()
           .then(response => {
@@ -458,9 +380,6 @@ export default {
       })
     });
   },
-  watch: {
-
-  },
   filters: {
     getTeacherName(value, teachers) {
       let item = teachers.find(val => val.id == value);
@@ -484,4 +403,5 @@ export default {
   width: 200px;
   margin-left: 10px;
 }
+
 </style>

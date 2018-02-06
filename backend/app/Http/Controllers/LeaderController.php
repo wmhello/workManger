@@ -407,7 +407,16 @@ class LeaderController extends Controller
         
     }
 
-
-
+    public function deleteAll(Request $request)
+    {
+        $data = $this->deleteByIds($request);
+        if ($data) {
+            if (Leader::destroy($data['ids'])) {
+                return $this->success();
+            } else {
+                return $this->error();
+            }
+        }
+    }
 
 }

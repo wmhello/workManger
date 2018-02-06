@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
 trait Result
 {
@@ -78,5 +79,26 @@ trait Result
         } else {
             return $this->errorWithCodeAndInfo(406,'上传的文件格式不正确');
         }
+    }
+
+    public function deleteByIds($request)
+    {
+        $data = $request->only('ids');
+        $rules = [
+            'ids' => 'required | Array'
+        ];
+        $messages = [
+            'ids.required' => '必须选择相应的记录',
+            'ids.Array' => 'ids字段必须是数组'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+        if ($validator->fails()) {
+            $errors = $validator->error($validator);
+            return $this->errorWithCodeAndInfo(422, $errors);
+        } else {
+            return $data;
+        }
+
     }
 }

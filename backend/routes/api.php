@@ -17,13 +17,16 @@ Route::middleware('auth:api')->get('/user', 'UserController@getUserInfo');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/token/refresh', 'Auth\LoginController@refresh');
 Route::post('/logout', 'Auth\LoginController@logout');
-Route::post('/test', 'LeaderController@export');
+// Route::post('/test', 'UserController@exportAll');
 Route::middleware('auth:api')->group(function() {
     Route::Resource('admin', 'UserController');
     Route::post('/admin/modify', 'UserController@modify' );
     Route::post('/admin/{id}/reset', 'UserController@reset');
     Route::post('/admin/uploadAvatar', 'UserController@uploadAvatar');
     Route::post('/admin/upload', 'UserController@upload');
+    Route::post('/admin/export', 'UserController@export');
+    Route::post('/admin/exportAll', 'UserController@exportAll');
+    Route::post('/admin/deleteAll', 'UserController@deleteAll');
 
     Route::Resource('session', 'SessionController');
     Route::post('/session/upload', 'SessionController@upload');
@@ -32,6 +35,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/leader/upload', 'LeaderController@upload');
     Route::post('/leader/export', 'LeaderController@export');
     Route::post('/leader/exportAll', 'LeaderController@exportAll');
+    Route::post('/leader/deleteAll', 'LeaderController@deleteAll');
 
 
     Route::Resource('classTeacher', 'ClassTeacherController');
