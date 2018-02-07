@@ -19,7 +19,7 @@
       <el-button  plain icon="el-icon-download" @click="download()">导出</el-button>
     </div>
     <el-table :data="tableData" :border="true" style="width: 100%"
-    @select-all="selectChange" @selection-change="selectChange">
+    @select-all="selectChange" @selection-change="selectChange"  v-loading="loading">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column prop="id" label="序号" width="70">
@@ -206,6 +206,7 @@ export default {
         newpsw: ""
       },
       roles: [],
+      loading: false,
       current_page: 1,
       total: 0,
       pageSize: 10,
@@ -249,13 +250,16 @@ export default {
       return true;
     },
     fetchData(searchObj = this.searchForm , page = this.current_page, pageSize = this.pageSize) {
+       this.loading = true
       getInfo(searchObj, page, pageSize)
         .then(response => {
           let result = response.data;
           this.tableData = result;
           this.total = response.meta.total;
+           this.loading = false
         })
         .catch(() => {
+           this.loading = false
         });
     },
     edit(row) {

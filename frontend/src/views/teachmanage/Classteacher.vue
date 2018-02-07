@@ -31,7 +31,7 @@
       <el-button  plain icon="el-icon-download" @click="download()">导出</el-button>
     </div>
     <!-- 学校行政列表 -->
-    <el-table :data="tableData" border style="width: 100%" @select-all="selectChange" @selection-change="selectChange">
+    <el-table :data="tableData" border style="width: 100%" @select-all="selectChange" @selection-change="selectChange" v-loading="loading">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column prop="id" label="序号" width="70">
@@ -166,6 +166,7 @@ export default {
       teachers: [],
       sessions: [],
       form: new Model(),
+      loading: false,
       isNew: false,
       isEdit: false,
       isShowUpload: false,
@@ -191,6 +192,7 @@ export default {
     },
     // 查询数据 获取信息列表
     fetchData(searchObj = this.searchForm , page = this.current_page, pageSize = this.pageSize) {
+      this.loading = true
       getInfo(searchObj, page, pageSize)
         .then(response => {
           //成功执行内容
@@ -198,9 +200,11 @@ export default {
            this.tableData = result;
            this.total = response.meta.total;
            this.pageCount = response.meta.last_page
+           this.loading = false
         })
         .catch(err => {
            Tools.error(this, err.response.data)
+           this.loading = false
         });
     },
     add() {

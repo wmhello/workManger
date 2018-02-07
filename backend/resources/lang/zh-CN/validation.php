@@ -116,7 +116,10 @@ return [
         'session_id'         => '学期',
         'teacher_id'         => '姓名',
         'leader_type'        => '行政类型',
-        'role'               => '角色'
+        'role'               => '角色',
+        'grade'              => '年级',
+        'teach_id'           => '学科',
+        'leader'             => '组长类型'
     ],
 
 ];

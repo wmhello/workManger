@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', 'UserController@getUserInfo');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/token/refresh', 'Auth\LoginController@refresh');
 Route::post('/logout', 'Auth\LoginController@logout');
-Route::post('/test', 'ClassTeacherController@export');
+Route::post('/test', 'DepartmentController@export');
 Route::middleware('auth:api')->group(function() {
     // 用户管理
     Route::Resource('admin', 'UserController');

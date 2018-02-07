@@ -25,7 +25,6 @@ class DepartmentRequest extends FormRequest
     {
         return [
             //
-            'session_id' => 'required|exists:sessions,id',
             'teacher_id' => 'required|exists:yz_teacher,id',
             'teach_id' => 'required|exists:yz_teaching,id',
             'leader' => 'required|in:0,1',
