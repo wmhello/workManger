@@ -19,7 +19,6 @@ class Leader extends Model
         }else {
             return $query;
         }
-
     }
 
     public function scopeTeacherId($query)
@@ -30,7 +29,6 @@ class Leader extends Model
         }else {
             return $query;
         }
-
     }
 
     public function scopeSessionId($query)
@@ -42,6 +40,5 @@ class Leader extends Model
             $sessionId = $this->getCurrentSessionId();
             return $query = $query->where('session_id', $sessionId);
         }
-
     }
 }

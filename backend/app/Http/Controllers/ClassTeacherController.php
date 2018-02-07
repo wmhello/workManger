@@ -9,6 +9,8 @@ use App\Http\Requests\ClassTeacherUploadRequest;
 use App\Http\Resources\ClassTeacherCollection;
 use App\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClassTeacherController extends Controller
 {
@@ -54,16 +56,10 @@ class ClassTeacherController extends Controller
      */
     public function index(Request $request)
     {
-        $data = $request->only(['session_id', 'page', 'pageSize', 'teacher_id']);
-        $pageSize = array_key_exists('pageSize', $data)?$data['pageSize']:15;
-        $teacher_id = array_key_exists('teacher_id', $data)?$data['teacher_id']:null;
-        $session_id = array_key_exists('session_id', $data)?$data['session_id']:$this->getCurrentSessionId();
-        if ($session_id) {
-            $lists = ClassTeacher::where('session_id',$session_id)->paginate($pageSize);
-        }
-        if ($teacher_id && $session_id) {
-            $lists = ClassTeacher::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
-        }
+
+        $pageSize = $request->input('pageSize');
+        $pageSize = isset($pageSize) && $pageSize ?$pageSize:10;
+        $lists = ClassTeacher::SessionId()->TeacherId()->Grade()->paginate($pageSize);
         return new ClassTeacherCollection($lists);
     }
 
@@ -124,9 +120,10 @@ class ClassTeacherController extends Controller
     public function store(ClassTeacherRequest $request)
     {
         //
-        $data = $request->only(['session_id', 'teacher_id', 'grade', 'class', 'remark']);
+        $data = $request->only(['teacher_id', 'grade', 'class_id', 'remark']);
+        $data['session_id'] = $this->getCurrentSessionId();
         if (! $this->checkClass($data)) {
-          return $this->errorWithCodeAndInfo(416, '数据校验出错，指定的班级不存在');
+          return $this->errorWithCodeAndInfo(422, '数据校验出错，指定的班级不存在');
         };
         if (ClassTeacher::create($data)) {
             return $this->success();
@@ -223,14 +220,15 @@ class ClassTeacherController extends Controller
     public function update(ClassTeacherRequest $request, ClassTeacher $classTeacher)
     {
         //
-        $data = $request->only(['session_id', 'teacher_id', 'grade', 'class', 'remark']);
+        $data = $request->only(['teacher_id', 'grade', 'class_id', 'remark']);
+        $data['session_id'] = $this->getCurrentSessionId();
         if (! $this->checkClass($data)) {
             return $this->errorWithCodeAndInfo(416, '数据校验出错，指定的班级不存在');
         };
         $classTeacher->session_id = $data['session_id'];
         $classTeacher->teacher_id = $data['teacher_id'];
         $classTeacher->grade = $data['grade'];
-        $classTeacher->class = $data['class'];
+        $classTeacher->class_id = $data['class_id'];
         $classTeacher->remark = $data['remark'];
         if ($classTeacher->save()) {
             return $this->success();
@@ -266,6 +264,18 @@ class ClassTeacherController extends Controller
             return $this->success();
         } else {
             return $this->error();
+        }
+    }
+
+    public function deleteAll(Request $request)
+    {
+        $data = $this->deleteByIds($request);
+        if ($data) {
+            if (ClassTeacher::destroy($data['ids'])) {
+                return $this->success();
+            } else {
+                return $this->error();
+            }
         }
     }
 
@@ -319,7 +329,7 @@ class ClassTeacherController extends Controller
 
     protected function checkClass($data)
     {
-        list($session_id, $class, $grade) = [(int)$data['session_id'], (int)$data['class'], (int)$data['grade']];
+        list($session_id, $class, $grade) = [(int)$data['session_id'], (int)$data['class_id'], (int)$data['grade']];
         $session = Session::where('id', $session_id)->first()->toArray();
         $arrGrade = ['zero', 'one', 'two', 'three'];
         $maxClass = $session[$arrGrade[$grade]];
@@ -328,5 +338,98 @@ class ClassTeacherController extends Controller
         } else {
             return true;
         }
+    }
+
+    public function exportAll(Request $request) {
+        $sessionId =$request->input('session_id');
+        $sessionId = isset($sessionId)?$sessionId:$this->getCurrentSessionId();
+        $rec = ClassTeacher::where('session_id', $sessionId)->count(); // 获得总记录数,因为是所有的数据
+        $this->generator($rec, 1);
+    }
+
+    public function export(Request $request)
+    {
+        $pageSize = (int)$request->input('pageSize');
+        $pageSize = isset($pageSize) && $pageSize? $pageSize: 10;
+        $page = (int)$request->input('page');
+        $page = isset($page) && $page ? $page: 1;
+        $this->generator($pageSize, $page);
+    }
+
+    public function generator($pageSize, $page)
+    {
+
+        $sessionId = (int)request()->input('session_id');
+        $teacherId = (int)request()->input('teacher_id');
+        $grade = (int)request()->input('grade');
+
+        $sessionId = (isset($sessionId)&&$sessionId)?$sessionId: $this->getCurrentSessionId();
+        $teacherId = (isset($teacherId)&&$teacherId)?$teacherId: null;
+        $grade = (isset($grade)&&$grade)?$grade: [1,2,3];
+        if (is_numeric($grade)) {
+            $arr = [];
+            array_push($arr,$grade);
+            $grade = $arr;
+        }
+        $lists = $this->queryData($pageSize, $page,$sessionId, $grade,$teacherId);
+        $data = $lists->toArray();  // 分页内容
+        $items = $this->generatorData($data);
+        $this->generatorXls($items);
+    }
+
+    protected  function queryData($pageSize = 10, $page = 1, $sessionId, $grade,$teacherId){
+        // 查询条件  根据姓名或者电话号码进行查询
+        $offset = $pageSize * ($page - 1) == 0? 0: $pageSize * ($page - 1);
+        $lists = DB::table('class_teachers')->join('yz_teacher', 'class_teachers.teacher_id','=', 'yz_teacher.id')
+            ->join('sessions', 'class_teachers.session_id', '=', 'sessions.id' )
+            ->select(['yz_teacher.name', 'sessions.year', 'sessions.team','class_teachers.grade', 'class_teachers.class_id', 'class_teachers.remark'])
+            ->where('session_id', $sessionId)
+            ->whereIn('grade', $grade)
+            ->when($teacherId,function ($query) use ($teacherId) {
+                return $query->where('teacher_id', $teacherId);
+            })
+            ->when($pageSize,function($query) use($offset, $pageSize) {
+                return $query->offset($offset)->limit($pageSize);
+            })
+            ->get();
+
+        return $lists;
+    }
+
+    /**
+     * 根据传入的数据生成内容
+     * @param $data
+     * @return array
+     */
+    protected function generatorData($data): array
+    {
+        $items = [];
+        // $data = $data['data'];  // 数据库中的数据
+        foreach ($data as $item) {
+            $arr = [];
+            $arr['name'] = $item->name;
+            $nextYear = $item->year + 1;
+            $arr['year'] = $item->year.'--'.$nextYear.'学年';
+            $arr['team'] = $item->team ==1 ? '上学期':'下学期';
+            $arr['grade'] = $this->getGradeById($item->grade);
+            $arr['class_id'] = $item->class_id.'班';
+            $arr['remark'] = $item->remark;
+            array_push($items, $arr);
+        }
+        array_unshift($items, ['姓名', '学年', '学期', '年级', '班级', '班主任备注']);
+        return $items;
+    }
+
+    /**
+     * 生成xls文件  名称叫做班主任管理
+     */
+    protected function generatorXls($items): void
+    {
+        $file = time();
+        Excel::create('班主任管理', function ($excel) use ($items) {
+            $excel->sheet('score', function ($sheet) use ($items) {
+                $sheet->rows($items);
+            });
+        })->store('xls', public_path('xls'));
     }
 }

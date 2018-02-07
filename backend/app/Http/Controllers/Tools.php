@@ -51,4 +51,10 @@ trait Tools
        $session_id = Session::where('year', $year) ->where('team', $team)->value('id');
        return $session_id;
    }
+
+    public function getGradeById($id)
+    {
+        $grades = ['', '高一', '高二', '高三'];
+        return $grades[$id];
+   }
 }

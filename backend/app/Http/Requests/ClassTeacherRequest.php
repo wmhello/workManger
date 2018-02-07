@@ -24,9 +24,8 @@ class ClassTeacherRequest extends FormRequest
     public function rules()
     {
         return [
-            'session_id' => 'required|exists:sessions,id',
             'teacher_id' => 'required|exists:yz_teacher,id',
-            'class' => 'required|numeric',
+            'class_id' => 'required|numeric',
             'grade' => 'required|in:1,2,3',
             'remark' => 'nullable|string|max:50',
         ];

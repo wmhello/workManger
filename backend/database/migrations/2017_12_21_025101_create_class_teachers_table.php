@@ -18,7 +18,7 @@ class CreateClassTeachersTable extends Migration
             $table->unsignedSmallInteger('session_id')->comment('学期ID');
             $table->unsignedSmallInteger('teacher_id')->comment('教师ID');
             $table->unsignedtinyInteger('grade')->comment('年级 1、2、3');
-            $table->unsignedtinyInteger('class')->comment('班级');
+            $table->unsignedtinyInteger('class_id')->comment('班级');
             $table->string('remark', 50)->nullable()->comment('备注');
             $table->softDeletes();
             $table->timestamps();

@@ -19,7 +19,7 @@ class ClassTeacher extends Resource
             'session_id' => $this->session_id,
             'teacher_id' => $this->teacher_id,
             'grade' => $this->grade,
-            'class' => $this->class,
+            'class_id' => $this->class_id,
             'remark' => $this->remark
         ];
     }

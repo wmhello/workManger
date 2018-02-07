@@ -17,17 +17,19 @@ use Illuminate\Support\Facades\Validator;
 
 class ClassTeacherImportHandler implements \Maatwebsite\Excel\Files\ImportHandler
 {
+    use App\Http\Controllers\Result;
+    use App\Http\Controllers\Tools;
     public function handle($import)
     {
         $data = $import->first()->toArray();
         $lists = [];
-        $session_id = (int)request()->input('session_id');
+        $session_id = $this->getCurrentSessionId();
         foreach($data as $val) {
             // 获取每条记录  为验证做准备
             $item = [
                 'name' => $val['name'],
                 'grade' => (int)$val['grade'],
-                'class' => (int)$val['class'],
+                'class_id' => (int)$val['class_id'],
                 'remark' => $val['remark'],
                 'phone' => $val['phone'],
                 'session_id' => $session_id,
@@ -39,7 +41,7 @@ class ClassTeacherImportHandler implements \Maatwebsite\Excel\Files\ImportHandle
                 'name' => 'required|exists:yz_teacher,name',
                 'phone' => ['nullable', new Telphone],
                 'grade' => 'required|in:1,2,3',
-                'class' => 'required|integer'
+                'class_id' => 'required|integer'
             ];
             $validator = Validator::make($item, $rules);
 
@@ -73,6 +75,9 @@ class ClassTeacherImportHandler implements \Maatwebsite\Excel\Files\ImportHandle
                         continue;
                     }
                 }
+            } else {
+                  $errors = $validator->errors($validator);
+                  return $this->errorWithCodeAndInfo(422,$errors);
             }
         }
         // 删除原来存在的该学期的数据

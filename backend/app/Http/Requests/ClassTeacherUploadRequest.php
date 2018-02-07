@@ -24,7 +24,6 @@ class ClassTeacherUploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'session_id' => 'required|exists:sessions,id'
         ];
     }
 }

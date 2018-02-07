@@ -67,18 +67,6 @@ class LeaderController extends Controller
         $pageSize = $request->input('pageSize');
         $pageSize = isset($pageSize) && $pageSize ?$pageSize:10;
         $lists = Leader::LeaderType()->SessionId()->TeacherId()->paginate($pageSize);
-//      if ($teacher_id && $session_id) {
-//          $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
-//      }
-//      if (! $teacher_id && $session_id) {
-//          $lists = Leader::where('session_id',$session_id)->paginate($pageSize);
-//      }
-//      if ($teacher_id && !$session_id) {
-//            $lists = Leader::where('teacher_id', $teacher_id)->paginate($pageSize);
-//       }
-//        if (! $teacher_id && !$session_id) {
-//            $lists = Leader::where('teacher_id', $teacher_id)->where('session_id',$session_id)->paginate($pageSize);
-//        }
       return new LeaderCollection($lists);
     }
 
