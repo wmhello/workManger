@@ -58,7 +58,12 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 ![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-upload.png)
 ### 行政管理--人员导出
 ![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/leader-download.png)
-
+### 教师代课管理--代课列表
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/teaching-manger.png)
+### 教师代课管理--个人代课编辑
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/teaching-edit.png)
+### 教师代课管理--个人代课添加
+![行政管理页面](https://github.com/wmhello/workManger/blob/master/Screenshot/teaching-add.png)
 
 # 说明
 
