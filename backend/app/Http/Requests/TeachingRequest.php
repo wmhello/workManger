@@ -13,7 +13,7 @@ class TeachingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,9 @@ class TeachingRequest extends FormRequest
     {
         return [
             //
+            'teacher_id' => 'required|exists:yz_teacher,id',
+            'teach_id' => 'required|exists:yz_teaching,id',
+            'grade' => 'required|in:1,2,3'
         ];
     }
 }

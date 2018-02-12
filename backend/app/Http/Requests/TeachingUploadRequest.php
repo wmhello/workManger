@@ -24,8 +24,10 @@ class TeachingUploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'session_id' => 'required|exists:sessions:id',
-            'grade' => 'required|in:1,2,3'
+            'teacher_id' => 'required|exists:yz_teacher,id',
+            'teach_id' => 'required|exists:yz_teaching,id',
+            'grade' => 'required|in:1,2,3',
+            'class_id' => 'required|numeric'
         ];
     }
 }

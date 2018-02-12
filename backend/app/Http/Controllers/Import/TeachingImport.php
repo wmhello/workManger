@@ -1,9 +1,15 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/2/8 0008
+ * Time: 15:58
+ */
 
 namespace App\Http\Controllers\Import;
 
 
-class UserImport extends \Maatwebsite\Excel\Files\ExcelFile
+class TeachingImport
 {
     use \App\Http\Controllers\Result;
 

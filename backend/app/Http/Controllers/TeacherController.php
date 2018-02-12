@@ -107,4 +107,11 @@ class TeacherController extends Controller
         $data = Teacher::select('id','name')->get()->toArray();
         return $this->successWithData($data);
     }
+
+    public function getTeacherByTeachingId(Request $request)
+    {
+        $teaching_id = $request->input('teaching_id');
+        $teachers = Teacher::select('id', 'name')->where('teaching_id', $teaching_id)->get();
+        return $this->successWithData($teachers);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SessionCollection;
 use App\Session;
+use App\Teaching;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Import\SessionImport;
 use Illuminate\Support\Facades\Validator;
@@ -351,5 +352,41 @@ class SessionController extends Controller
             'status' => 'success',
             'status_code' => 200
         ], 200);
+    }
+
+    public function getClassNumByGrade(Request $request)
+    {
+       $arrClass = ['zero', 'one', 'two', 'three'];
+        $grade = (int)$request->input('grade');
+        $teach_id = (int)$request->input('teach_id', 7);
+        if (isset($grade) && $grade && $grade>=0 && $grade<=3) {
+            $session_id = $this->getCurrentSessionId();
+            $filed =$arrClass[$grade];
+            $maxClass = Session::where('id', $session_id)->value($arrClass[$grade]);
+            $arr = [];
+            for ($i = 1; $i<=$maxClass;$i++){
+                $key = 'class'.$i;
+                $arr[$key] = [
+                    'disable' => false,
+                    'label' => $i
+                ];
+            }
+            $arr1 = [];
+            $tmpArr = Teaching::where('teach_id', $teach_id)
+                ->where('session_id', $session_id)
+                ->where('grade', $grade)
+                ->pluck('class_id');
+            foreach ($tmpArr as $item){
+                $key = 'class'.$item;
+                $arr1[$key] = [
+                    'disable' => true,
+                    'label' => $item
+                ];
+            }
+            $result=array_values(array_merge($arr,$arr1));
+            return $this->successWithData($result);
+        } else {
+            return $this->errorWithCodeAndInfo(422, '请选择年级');
+        }
     }
 }

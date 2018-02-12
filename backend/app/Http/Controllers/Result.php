@@ -99,6 +99,5 @@ trait Result
         } else {
             return $data;
         }
-
     }
 }

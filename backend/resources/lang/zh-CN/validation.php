@@ -119,7 +119,8 @@ return [
         'role'               => '角色',
         'grade'              => '年级',
         'teach_id'           => '学科',
-        'leader'             => '组长类型'
+        'leader'             => '组长类型',
+        'class_id'           => '班级'
     ],
 
 ];
