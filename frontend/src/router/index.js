@@ -103,6 +103,16 @@ export const asyncRouterMap = [
           title: '角色管理',
           icon: 'table'
         }
+      },
+      {
+        path: 'permission',
+        name: 'permission/index',
+        component: _import('permission/Index'),
+        meta: {
+          role: ['admin'],
+          title: '功能管理',
+          icon: 'table'
+        }
       }
     ]
   },

@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Request;
 use App\Session;
 use Carbon\Carbon;
 
@@ -56,5 +57,6 @@ trait Tools
     {
         $grades = ['', '高一', '高二', '高三'];
         return $grades[$id];
-   }
+    }
+
 }
