@@ -44,9 +44,9 @@ export function addInfo (data) {
   })
 }
 
-export function Model (name='', explain='', remark='') {
+export function Model (name='', explain='', remark='', permission = []) {
     this.name = name
     this.explain = explain
     this.remark = remark
-
+    this.permission = permission
 }

@@ -18,6 +18,7 @@ class Role extends Resource
             'id' => $this->id,
             'name' => $this->name,
             'explain' => $this->explain,
+            'permission' => explode(',', $this->permission),
             'remark' => $this->remark
         ];
     }

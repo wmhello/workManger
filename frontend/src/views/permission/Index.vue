@@ -43,13 +43,16 @@
       </el-table-column>
       <el-table-column prop="method" label="访问方法" width="120">
       </el-table-column>
-      <el-table-column prop="route_name" label="访问路由" width="180">
+      <el-table-column prop="route_name" label="后端路由" width="180">
       </el-table-column>
       <el-table-column prop="remark" label="备注" >
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-tooltip content="编辑" placement="right-end"  effect="light">
+          <el-tooltip content="编辑功能" v-if="scope.row.type === 2" placement="right-end"  effect="light">
+            <el-button plain icon="el-icon-edit" type="primary" size="small" @click="edit(scope.row)"></el-button>
+          </el-tooltip>
+          <el-tooltip content="编辑组" v-if="scope.row.type === 1" placement="right-end"  effect="light">
             <el-button plain icon="el-icon-edit" type="primary" size="small" @click="edit(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="right-end"  effect="light">
@@ -108,14 +111,14 @@
         </el-form-item>
           </el-col>
           <el-col :span="12">
-        <el-form-item label="功能路由"  prop="route_name">
+        <el-form-item label="后端路由"  prop="route_name">
           <el-input v-model="form.route_name"></el-input>
         </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-           <el-form-item label="功能匹配"  prop="route_match">
+           <el-form-item label="前端匹配"  prop="route_match">
              <el-input v-model="form.route_match"></el-input>
            </el-form-item>
           </el-col>
@@ -132,6 +135,39 @@
       </div>
     </el-dialog>
 
+
+        <!-- 编辑组 -->
+  <el-dialog title="组管理" center  :visible.sync="isGroup" :close-on-click-modal="false">
+      <el-form :model="form" label-width="100px">
+        <el-row>
+          <el-col :span="12">
+        <el-form-item label="组名称" prop="name">
+            <el-input v-model="form.name"  placeholder="请输入名称">
+            </el-input>
+        </el-form-item>
+          </el-col>
+          <el-col :span="12">
+        <el-form-item label="所属功能组" prop="pid">
+          <el-select v-model="form.pid" placeholder="请选择所属功能组">
+              <el-option label="全局" :value="0" >全局</el-option>
+              <el-option v-for="item in permissions" :label="item.name" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+        <el-form-item label="组备注"  prop="remark">
+          <el-input type="textarea" v-model="form.remark"></el-input>
+        </el-form-item>
+          </el-col>
+        </el-row>
+        </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelGroup()">取 消</el-button>
+        <el-button type="primary" @click="saveGroup()">确 定</el-button>
+      </div>
+    </el-dialog>
 
 </div>
 </template>
@@ -165,6 +201,7 @@ export default {
       loading: false,
       isNew: false,
       isEdit: false,
+      isGroup: false,
       current_page: 1,
       total: 0,
       pageSize: 10,
@@ -203,10 +240,15 @@ export default {
             this.loading = false
         });
     },
+    addGroup() {
+       this.isNew = true
+       this.isGroup = true
+       this.form = new Model(null, 0, 1)
+    },
     add() {
       this.editDialogFormVisible = true;
       this.isNew = true;
-      this.form = new Model();
+      this.form = new Model(null,null,2);
     },
     // 模型的新建、编辑与更新
     edit(row) {
@@ -216,7 +258,12 @@ export default {
         let result = response.data;
         this.form = result;
         this.isEdit = true;
-        this.editDialogFormVisible = true;
+        if (row.type === 1) {
+            this.isGroup = true
+        } else {
+            this.editDialogFormVisible = true;
+        }
+
       });
     },
     save() {
@@ -230,8 +277,24 @@ export default {
         this.updateData()
       }
     },
+   saveGroup() {
+      this.isGroup = false;
+      if (this.isNew) {
+        this.isNew = false
+        this.newData()
+      }
+      if (this.isEdit) {
+        this.isEdit = false
+        this.updateData()
+      }
+    },
     cancel(){
       this.editDialogFormVisible = false
+      this.isNew = false
+      this.isEdit = false
+    },
+    cancelGroup() {
+      this.isGroup = false
       this.isNew = false
       this.isEdit = false
     },
@@ -255,7 +318,6 @@ export default {
         });
     },
     newData() {
-      this.form.type =2
       addInfo(this.form)
         .then(response => {
             Tools.success(this, "功能信息添加成功");

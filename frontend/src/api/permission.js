@@ -31,6 +31,7 @@ export function updateInfo (id, data) {
 }
 
 export function addInfo (data) {
+  console.log(data)
   return fetch({
     url: '/api/permissions',
     method: 'post',
@@ -61,6 +62,13 @@ export function getGroup() {
     method: 'post'
   })
 
+}
+
+export function getPermission() {
+  return fetch({
+    url: '/api/permissions/getPermissionByTree',
+    method: 'post'
+  })
 }
 
 export function Model (name = null, pid = null, type = null, method = null, route_name = null, route_match = null, remark = null) {

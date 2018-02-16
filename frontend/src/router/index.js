@@ -122,8 +122,9 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/teachmanage/session',
     name: 'teachermanage',
+    alwaysShow: true,
     meta: {
-      role: ['admin'],
+      role: ['admin', 'user'],
       icon: 'tubiao',
       title: '教学过程管理'
     },
@@ -133,7 +134,7 @@ export const asyncRouterMap = [
         name: 'teachermanage/session',
         component: _import('teachmanage/Session'),
         meta: {
-          role: ['admin'],
+          role: ['admin', 'user'],
           title: '学期管理',
           icon: 'zonghe'
         }

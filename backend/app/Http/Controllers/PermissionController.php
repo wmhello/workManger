@@ -6,6 +6,7 @@ use App\Http\Requests\PermissionRequest;
 use App\Http\Resources\PermissionCollection;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PermissionController extends Controller
@@ -154,6 +155,34 @@ class PermissionController extends Controller
                 return $this->error();
             }
         }
+    }
+
+    public function getPermissionByTree()
+    {
+        // 获取权限数据 用于在树形控件中显示
+        $lists = Permission::select(DB::raw('id, name as label, pid'))->get();
+        $arr = $lists->toArray();
+        $arr1 = $this->make_tree($arr);
+        return $this->successWithData($arr1);
+    }
+
+    public function make_tree($arr){
+        $refer = array();
+        $tree = array();
+        foreach($arr as $k => $v){
+            $refer[$v['id']] = & $arr[$k]; //创建主键的数组引用
+        }
+        foreach($arr as $k => $v){
+            $pid = $v['pid'];  //获取当前分类的父级id
+            if($pid == 0){
+                $tree[] = & $arr[$k];  //顶级栏目
+            }else{
+                if(isset($refer[$pid])){
+                    $refer[$pid]['children'][] = & $arr[$k]; //如果存在父级栏目，则添加进父级栏目的子栏目数组中
+                }
+            }
+        }
+        return $tree;
     }
 
 }

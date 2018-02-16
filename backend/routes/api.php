@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', 'UserController@getUserInfo')->name(
 Route::post('/login', 'Auth\LoginController@login')->name('login.login');
 Route::post('/token/refresh', 'Auth\LoginController@refresh')->name('login.refresh');
 Route::post('/logout', 'Auth\LoginController@logout')->name('login.logout');
-Route::post('/test', 'TeachingController@test')->name('soft.test');
+Route::post('/test', 'PermissionController@getPermission')->name('soft.test');
 Route::middleware('auth:api')->group(function() {
     // 用户管理
     Route::Resource('admin', 'UserController');
@@ -42,6 +42,7 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/getTeacherByTeachingId', 'TeacherController@getTeacherByTeachingId')->name('teacher.getTeacher'); // 根据学科获取任课教师
     Route::get('/getSelectClass/{id}/grade/{grade}', 'TeachingController@getSelectClassByGrade')->name('teaching.getTeacher'); // 根据学科获取任课教师
     Route::get('/getClassByTeachingId/{id}', 'TeachingController@getClassByTeachingId')->name('teaching.getClass'); // 根据ID获取当前学期，当前科目和当前年级可以使用的班级
+
 
     // 学期管理
     Route::Resource('session', 'SessionController');
@@ -80,4 +81,5 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/permissions/addGroup', 'PermissionController@addGroup')->name('permissions.addGroup');
     Route::post('/permissions/getGroup', 'PermissionController@getGroup')->name('permissions.getGroup');
     Route::post('/permissions/deleteAll', 'PermissionController@deleteAll')->name('permissions.deleteAll') ;
+    Route::post('/permissions/getPermissionByTree', 'PermissionController@getPermissionByTree')->name('Permission.getPermissionByTree');
 });

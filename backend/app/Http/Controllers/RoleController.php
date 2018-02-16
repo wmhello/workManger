@@ -207,9 +207,10 @@ class RoleController extends Controller
     public function update(RoleRequest $request, Role $role)
     {
         //
-        $data = $request->only(['name', 'explain', 'remark']);
+        $data = $request->only(['name', 'explain', 'remark', 'permission']);
         $role->name = $data['name'];
         $role->explain = $data['explain'];
+        $role->permission = implode(',', $data['permission']);
         $role->remark = $data['remark']??null;
         if ($role->save()) {
             return $this->success();
@@ -250,5 +251,11 @@ class RoleController extends Controller
         } else {
             return $this->error();
         }
+    }
+
+    public function addPermission(Request $request)
+    {
+        $data = $request->only(['id', 'name', 'permission', 'explain', 'remark']);
+
     }
 }
