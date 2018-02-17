@@ -21,8 +21,35 @@ class PermissionController extends Controller
     {
         //
         $pageSize = $request->input('pageSize', 10);
-        $lists  = Permission::Name()->Pid()->Type()->paginate($pageSize);
-        return new PermissionCollection($lists);
+        $page = $request->input('page', 1);
+        // $lists  = Permission::Name()->Pid()->Type()->paginate($pageSize);
+        $lists  = Permission::Name()->Pid()->Type()->get();
+        $count = Permission::Name()->Pid()->Type()->count();
+        $items = $lists->toArray();
+        $list_data = $items;
+        $end = $list_data;
+        if ( !$request->has('type')) {
+            // 转换为无极限分类格式，分类下的所有API都在一起
+            $data = $this->make_tree($list_data);
+            $end = [];
+            foreach($data as $item) {
+                if (is_array($item['children'])) {
+                    $values = $item['children'];
+                    unset($item['children']);
+                    array_push($end, $item);
+                    $end = array_merge($end, $values);
+                }
+            }
+        }
+        return response()->json([
+            'data' => $end,
+            'meta' => [
+                'total' => $count
+            ],
+            'status' => 'success',
+            'status_code' => 200
+        ], 200);
+        //return new PermissionCollection($lists);
     }
 
     /**
@@ -88,6 +115,7 @@ class PermissionController extends Controller
         //
         $data = $request->only(['name', 'pid', 'type', 'method', 'route_name', 'route_match', 'remark']);
         $permission->name = $data['name'];
+        $permission->pid= $data['pid'];
         $permission->type = $data['type'];
         $permission->method = $data['method'];
         $permission->route_name = $data['route_name'];

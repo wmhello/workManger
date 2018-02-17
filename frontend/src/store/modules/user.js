@@ -6,7 +6,9 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    permissions: [],
+    routeName:[],
   },
 
   mutations: {
@@ -21,6 +23,12 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
+    },
+    SET_ROUTENAME: (state, routeName) => {
+      state.routeName = routeName
     }
   },
 
@@ -48,6 +56,13 @@ const user = {
           commit('SET_ROLES', data.role)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
+          commit('SET_PERMISSIONS', data.permission)
+          let routeName = [];
+          let permissions = data.permission;
+          routeName = permissions.map(item => {
+               return item.route_name
+          })
+          commit('SET_ROUTENAME', routeName)
           resolve(response)
         }).catch(error => {
           reject(error)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Import\UserImport;
 use App\Http\Resources\UserCollection;
+use App\Models\Permission;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
@@ -392,6 +393,8 @@ class UserController extends Controller
      */
     public function getUserInfo(Request $request)
     {
+        // 获取用户信息和用户组对应的用户权限
+        // 用户权限
         $user = $request->user();
         $roles = explode(',',$user['role']);
         $data = [
@@ -401,6 +404,14 @@ class UserController extends Controller
             'role' => $roles,
             'avatar' => $user['avatar']
         ];
+        // 用户权限
+        $feature = \App\Role::whereIn('name',$roles)->pluck('permission');
+        $feature = $feature->toArray();
+        $strPermission = implode(',', $feature);
+        $permissions = explode(',', $strPermission);
+        $feature = Permission::select(['route_name', 'method', 'route_match', 'id'])->whereIn('id',$permissions)->get();
+        $feature = $feature->toArray();
+        $data['permission'] = $feature;
         return response()->json([
             'data' => $data,
             'status' => 'success',

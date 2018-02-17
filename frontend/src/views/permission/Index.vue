@@ -32,7 +32,11 @@
       </el-table-column>
       <el-table-column prop="id" label="序号" width="50">
       </el-table-column>
-      <el-table-column label="功能名称"  prop="name">
+      <el-table-column label="功能名称" >
+           <template slot-scope="scope">
+               <span v-if="scope.row.type ===1">{{scope.row.name}}</span>
+               <span v-else>&nbsp&nbsp&nbsp&nbsp|-{{scope.row.name}}</span>
+           </template>
       </el-table-column>
       <el-table-column label="功能类型" width="100">
           <template slot-scope="scope">
@@ -41,6 +45,12 @@
           close-transition>{{scope.row.type === 1 ? '功能分组' : '功能节点' }}</el-tag>
           </template>
       </el-table-column>
+      <el-table-column label="所属组" width="100">
+          <template slot-scope="scope">
+          <span>{{scope.row.pid|featureGroup(permissions) }}</span>
+          </template>
+      </el-table-column>
+
       <el-table-column prop="method" label="访问方法" width="120">
       </el-table-column>
       <el-table-column prop="route_name" label="后端路由" width="180">
@@ -232,7 +242,6 @@ export default {
           let result = response.data;
            this.tableData = result;
            this.total = response.meta.total;
-           this.pageCount = response.meta.last_page
            this.loading = false
         })
         .catch(err => {
@@ -304,12 +313,13 @@ export default {
           //成功执行内容
           let result = response.status_code;
           if (result == 200) {
-            let currentId = this.form.id;
-            let record = 0;
-            record = this.tableData.findIndex((val, index) => {
-              return val.id == currentId;
-            });
-            this.tableData.splice(record, 1, this.form);
+            // let currentId = this.form.id;
+            // let record = 0;
+            // record = this.tableData.findIndex((val, index) => {
+            //   return val.id == currentId;
+            // });
+            // this.tableData.splice(record, 1, this.form);
+            this.fetchData();
             Tools.success(this, "信息更新成功");
           }
         })
@@ -407,7 +417,14 @@ export default {
     });
   },
   filters: {
-
+     featureGroup(value, group){
+        if (value === 0) {
+          return '顶层'
+        } else {
+           let gp = group.find(item => item.id === value)
+           return gp.name
+        }
+     }
   }
 };
 </script>

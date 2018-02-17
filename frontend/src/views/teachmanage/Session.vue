@@ -2,7 +2,7 @@
   <div id="session">
     <div id="datagrid">
       <div class="toolbar">
-           <el-button plain icon="el-icon-plus" @click="add()">添加</el-button>
+           <el-button plain icon="el-icon-plus" v-has="'session.store'" @click="add()">添加</el-button>
       </div>
     <el-table :data="tableData" :border="true" style="width: 80%" scope="scope">
       <el-table-column prop="id" label="序号" width="80">
@@ -20,10 +20,10 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tooltip content="编辑" placement="right-end" effect="light">
-            <el-button plain icon="el-icon-edit" type="primary" size="small" @click="edit(scope.row)"></el-button>
+            <el-button plain icon="el-icon-edit" type="primary" size="small" v-has="'session.show'" @click="edit(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="right-end" effect="light">
-            <el-button plain icon="el-icon-delete" type="danger" size="small" @click="del(scope.row)"></el-button>
+            <el-button plain icon="el-icon-delete" type="danger" size="small" v-has="'session.delete'" @click="del(scope.row)"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -67,7 +67,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel()">取 消</el-button>
-        <el-button type="primary" @click="save()">确 定</el-button>
+        <el-button type="primary" v-if="($_has('session.update') && isEdit) || ($_has('session.store') && isNew)" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 

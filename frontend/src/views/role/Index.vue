@@ -68,7 +68,7 @@
             ref="tree"
             default-expand-all
             highlight-current
-          :default-checked-keys="form.permission"
+           :default-checked-keys="permissions"
            :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -102,6 +102,7 @@ export default {
       isNew: false,    // 添加状态
       isEdit: false,   // 编辑状态
       isPermission: false,
+      permissions:[],
       treeData: [],
       defaultProps: {
           children: 'children',
@@ -135,12 +136,16 @@ export default {
            let yearTime = new Date(result.year, 1, 1);
            result.year = yearTime
            this.form = result;
+           this.permissions = this.form.permission
            this.isPermission = true;
+           // this.$refs.tree.setCheckedKeys(this.permissions,true)
         });
        })
     },
     setPermissionSelect() {
-        this.$refs.tree.setCheckedKeys(this.form.permission)
+        if (this.$refs.tree !== undefined) {
+          this.$refs.tree.setCheckedKeys(this.permissions,true)
+        }
     },
     edit (row) {  // 显示编辑页面
        let id = row.id;

@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Route;
 class Role
 {
     /**
-     * Handle an incoming request.
-     *
+     * 根据当前的用户，获取相关的权限，并通过当前的路由名称，来判断用户是否有访问该路由的权限
+     * 用户是管理员角色，则直接放行访问，如果用户是其他角色，则进行权限判断
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
@@ -41,9 +41,9 @@ class Role
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'status_code' => 401,
-                    'message' => '当前用户无权限访问指定的功能'
-                ], 401);
+                    'status_code' => 403,
+                    'message' => '当前用户无权限访问该功能'
+                ], 403);
             }
 
         }
@@ -52,15 +52,5 @@ class Role
             return $next($request);
         }
 
-//        $user = $request->user();
-//        $role = explode(',', $user->role);
-//        if (in_array('admin', $role)) {
-//            echo '管理员';
-//            return $next($request);
-//        } else {
-//           echo '非管理员';
-//           $url = $request->url();
-//           echo $url;
-//        }
     }
 }

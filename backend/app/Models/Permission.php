@@ -21,7 +21,7 @@ class Permission extends Model
     {
         $val = request()->input('pid');
         if (isset($val)) {
-            return $query->where('pid', (int)$val);
+            return $query->where('id', (int)$val)->orWhere('pid', (int)$val);
         } else {
             return $query;
         }

@@ -16,11 +16,75 @@ service.interceptors.request.use(config => {
   if (getToken()) {
     config.headers['Authorization'] = "Bearer "+getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
+
+//   axios请求格式
+//   { adapter: ƒ, transformRequest: { … }, transformResponse: { … }, timeout: 150000, xsrfCookieName: "XSRF-TOKEN",  … } {
+//   {
+//   adapter: ƒ xhrAdapter(config)
+//   baseURL: "http://manger.test"
+//   data: undefinedheaders: { Accept: "application/json, text/plain, */*", Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI…MKBIWaqQ78k-f6y-WupXefy4HmXhSa-MnqY33BozaWcJOVsXQ" }
+//   maxContentLength: -1
+//   method: "get"
+//   timeout: 150000
+//   transformRequest: { 0: ƒ }
+//   transformResponse: { 0: ƒ }
+//   url: "http://manger.test/api/user"
+//   validateStatus: ƒ validateStatus(status)
+//   withCredentials: true
+//   xsrfCookieName: "XSRF-TOKEN"
+//   xsrfHeaderName: "X-XSRF-TOKEN"
+//   __proto__: Object
+// }
+  let url = config.url  // 当前访问的地址
+  // 对指定的白名单API自动放行，一般用于登录和退出
+  let white_list = ['/api/login', '/api/user', '/api/logout']
+  if (Array.indexOf(white_list, url) !== -1) {
+    return config
+  }
+  let permissions = store.state.user.permissions // 后台获取的当前用户能访问的地址
+  let roles = store.state.user.roles // 当前用户角色
+  // 对admin角色自动放行
+  if (Array.indexOf(roles, 'admin') !== -1) {
+    return config
+  }
+  // 进行权限判断， 如果没有权限的话，就直接在前端拦截，不访问后台了
+  let isPermission = false // 权限表示，用户是否有权限
+  let i = 0,max =0
+  // 利用正则表达式，查看当前用户是否有访问指定地址的权限，没有则无需访问，直接提示，从而拦截请求
+  for(max=permissions.length; i<max; i++) {
+     let feature = permissions[i]
+     if (feature.route_match === ''){
+       continue
+     } else {
+       let regx = eval(feature.route_match) // 字符串转为正则表达式，用来做验证
+       if (url.search(regx) == -1) {
+         // 正则不匹配， 无权限，继续下一个判断
+       } else {
+         // 正则匹配，有权限，直接跳出循环
+         isPermission = true
+         break;
+       }
+     }
+    }
+  // 根据判断的结果，来决定是否有访问内容
+  if (!isPermission) {
+   let error = {
+      response: {
+         data: {
+           message: '前端拦截，当前用户没有权限访问指定的内容',
+           status: 'error',
+           status_code: 403
+         },
+         status: 403
+     }
+    }
+    return Promise.reject(error)
+  }
   return config
 }, error => {
   // Do something with request error
-  // console.log(error) // for debug
-  Promise.reject(error)
+  //console.log(error) // for debug
+  return Promise.reject(error)
 })
 
 // respone拦截器
@@ -57,7 +121,7 @@ service.interceptors.response.use(
   },
   error => {
 
-      // console.log(error.response)
+       // console.log(error.response)
        if (error.response.status == 401) {  // 刷新token
           loginToken().then(response => {
             setToken(response.token)
