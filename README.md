@@ -89,7 +89,7 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
 
 >  如有问题请直接在 Issues 中提，或者您发现问题并有非常好的解决方案，欢迎 PR 👍
 
->  项目交流群：106822531(QQ)
+>  项目交流：xpyzwm(微信)
 
 # 致谢
   站在巨人之上，我们才能走得更远。项目中使用到了以下开源框架 一并致谢
