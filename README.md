@@ -35,6 +35,14 @@ laravel5.5 + vuejs 2.5.2 + vue-router + vuex +element ui 2.0 + easywechat
   系统登录密码从backend\database\seeds里面去找 具体可以参考laravel教程
 - 前端使用了vue.js 技术  可以参考vue.js的项目流程来进行发布与测试
 
+## 如何获取
+> 因为项目已经商用，开源版本将不再继续更新功能， 需要演示或者商务合作可以加微信（xpyzwm）
+
+## 使用范围
+> 作为学校常规管理模板使用
+
+> 适用于毕业设计及相关产品演示
+
 # 项目界面截图
 #### 系统首页
 ![系统首页](https://i.loli.net/2021/11/24/J1wQsvdxhyRB4pA.png)
